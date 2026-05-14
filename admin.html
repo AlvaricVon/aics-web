@@ -428,14 +428,17 @@
     </div>
     <div class="login-sub">Internal admin dashboard</div>
 
-    <h1>Login dengan email</h1>
-    <p>Masukkan email Anda. Kami kirim magic link — klik link di email untuk masuk. Tidak perlu password.</p>
+    <h1>Login admin</h1>
+    <p>Masuk dengan email &amp; password. Magic link juga tersedia sebagai opsi backup.</p>
 
     <form id="loginForm">
       <label for="emailInput">Email</label>
       <input type="email" id="emailInput" placeholder="kamilalfaris@gmail.com" required value="kamilalfaris@gmail.com" />
-      <button type="submit" id="loginBtn">Kirim magic link</button>
-      <div class="alt">Periksa folder Inbox &amp; Spam setelah klik kirim.</div>
+      <label for="passwordInput" style="margin-top: 14px;">Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" required />
+      <button type="submit" id="loginBtn">Login</button>
+      <button type="button" id="magicBtn" style="background: transparent; color: var(--text-soft); border: 1px solid var(--border); margin-top: 8px;">Kirim magic link saja</button>
+      <div class="alt">Lupa password? Klik magic link — cek inbox kalau gak kena rate limit.</div>
     </form>
 
     <div class="login-msg" id="loginMsg"></div>
@@ -565,27 +568,56 @@
     }
   });
 
+  // Password login (primary)
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
     loginMsg.style.display = "none";
     loginBtn.disabled = true;
-    loginBtn.textContent = "Mengirim...";
+    loginBtn.textContent = "Memproses...";
+
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Login";
+    if (error) {
+      loginMsg.className = "login-msg error";
+      loginMsg.textContent = `Login gagal: ${error.message}`;
+      loginMsg.style.display = "block";
+    }
+  });
+
+  // Magic link (backup)
+  document.getElementById("magicBtn").addEventListener("click", async () => {
+    const email = document.getElementById("emailInput").value.trim();
+    if (!email) {
+      loginMsg.className = "login-msg error";
+      loginMsg.textContent = "Isi email dulu.";
+      loginMsg.style.display = "block";
+      return;
+    }
+    loginMsg.style.display = "none";
+    const magicBtn = document.getElementById("magicBtn");
+    magicBtn.disabled = true;
+    magicBtn.textContent = "Mengirim...";
 
     const { error } = await sb.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: location.origin + "/admin" }
     });
 
-    loginBtn.disabled = false;
-    loginBtn.textContent = "Kirim magic link";
+    magicBtn.disabled = false;
+    magicBtn.textContent = "Kirim magic link saja";
     if (error) {
       loginMsg.className = "login-msg error";
-      loginMsg.textContent = `Error: ${error.message}`;
+      loginMsg.textContent = error.message.includes("rate limit")
+        ? "Rate limit kena. Pakai password aja, atau tunggu ~1 jam."
+        : `Error: ${error.message}`;
       loginMsg.style.display = "block";
     } else {
       loginMsg.className = "login-msg success";
-      loginMsg.innerHTML = `Magic link sudah dikirim ke <strong>${email}</strong>. Cek inbox (dan folder spam) lalu klik link untuk login.`;
+      loginMsg.innerHTML = `Magic link dikirim ke <strong>${email}</strong>. Cek inbox + folder spam.`;
       loginMsg.style.display = "block";
     }
   });
