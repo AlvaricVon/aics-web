@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AICS Admin — Dashboard</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --surface-alt: #F5F4F1;
+    --text: #1C1917;
+    --text-soft: #44403C;
+    --muted: #78716C;
+    --border: #E7E5E4;
+    --border-soft: #F1F0EE;
+    --accent: #C2410C;
+    --accent-bg: #FFF7ED;
+    --accent-soft: #FED7AA;
+    --success: #15803D;
+    --success-bg: #DCFCE7;
+    --warning: #D97706;
+    --warning-bg: #FEF3C7;
+    --danger: #DC2626;
+    --danger-bg: #FEE2E2;
+    --info: #2563EB;
+    --info-bg: #DBEAFE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    font-size: 14.5px;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* ===== LOGIN ===== */
+  .login-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 24px 60px -24px rgba(28, 25, 23, 0.15);
+  }
+  .login-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  .login-brand .mark {
+    width: 28px; height: 28px;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .login-sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  .login-card h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .login-card p { color: var(--text-soft); font-size: 14px; margin-bottom: 24px; line-height: 1.55; }
+  .login-card label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .login-card input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-size: 14.5px;
+    font-family: inherit;
+    outline: none;
+    background: var(--bg);
+  }
+  .login-card input:focus { border-color: var(--text); }
+  .login-card button {
+    width: 100%;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 12px;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 14.5px;
+    margin-top: 16px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .login-card button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .login-card button:hover:not(:disabled) { background: var(--accent); }
+  .login-card .alt {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+    text-align: center;
+  }
+  .login-msg {
+    padding: 12px 14px;
+    border-radius: 7px;
+    margin-top: 16px;
+    font-size: 13.5px;
+    display: none;
+    line-height: 1.5;
+  }
+  .login-msg.success { background: var(--success-bg); color: #166534; display: block; }
+  .login-msg.error { background: var(--danger-bg); color: #991B1B; display: block; }
+  .login-msg.info { background: var(--info-bg); color: #1E40AF; display: block; }
+
+  /* ===== APP ===== */
+  .app { display: none; }
+  .app.active { display: block; }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 14px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 16px;
+  }
+  .topbar-brand .mark {
+    width: 26px; height: 26px;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .topbar-brand .label { font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-left: 4px; }
+  .topbar-user { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-soft); }
+  .topbar-user button {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12.5px;
+    color: var(--text-soft);
+  }
+  .topbar-user button:hover { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-soft); }
+
+  /* ===== STATS ===== */
+  .stats {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .stat-card .label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .stat-card .num {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .stat-card .delta {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ===== TABS ===== */
+  .tabs {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    padding: 12px 18px;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab .count {
+    background: var(--surface-alt);
+    color: var(--text);
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+  .tab.active .count { background: var(--accent-bg); color: var(--accent); }
+
+  /* ===== TABLE ===== */
+  .panel {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 24px 60px;
+  }
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .filter {
+    display: flex;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 3px;
+  }
+  .filter button {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .filter button.active { background: var(--text); color: var(--bg); }
+  .search {
+    padding: 7px 13px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    background: var(--surface);
+    min-width: 240px;
+  }
+  .search:focus { border-color: var(--text); }
+
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead {
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 13.5px;
+    color: var(--text-soft);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr.flash { animation: flash 2s ease-out; }
+  @keyframes flash {
+    0% { background: var(--accent-bg); }
+    100% { background: transparent; }
+  }
+  tr:hover td { background: rgba(245, 244, 241, 0.5); }
+  td .pri { color: var(--text); font-weight: 600; }
+  td .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+  td .amount { font-weight: 700; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+
+  .status {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .status-new, .status-pending_payment, .status-pending { background: var(--warning-bg); color: #78350F; }
+  .status-paid, .status-scheduled, .status-contacted { background: var(--info-bg); color: #1E40AF; }
+  .status-in_progress, .status-qualified { background: var(--accent-bg); color: var(--accent); }
+  .status-delivered, .status-won { background: var(--success-bg); color: #166534; }
+  .status-cancelled, .status-lost, .status-refunded, .status-no_show { background: var(--danger-bg); color: #991B1B; }
+  .status-converted { background: var(--success-bg); color: #166534; }
+  .status-escalated { background: var(--warning-bg); color: #78350F; }
+  .status-resolved { background: var(--success-bg); color: #166534; }
+  .status-awaiting_customer { background: var(--info-bg); color: #1E40AF; }
+
+  .actions {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .action-btn {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    padding: 4px 9px;
+    border-radius: 5px;
+    font-size: 11.5px;
+    font-family: inherit;
+    cursor: pointer;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+  .action-btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .action-btn.wa { background: #25D366; color: white; border-color: #25D366; }
+  .action-btn.wa:hover { background: #1ea551; }
+
+  .empty {
+    padding: 60px 30px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .empty .icon { font-size: 32px; opacity: 0.4; margin-bottom: 12px; }
+
+  .detail {
+    background: var(--surface-alt);
+    padding: 12px 16px;
+    margin: 6px 0;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-soft);
+    border-left: 3px solid var(--accent);
+  }
+  .detail .key { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; margin-right: 8px; }
+  .detail-row { padding: 4px 0; }
+
+  .notif-banner {
+    background: var(--accent);
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+    animation: slideDown 0.4s ease-out;
+  }
+  .notif-banner.show { display: block; }
+  @keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+
+  @media (max-width: 720px) {
+    th, td { padding: 8px 10px; font-size: 12.5px; }
+    th:nth-child(n+5), td:nth-child(n+5) { display: none; }
+    .search { width: 100%; min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-brand">
+      <span class="mark">AI</span>
+      AICS
+    </div>
+    <div class="login-sub">Internal admin dashboard</div>
+
+    <h1>Login dengan email</h1>
+    <p>Masukkan email Anda. Kami kirim magic link — klik link di email untuk masuk. Tidak perlu password.</p>
+
+    <form id="loginForm">
+      <label for="emailInput">Email</label>
+      <input type="email" id="emailInput" placeholder="kamilalfaris@gmail.com" required value="kamilalfaris@gmail.com" />
+      <button type="submit" id="loginBtn">Kirim magic link</button>
+      <div class="alt">Periksa folder Inbox &amp; Spam setelah klik kirim.</div>
+    </form>
+
+    <div class="login-msg" id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app" id="app">
+  <div class="notif-banner" id="notifBanner"></div>
+
+  <div class="topbar">
+    <div class="topbar-brand">
+      <span class="mark">AI</span>
+      AICS
+      <span class="label">admin</span>
+    </div>
+    <div class="topbar-user">
+      <span id="userEmail">—</span>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats">
+    <div class="stat-card">
+      <div class="label">Total order</div>
+      <div class="num" id="statOrders">—</div>
+      <div class="delta" id="statOrdersDelta">all-time</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Pending payment</div>
+      <div class="num" id="statPending">—</div>
+      <div class="delta">need follow-up</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Revenue</div>
+      <div class="num" id="statRevenue">—</div>
+      <div class="delta">paid orders</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Audit requests</div>
+      <div class="num" id="statAudits">—</div>
+      <div class="delta">total submitted</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Demo sessions</div>
+      <div class="num" id="statDemos">—</div>
+      <div class="delta">unique visitors</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="orders">Orders <span class="count" id="cntOrders">0</span></button>
+    <button class="tab" data-tab="audits">Audit Requests <span class="count" id="cntAudits">0</span></button>
+    <button class="tab" data-tab="leads">Leads <span class="count" id="cntLeads">0</span></button>
+    <button class="tab" data-tab="demos">Demo Chats <span class="count" id="cntDemos">0</span></button>
+  </div>
+
+  <div class="panel">
+    <div class="toolbar">
+      <div class="filter" id="filterBar">
+        <button class="active" data-filter="all">Semua</button>
+      </div>
+      <input type="text" class="search" id="searchInput" placeholder="Cari nama, email, perusahaan..." />
+    </div>
+
+    <div class="table-wrap">
+      <table id="dataTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="empty" id="emptyState" style="display:none;">
+        <div class="icon">—</div>
+        Belum ada data di tab ini.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== JS ===== -->
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+
+  const SUPABASE_URL = "https://stcywvcnbbapshrzqblk.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_WUxbFG3866P7BANLSqv-Sw_4NcXMLSr";
+  const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const loginWrap = document.getElementById("loginWrap");
+  const app = document.getElementById("app");
+  const loginForm = document.getElementById("loginForm");
+  const loginBtn = document.getElementById("loginBtn");
+  const loginMsg = document.getElementById("loginMsg");
+
+  // Detect magic link redirect
+  const hashParams = new URLSearchParams(location.hash.slice(1));
+  if (hashParams.get("access_token")) {
+    history.replaceState(null, "", location.pathname);
+  }
+
+  // ===== AUTH CHECK =====
+  async function checkAuth() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      showApp(session.user);
+    } else {
+      loginWrap.style.display = "flex";
+      app.classList.remove("active");
+    }
+  }
+  await checkAuth();
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_IN" && session) showApp(session.user);
+    if (event === "SIGNED_OUT") {
+      loginWrap.style.display = "flex";
+      app.classList.remove("active");
+    }
+  });
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("emailInput").value.trim();
+    loginMsg.style.display = "none";
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Mengirim...";
+
+    const { error } = await sb.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: location.origin + "/admin" }
+    });
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Kirim magic link";
+    if (error) {
+      loginMsg.className = "login-msg error";
+      loginMsg.textContent = `Error: ${error.message}`;
+      loginMsg.style.display = "block";
+    } else {
+      loginMsg.className = "login-msg success";
+      loginMsg.innerHTML = `Magic link sudah dikirim ke <strong>${email}</strong>. Cek inbox (dan folder spam) lalu klik link untuk login.`;
+      loginMsg.style.display = "block";
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await sb.auth.signOut();
+  });
+
+  // ===== APP STATE =====
+  let activeTab = "orders";
+  let activeFilter = "all";
+  let searchTerm = "";
+  let allData = { orders: [], audits: [], leads: [], demos: [] };
+
+  const TAB_CONFIGS = {
+    orders: {
+      table: "orders",
+      title: "Orders",
+      columns: ["created_at", "service", "customer_name", "company", "amount_idr", "status", "actions"],
+      headers: ["Waktu", "Layanan", "Customer", "Perusahaan", "Nominal", "Status", "Aksi"],
+      filters: ["all", "pending_payment", "paid", "in_progress", "delivered", "cancelled"],
+      statusOptions: ["pending_payment", "paid", "in_progress", "delivered", "cancelled", "refunded"],
+    },
+    audits: {
+      table: "audit_requests",
+      title: "Audit Requests",
+      columns: ["created_at", "company", "contact_name", "monthly_ticket_volume", "team_size", "status", "actions"],
+      headers: ["Waktu", "Perusahaan", "Contact", "Volume", "Tim CS", "Status", "Aksi"],
+      filters: ["all", "pending", "scheduled", "delivered", "converted", "no_show"],
+      statusOptions: ["pending", "scheduled", "delivered", "converted", "no_show"],
+    },
+    leads: {
+      table: "leads",
+      title: "Leads",
+      columns: ["created_at", "name", "company", "email", "source", "status", "actions"],
+      headers: ["Waktu", "Nama", "Perusahaan", "Email", "Source", "Status", "Aksi"],
+      filters: ["all", "new", "contacted", "qualified", "proposal", "won", "lost"],
+      statusOptions: ["new", "contacted", "qualified", "proposal", "won", "lost"],
+    },
+    demos: {
+      table: "demo_chats",
+      title: "Demo Chats",
+      columns: ["created_at", "session_id", "user_message", "intent", "state", "escalated"],
+      headers: ["Waktu", "Session", "Pesan", "Intent", "State", "Escalated"],
+      filters: ["all", "resolved", "escalated", "awaiting_customer"],
+      statusOptions: [],
+    },
+  };
+
+  const SERVICE_LABELS = {
+    review_analyzer: "Review Analyzer",
+    wa_bot_setup: "WA Bot Setup",
+    strategy_workshop: "Strategy Workshop",
+    custom_quote: "Custom Quote",
+  };
+
+  // ===== UI =====
+  function showApp(user) {
+    loginWrap.style.display = "none";
+    app.classList.add("active");
+    document.getElementById("userEmail").textContent = user.email;
+    initData();
+    bindTabs();
+    bindRealtime();
+    requestNotificationPerm();
+  }
+
+  function bindTabs() {
+    document.querySelectorAll(".tab").forEach(t => {
+      t.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+        t.classList.add("active");
+        activeTab = t.dataset.tab;
+        activeFilter = "all";
+        renderFilters();
+        renderTable();
+      });
+    });
+    document.getElementById("searchInput").addEventListener("input", e => {
+      searchTerm = e.target.value.toLowerCase();
+      renderTable();
+    });
+  }
+
+  function renderFilters() {
+    const cfg = TAB_CONFIGS[activeTab];
+    const bar = document.getElementById("filterBar");
+    bar.innerHTML = "";
+    cfg.filters.forEach(f => {
+      const b = document.createElement("button");
+      b.dataset.filter = f;
+      b.textContent = f === "all" ? "Semua" : f.replace(/_/g, " ");
+      if (f === activeFilter) b.classList.add("active");
+      b.addEventListener("click", () => {
+        activeFilter = f;
+        renderFilters();
+        renderTable();
+      });
+      bar.appendChild(b);
+    });
+  }
+
+  async function initData() {
+    await Promise.all([
+      loadTable("orders"),
+      loadTable("audits"),
+      loadTable("leads"),
+      loadTable("demos"),
+    ]);
+    renderFilters();
+    renderTable();
+    renderStats();
+  }
+
+  async function loadTable(key) {
+    const cfg = TAB_CONFIGS[key];
+    const { data, error } = await sb.from(cfg.table).select("*").order("created_at", { ascending: false }).limit(200);
+    if (error) {
+      console.error(`Load ${key} error:`, error);
+      return;
+    }
+    allData[key] = data || [];
+    updateCount(key);
+  }
+
+  function updateCount(key) {
+    const id = { orders: "cntOrders", audits: "cntAudits", leads: "cntLeads", demos: "cntDemos" }[key];
+    document.getElementById(id).textContent = allData[key].length;
+  }
+
+  function renderStats() {
+    const orders = allData.orders;
+    const paid = orders.filter(o => ["paid","in_progress","delivered"].includes(o.status));
+    const revenue = paid.reduce((s, o) => s + (o.amount_idr || 0), 0);
+    const pending = orders.filter(o => o.status === "pending_payment").length;
+
+    document.getElementById("statOrders").textContent = orders.length;
+    document.getElementById("statPending").textContent = pending;
+    document.getElementById("statRevenue").textContent = `Rp ${revenue.toLocaleString("id-ID")}`;
+    document.getElementById("statAudits").textContent = allData.audits.length;
+    document.getElementById("statDemos").textContent = new Set(allData.demos.map(d => d.session_id)).size;
+  }
+
+  function renderTable() {
+    const cfg = TAB_CONFIGS[activeTab];
+    const head = document.getElementById("tableHead");
+    const body = document.getElementById("tableBody");
+    const empty = document.getElementById("emptyState");
+
+    head.innerHTML = "<tr>" + cfg.headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+
+    let rows = allData[activeTab] || [];
+    if (activeFilter !== "all") {
+      const field = activeTab === "demos" ? "state" : "status";
+      rows = rows.filter(r => r[field] === activeFilter);
+    }
+    if (searchTerm) {
+      rows = rows.filter(r => JSON.stringify(r).toLowerCase().includes(searchTerm));
+    }
+
+    if (rows.length === 0) {
+      body.innerHTML = "";
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+
+    body.innerHTML = rows.map(r => renderRow(r, cfg)).join("");
+    bindActions();
+  }
+
+  function fmtTime(iso) {
+    const d = new Date(iso);
+    const now = new Date();
+    const diff = (now - d) / 1000;
+    if (diff < 60) return "baru saja";
+    if (diff < 3600) return `${Math.floor(diff/60)}m lalu`;
+    if (diff < 86400) return `${Math.floor(diff/3600)}j lalu`;
+    return d.toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  }
+
+  function renderRow(r, cfg) {
+    const cells = cfg.columns.map(col => {
+      if (col === "created_at") return `<td><span class="mono">${fmtTime(r.created_at)}</span></td>`;
+      if (col === "service") return `<td><span class="pri">${SERVICE_LABELS[r.service] || r.service}</span></td>`;
+      if (col === "amount_idr") return `<td><span class="amount">Rp ${(r.amount_idr || 0).toLocaleString("id-ID")}</span></td>`;
+      if (col === "status" || col === "state") {
+        const v = r.status || r.state || "—";
+        return `<td><span class="status status-${v}">${v.replace(/_/g," ")}</span></td>`;
+      }
+      if (col === "escalated") return `<td>${r.escalated ? `<span class="status status-escalated">YES</span>` : "no"}</td>`;
+      if (col === "customer_name" || col === "contact_name" || col === "name") {
+        return `<td><div class="pri">${r[col] || "—"}</div><div class="mono">${r.email || ""}</div></td>`;
+      }
+      if (col === "actions") return `<td>${renderActions(r, cfg)}</td>`;
+      if (col === "user_message") return `<td style="max-width: 320px;"><div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(r.user_message || "")}</div></td>`;
+      return `<td>${escapeHtml(r[col] != null ? String(r[col]) : "—")}</td>`;
+    }).join("");
+    return `<tr data-id="${r.id}">${cells}</tr>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[<>&"]/g, c => ({ "<":"&lt;", ">":"&gt;", "&":"&amp;", '"':"&quot;" }[c]));
+  }
+
+  function renderActions(r, cfg) {
+    if (activeTab === "demos") return "";
+    const wa = r.whatsapp ? `<a class="action-btn wa" target="_blank" rel="noopener" href="https://wa.me/${String(r.whatsapp).replace(/[^0-9]/g,"")}?text=Halo%20${encodeURIComponent(r.customer_name || r.contact_name || r.name || "")}%2C%20saya%20Kamil%20dari%20AICS">WA</a>` : "";
+    const opts = cfg.statusOptions || [];
+    if (opts.length === 0) return wa;
+    const current = r.status || "";
+    const next = opts.filter(o => o !== current).slice(0, 3).map(o =>
+      `<button class="action-btn" data-update="${cfg.table}" data-id="${r.id}" data-status="${o}">${o.replace(/_/g," ")}</button>`
+    ).join("");
+    return wa + next;
+  }
+
+  function bindActions() {
+    document.querySelectorAll("[data-update]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const table = btn.dataset.update;
+        const id = btn.dataset.id;
+        const status = btn.dataset.status;
+        const patch = { status };
+        if (status === "paid") patch.paid_at = new Date().toISOString();
+        if (status === "delivered") patch.delivered_at = new Date().toISOString();
+        const { error } = await sb.from(table).update(patch).eq("id", id);
+        if (error) {
+          alert(`Update failed: ${error.message}`);
+        } else {
+          // refresh affected tab
+          const k = table === "orders" ? "orders" : table === "audit_requests" ? "audits" : "leads";
+          await loadTable(k);
+          renderTable();
+          renderStats();
+        }
+      });
+    });
+  }
+
+  // ===== REALTIME =====
+  function bindRealtime() {
+    sb.channel("admin-realtime")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "orders" }, payload => {
+        allData.orders.unshift(payload.new);
+        updateCount("orders");
+        renderStats();
+        if (activeTab === "orders") renderTable();
+        notify(`Order baru: ${SERVICE_LABELS[payload.new.service] || payload.new.service} dari ${payload.new.customer_name}`);
+      })
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "audit_requests" }, payload => {
+        allData.audits.unshift(payload.new);
+        updateCount("audits");
+        renderStats();
+        if (activeTab === "audits") renderTable();
+        notify(`Audit request baru dari ${payload.new.company}`);
+      })
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "leads" }, payload => {
+        allData.leads.unshift(payload.new);
+        updateCount("leads");
+        renderStats();
+        if (activeTab === "leads") renderTable();
+      })
+      .subscribe();
+  }
+
+  function notify(text) {
+    const banner = document.getElementById("notifBanner");
+    banner.textContent = "• " + text;
+    banner.classList.add("show");
+    setTimeout(() => banner.classList.remove("show"), 8000);
+    // Browser notification
+    if ("Notification" in window && Notification.permission === "granted") {
+      try { new Notification("AICS Admin", { body: text, icon: "/favicon.ico" }); } catch (_) {}
+    }
+    // Tab title flash
+    const orig = document.title;
+    let count = 0;
+    const interval = setInterval(() => {
+      document.title = count % 2 ? "(•) AICS Admin" : orig;
+      count++;
+      if (count > 10) { clearInterval(interval); document.title = orig; }
+    }, 600);
+  }
+
+  function requestNotificationPerm() {
+    if ("Notification" in window && Notification.permission === "default") {
+      // Don't request immediately, wait for first user gesture
+      document.addEventListener("click", function once() {
+        Notification.requestPermission();
+        document.removeEventListener("click", once);
+      }, { once: true });
+    }
+  }
+</script>
+
+</body>
+</html>
