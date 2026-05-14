@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kamil — Setup AI customer service tanpa drama agency Rp 200jt</title>
-<meta name="description" content="Solo founder Indonesia. Bantu UMKM dan tim CS mid-stage otomasi FAQ pakai LLM. 3 paket fixed-scope mulai Rp 750rb. Bayar di muka, refund kalau gagal deliver." />
-<meta property="og:title" content="AI customer service tanpa drama agency Rp 200jt" />
-<meta property="og:description" content="3 paket fixed-scope mulai Rp 750rb. Coba demo live tanpa signup." />
+<title>AICS — AI Customer Support Otonom untuk Bisnis Indonesia</title>
+<meta name="description" content="Implementasi sistem AI customer service yang teraudit, terukur, dan reliable. 3 paket fixed-scope mulai Rp 750.000. Live dalam 7-14 hari." />
+<meta property="og:title" content="AICS — AI Customer Support Otonom" />
+<meta property="og:description" content="Implementasi sistem AI customer service yang teraudit & terukur. Mulai Rp 750.000." />
 <meta property="og:type" content="website" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
     --bg: #FAFAF7;
     --surface: #FFFFFF;
+    --surface-alt: #F5F4F1;
     --text: #1C1917;
     --text-soft: #44403C;
     --muted: #78716C;
@@ -26,8 +27,12 @@
     --accent-bg: #FFF7ED;
     --highlight-bg: #FEF3C7;
     --success: #15803D;
-    --code-bg: #292524;
+    --code-bg: #1C1917;
     --code-text: #FAFAF7;
+    --code-purple: #C084FC;
+    --code-green: #86EFAC;
+    --code-blue: #93C5FD;
+    --code-orange: #FDBA74;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -37,32 +42,87 @@
     line-height: 1.6;
     background: var(--bg);
     font-size: 16px;
+    -webkit-font-smoothing: antialiased;
   }
-  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
   .narrow { max-width: 720px; }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+  @keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes drawLine {
+    from { stroke-dashoffset: 1000; }
+    to { stroke-dashoffset: 0; }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* ===== HEADER ===== */
   header {
-    padding: 20px 0;
+    padding: 18px 0;
     border-bottom: 1px solid var(--border-soft);
-    background: var(--bg);
+    background: rgba(250, 250, 247, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 50;
   }
   header .container { display: flex; justify-content: space-between; align-items: center; }
   .brand {
-    font-weight: 700;
-    font-size: 17px;
-    letter-spacing: -0.01em;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
-  .brand .dot { color: var(--accent); }
-  nav { display: flex; gap: 28px; align-items: center; }
+  .brand-mark {
+    width: 26px;
+    height: 26px;
+    background: var(--text);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .brand-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-left: 2px;
+  }
+  nav { display: flex; gap: 30px; align-items: center; }
   nav a {
     color: var(--text-soft);
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
+    transition: color 0.15s;
   }
   nav a:hover { color: var(--text); }
 
@@ -70,48 +130,53 @@
   .btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 8px;
     background: var(--text);
     color: var(--bg) !important;
-    padding: 12px 22px;
-    border-radius: 6px;
+    padding: 13px 24px;
+    border-radius: 7px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14.5px;
     border: none;
     cursor: pointer;
-    transition: background 0.12s;
+    transition: all 0.15s ease-out;
     font-family: inherit;
+    line-height: 1;
   }
-  .btn:hover { background: var(--accent); }
-  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn:hover { background: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(194, 65, 12, 0.18); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
   .btn-accent { background: var(--accent); color: white !important; }
   .btn-accent:hover { background: var(--accent-hover); }
   .btn-ghost {
     background: transparent;
     color: var(--text) !important;
     border: 1px solid var(--border);
-    padding: 11px 21px;
+    padding: 12px 23px;
   }
-  .btn-ghost:hover { border-color: var(--text); }
-  .btn-sm { padding: 7px 14px; font-size: 13px; }
-  .btn-block { width: 100%; justify-content: center; }
+  .btn-ghost:hover { border-color: var(--text); background: var(--surface); transform: translateY(-1px); }
+  .btn-sm { padding: 8px 16px; font-size: 13.5px; }
+  .btn-block { width: 100%; }
+
+  .btn .arrow { transition: transform 0.2s; display: inline-block; }
+  .btn:hover .arrow { transform: translateX(3px); }
 
   /* ===== TYPOGRAPHY ===== */
   h1 {
-    font-size: clamp(34px, 5vw, 48px);
-    line-height: 1.08;
-    letter-spacing: -0.025em;
-    font-weight: 700;
+    font-size: clamp(36px, 5.5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 800;
     margin-bottom: 20px;
     color: var(--text);
   }
   h2 {
-    font-size: clamp(24px, 3.5vw, 32px);
+    font-size: clamp(28px, 3.8vw, 38px);
     line-height: 1.15;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   h3 {
     font-size: 18px;
@@ -121,161 +186,197 @@
   }
   p { color: var(--text-soft); }
   .lede {
-    font-size: 17px;
+    font-size: 18px;
     color: var(--text-soft);
-    margin-bottom: 28px;
-    line-height: 1.5;
+    margin-bottom: 32px;
+    line-height: 1.55;
   }
   .small { font-size: 14px; color: var(--muted); }
   .mono { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
-  a.text-link { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a.text-link { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a.text-link:hover { color: var(--accent-hover); }
 
   .pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     background: var(--surface);
     border: 1px solid var(--border);
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 999px;
     font-size: 12.5px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-soft);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
-  .pill .pill-dot {
+  .pill .dot-live {
     width: 6px; height: 6px;
     background: var(--success);
     border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+    animation: pulse 2s infinite;
   }
 
   /* ===== SECTIONS ===== */
-  section { padding: 72px 0; }
-  section.sm { padding: 40px 0; }
+  section { padding: 88px 0; }
+  section.sm { padding: 56px 0; }
   .section-eyebrow {
-    font-size: 12px;
+    font-size: 11.5px;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    font-weight: 600;
-    margin-bottom: 12px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   /* ===== HERO ===== */
-  .hero { padding: 64px 0 56px; }
+  .hero {
+    padding: 80px 0 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(194, 65, 12, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
   .hero-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 56px;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 64px;
     align-items: center;
+    position: relative;
   }
   .hero-cta-row {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
-    margin-top: 4px;
+    margin-top: 8px;
   }
   .hero-meta {
-    margin-top: 32px;
-    padding-top: 24px;
+    margin-top: 40px;
+    padding-top: 28px;
     border-top: 1px solid var(--border-soft);
-    display: flex;
-    gap: 32px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
   }
-  .hero-meta-item { font-size: 13px; }
   .hero-meta-item .num {
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 800;
     color: var(--text);
-    margin-right: 4px;
+    display: block;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
   }
+  .hero-meta-item .label { font-size: 12.5px; color: var(--muted); }
 
   /* ===== DEMO WIDGET ===== */
+  .demo-wrap {
+    position: relative;
+    animation: fadeUp 0.8s ease-out;
+  }
   .demo-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 24px 60px -20px rgba(28, 25, 23, 0.18), 0 8px 24px -8px rgba(28, 25, 23, 0.08);
+    position: relative;
+    z-index: 2;
   }
   .demo-head {
-    padding: 12px 16px;
+    padding: 14px 18px;
     border-bottom: 1px solid var(--border-soft);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 13px;
+    background: var(--surface);
   }
   .demo-head-title {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     font-weight: 600;
+    font-size: 13.5px;
   }
   .demo-head-status {
-    width: 6px; height: 6px;
+    width: 7px; height: 7px;
     background: var(--success);
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
   }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+  .demo-head-meta {
+    color: var(--muted);
+    font-size: 11.5px;
+    font-family: 'JetBrains Mono', monospace;
   }
-  .demo-head-meta { color: var(--muted); font-size: 12px; font-family: 'JetBrains Mono', monospace; }
   .demo-msgs {
-    height: 320px;
+    height: 340px;
     overflow-y: auto;
-    padding: 16px;
+    padding: 18px;
     background: var(--bg);
     display: flex;
     flex-direction: column;
     gap: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
   }
+  .demo-msgs::-webkit-scrollbar { width: 6px; }
+  .demo-msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   .msg {
     max-width: 85%;
-    padding: 9px 13px;
-    border-radius: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
     font-size: 13.5px;
-    line-height: 1.45;
+    line-height: 1.5;
     white-space: pre-wrap;
     word-wrap: break-word;
+    animation: fadeUp 0.3s ease-out;
   }
   .msg.customer {
     align-self: flex-end;
     background: var(--text);
     color: var(--bg);
+    border-bottom-right-radius: 4px;
   }
   .msg.bot {
     align-self: flex-start;
     background: var(--surface);
     color: var(--text);
     border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
   }
   .msg-meta {
     font-size: 10.5px;
     color: var(--muted);
     margin-top: -4px;
-    padding: 0 4px;
+    padding: 0 6px;
     font-family: 'JetBrains Mono', monospace;
+    align-self: flex-start;
   }
   .msg-meta b { color: var(--text); font-weight: 600; }
   .badge-state {
     display: inline-block;
-    padding: 1px 7px;
+    padding: 2px 8px;
     border-radius: 4px;
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 700;
     text-transform: uppercase;
-    margin-right: 5px;
+    margin-right: 6px;
     letter-spacing: 0.05em;
-    font-family: 'JetBrains Mono', monospace;
   }
   .state-resolved { background: #DCFCE7; color: #14532D; }
   .state-escalated { background: var(--highlight-bg); color: #78350F; }
   .state-awaiting_customer { background: #FED7AA; color: #7C2D12; }
   .typing-dots span {
     display: inline-block;
-    width: 5px; height: 5px;
+    width: 6px; height: 6px;
     background: var(--muted);
     border-radius: 50%;
     margin: 0 1px;
@@ -283,12 +384,8 @@
   }
   .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
   .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes typing {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-    30% { transform: translateY(-4px); opacity: 1; }
-  }
   .demo-suggest {
-    padding: 10px 16px;
+    padding: 12px 16px;
     border-top: 1px solid var(--border-soft);
     background: var(--surface);
     display: flex;
@@ -298,12 +395,13 @@
   .demo-suggest button {
     background: var(--bg);
     border: 1px solid var(--border);
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 6px 11px;
+    border-radius: 5px;
     font-size: 12px;
     cursor: pointer;
     font-family: inherit;
     color: var(--text-soft);
+    transition: all 0.12s;
   }
   .demo-suggest button:hover {
     background: var(--accent-bg);
@@ -311,7 +409,7 @@
     color: var(--accent);
   }
   .demo-input {
-    padding: 12px 16px;
+    padding: 14px 18px;
     background: var(--surface);
     border-top: 1px solid var(--border-soft);
     display: flex;
@@ -319,59 +417,298 @@
   }
   .demo-input input {
     flex: 1;
-    padding: 8px 12px;
+    padding: 9px 13px;
     border: 1px solid var(--border);
-    border-radius: 5px;
-    font-size: 13px;
+    border-radius: 6px;
+    font-size: 13.5px;
     font-family: inherit;
     outline: none;
     background: var(--bg);
+    transition: border 0.15s;
   }
   .demo-input input:focus { border-color: var(--text); }
   .demo-input button {
     background: var(--text);
     color: var(--bg);
     border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
+    padding: 9px 18px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 13.5px;
     font-family: inherit;
+    transition: background 0.15s;
+  }
+  .demo-input button:hover { background: var(--accent); }
+
+  /* Floating accent behind demo card */
+  .demo-wrap::after {
+    content: "";
+    position: absolute;
+    top: 20px; right: -16px;
+    width: 100%; height: 100%;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-soft);
+    border-radius: 12px;
+    z-index: 1;
   }
 
-  /* ===== "FOR WHO" ===== */
-  .for-list {
-    list-style: none;
-    margin-top: 20px;
-  }
-  .for-list li {
-    padding: 12px 0;
+  /* ===== TRUSTED BY ===== */
+  .trusted {
+    padding: 36px 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border-soft);
     border-bottom: 1px solid var(--border-soft);
-    display: flex;
-    gap: 14px;
-    align-items: baseline;
   }
-  .for-list li::before {
-    content: "—";
+  .trusted-label {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 18px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .trusted-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+    align-items: center;
+  }
+  .trusted-item {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    opacity: 0.55;
+    transition: opacity 0.15s;
+  }
+  .trusted-item:hover { opacity: 0.9; }
+  .trusted-item .badge {
+    font-size: 10px;
+    background: var(--border);
+    color: var(--muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ===== PROBLEM ===== */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 36px;
+  }
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .problem-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -8px rgba(28, 25, 23, 0.08);
+  }
+  .problem-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     color: var(--accent);
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+  .problem-card h3 {
+    font-size: 19px;
+    margin-bottom: 8px;
     font-weight: 700;
   }
+  .problem-card p { font-size: 14.5px; line-height: 1.55; }
+
+  /* ===== ARCHITECTURE ===== */
+  .arch {
+    background: var(--text);
+    color: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .arch::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 800px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .arch h2 { color: white; }
+  .arch .section-eyebrow { color: var(--accent-soft); }
+  .arch .lede { color: rgba(250, 250, 247, 0.7); }
+  .arch-diagram {
+    margin: 56px 0 32px;
+    display: flex;
+    justify-content: center;
+  }
+  .arch-svg {
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+  }
+  .arch-svg .node {
+    fill: var(--bg);
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+  .arch-svg .node-label {
+    fill: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .arch-svg .node-sub {
+    fill: var(--muted);
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .arch-svg .line {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    fill: none;
+    stroke-dasharray: 4 4;
+  }
+  .arch-svg .arrow-tip { fill: var(--accent); }
+  .arch-svg .accent { fill: var(--accent); stroke: var(--accent); }
+  .arch-svg .accent-label { fill: white; font-weight: 700; }
+  .arch-agents {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .agent-row {
+    background: rgba(250, 250, 247, 0.05);
+    border: 1px solid rgba(250, 250, 247, 0.1);
+    border-radius: 8px;
+    padding: 18px 16px;
+  }
+  .agent-row .agent-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-soft);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .agent-row .agent-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+  }
+  .agent-row .agent-desc {
+    font-size: 12.5px;
+    color: rgba(250, 250, 247, 0.65);
+    line-height: 1.5;
+  }
+
+  /* ===== CODE EXAMPLE ===== */
+  .code-section {
+    background: var(--surface);
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .code-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    box-shadow: 0 12px 32px -12px rgba(28, 25, 23, 0.2);
+  }
+  .code-head {
+    background: rgba(250, 250, 247, 0.04);
+    padding: 9px 16px;
+    border-bottom: 1px solid rgba(250, 250, 247, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .code-head-dots {
+    display: flex;
+    gap: 5px;
+  }
+  .code-head-dots span {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: rgba(250, 250, 247, 0.15);
+  }
+  .code-head-dots span:first-child { background: #FB7185; }
+  .code-head-dots span:nth-child(2) { background: #FBBF24; }
+  .code-head-dots span:nth-child(3) { background: #4ADE80; }
+  .code-head-file {
+    color: rgba(250, 250, 247, 0.55);
+    font-size: 11.5px;
+  }
+  .code-body {
+    padding: 16px 18px;
+    overflow-x: auto;
+    color: var(--code-text);
+  }
+  .code-body .key { color: var(--code-blue); }
+  .code-body .str { color: var(--code-green); }
+  .code-body .num { color: var(--code-orange); }
+  .code-body .com { color: rgba(250, 250, 247, 0.4); }
+  .code-body .kw { color: var(--code-purple); }
+  .code-body .punct { color: rgba(250, 250, 247, 0.5); }
 
   /* ===== SERVICE CARDS ===== */
   .services {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-top: 32px;
+    gap: 18px;
+    margin-top: 40px;
   }
   .service {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 28px 24px;
+    border-radius: 12px;
+    padding: 28px 26px;
     display: flex;
     flex-direction: column;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .service:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px -12px rgba(28, 25, 23, 0.12);
+    border-color: var(--accent-soft);
+  }
+  .service.featured {
+    border-color: var(--text);
+    box-shadow: 0 8px 24px -8px rgba(28, 25, 23, 0.1);
+  }
+  .service.featured::before {
+    content: "Paling diminati";
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    background: var(--text);
+    color: var(--bg);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.04em;
   }
   .service-tag {
     font-family: 'JetBrains Mono', monospace;
@@ -380,57 +717,101 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 10px;
+    font-weight: 600;
   }
-  .service-title { font-size: 19px; font-weight: 700; margin-bottom: 8px; }
-  .service-desc { font-size: 14px; color: var(--text-soft); margin-bottom: 20px; line-height: 1.5; flex-grow: 1; }
+  .service-title { font-size: 21px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .service-desc { font-size: 14.5px; color: var(--text-soft); margin-bottom: 22px; line-height: 1.55; flex-grow: 1; }
   .service-meta {
     border-top: 1px solid var(--border-soft);
-    padding-top: 16px;
+    padding-top: 18px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 18px;
     font-size: 13px;
   }
-  .service-meta .price { font-weight: 700; color: var(--text); }
-  .service-meta .duration { color: var(--muted); }
-  .service ul { list-style: none; padding: 0; margin-bottom: 20px; }
+  .service-meta .price { font-weight: 700; color: var(--text); font-size: 17px; }
+  .service-meta .duration { color: var(--muted); display: flex; align-items: center; }
+  .service ul { list-style: none; padding: 0; margin-bottom: 22px; }
   .service ul li {
-    font-size: 13px;
+    font-size: 13.5px;
     color: var(--text-soft);
-    padding: 4px 0 4px 16px;
+    padding: 5px 0 5px 22px;
     position: relative;
+    line-height: 1.5;
   }
   .service ul li::before {
-    content: "→";
-    color: var(--accent);
+    content: "";
     position: absolute;
     left: 0;
+    top: 12px;
+    width: 14px;
+    height: 1px;
+    background: var(--accent);
   }
 
   .custom-note {
-    background: var(--accent-bg);
-    border: 1px solid var(--accent-soft);
-    border-radius: 8px;
-    padding: 18px 22px;
-    margin-top: 24px;
-    font-size: 14.5px;
-    color: var(--text);
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin-top: 28px;
+    font-size: 15px;
+    color: var(--text-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
   }
-  .custom-note strong { color: var(--text); font-weight: 700; }
+  .custom-note strong { color: var(--text); }
+
+  /* ===== HOW IT WORKS ===== */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+    position: relative;
+  }
+  .step {
+    padding: 0 4px;
+    position: relative;
+  }
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--accent-bg);
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+  }
+  .step h3 { font-size: 17px; margin-bottom: 8px; font-weight: 700; }
+  .step p { font-size: 14px; color: var(--text-soft); line-height: 1.55; }
 
   /* ===== FAQ ===== */
+  .faq-section {
+    background: var(--surface);
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+  }
   .faq-item {
     border-bottom: 1px solid var(--border);
-    padding: 20px 0;
+    padding: 22px 0;
   }
+  .faq-item:first-of-type { border-top: 1px solid var(--border); margin-top: 8px; }
   .faq-item h3 {
     font-size: 17px;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     color: var(--text);
+    letter-spacing: -0.005em;
   }
-  .faq-item p { font-size: 15px; line-height: 1.6; color: var(--text-soft); }
-  .faq-item p strong { color: var(--text); }
+  .faq-item p { font-size: 15px; line-height: 1.65; color: var(--text-soft); }
+  .faq-item p strong { color: var(--text); font-weight: 600; }
 
   /* ===== ABOUT ===== */
   .about {
@@ -438,23 +819,71 @@
     border-top: 1px solid var(--accent-soft);
     border-bottom: 1px solid var(--accent-soft);
   }
-  .about h2 { color: var(--text); margin-bottom: 24px; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 48px;
+    align-items: start;
+  }
+  .about h2 { color: var(--text); margin-bottom: 28px; }
   .about p { font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
   .about .signature {
-    margin-top: 24px;
-    padding-top: 20px;
+    margin-top: 28px;
+    padding-top: 22px;
     border-top: 1px dashed var(--accent-soft);
     font-style: italic;
     color: var(--text-soft);
-    font-size: 14px;
+    font-size: 14.5px;
   }
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--accent-soft);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .about-card-name {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .about-card-role {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .about-card-list {
+    list-style: none;
+    padding: 0;
+    font-size: 13.5px;
+    color: var(--text-soft);
+  }
+  .about-card-list li {
+    padding: 6px 0;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    border-bottom: 1px dashed var(--border-soft);
+  }
+  .about-card-list li:last-child { border-bottom: none; }
+  .about-card-list li .label {
+    color: var(--muted);
+    width: 70px;
+    flex-shrink: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .about-card a { color: var(--accent); text-decoration: none; }
+  .about-card a:hover { text-decoration: underline; }
 
   /* ===== MODAL ===== */
   .modal-bg {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(28, 25, 23, 0.6);
+    background: rgba(28, 25, 23, 0.65);
+    backdrop-filter: blur(4px);
     z-index: 100;
     align-items: flex-start;
     justify-content: center;
@@ -464,94 +893,98 @@
   .modal-bg.open { display: flex; }
   .modal {
     background: var(--surface);
-    border-radius: 10px;
-    max-width: 560px;
+    border-radius: 12px;
+    max-width: 580px;
     width: 100%;
-    padding: 32px 32px 28px;
+    padding: 32px 34px 28px;
+    animation: fadeUp 0.3s ease-out;
   }
   .modal-head {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .modal-head .close {
     background: none;
     border: none;
-    font-size: 22px;
+    font-size: 26px;
     cursor: pointer;
     color: var(--muted);
     line-height: 1;
+    padding: 0;
+    transition: color 0.15s;
   }
-  .modal h2 { font-size: 22px; margin-bottom: 6px; }
-  .modal-desc { font-size: 14px; color: var(--text-soft); margin-bottom: 24px; }
+  .modal-head .close:hover { color: var(--text); }
+  .modal h2 { font-size: 24px; margin-bottom: 6px; }
+  .modal-desc { font-size: 14.5px; color: var(--text-soft); margin-bottom: 24px; line-height: 1.55; }
   .modal-price {
-    background: var(--bg);
+    background: var(--surface-alt);
     border: 1px solid var(--border);
-    padding: 12px 16px;
-    border-radius: 6px;
-    margin-bottom: 20px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
   }
-  .modal-price .amt { font-weight: 700; font-size: 18px; color: var(--text); }
+  .modal-price .amt { font-weight: 800; font-size: 20px; color: var(--text); }
 
   .field { margin-bottom: 14px; }
   .field label {
     display: block;
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     color: var(--text);
   }
   .field .req { color: var(--accent); }
   .field input, .field textarea, .field select {
     width: 100%;
-    padding: 9px 12px;
+    padding: 10px 13px;
     border: 1px solid var(--border);
-    border-radius: 5px;
+    border-radius: 6px;
     font-size: 14px;
     font-family: inherit;
     outline: none;
     background: var(--surface);
+    transition: border 0.15s;
   }
   .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--text); }
-  .field textarea { resize: vertical; min-height: 70px; }
+  .field textarea { resize: vertical; min-height: 80px; }
   .field-help { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
   .form-msg {
-    padding: 14px 16px;
-    border-radius: 6px;
-    margin-top: 14px;
+    padding: 16px 18px;
+    border-radius: 8px;
+    margin-top: 16px;
     font-size: 14px;
     display: none;
-    line-height: 1.5;
+    line-height: 1.55;
   }
   .form-msg.success { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; display: block; }
   .form-msg.error { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; display: block; }
   .form-msg .mono-block {
-    margin-top: 10px;
-    padding: 10px 12px;
+    margin-top: 12px;
+    padding: 12px 14px;
     background: var(--code-bg);
     color: var(--code-text);
-    border-radius: 5px;
+    border-radius: 6px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 12.5px;
+    line-height: 1.6;
     white-space: pre-wrap;
   }
+  .form-msg .mono-block a { color: var(--accent-soft) !important; }
 
   /* ===== FINAL CTA ===== */
-  .end-cta {
-    padding: 56px 0 72px;
-    text-align: center;
-  }
-  .end-cta h2 { margin-bottom: 12px; }
-  .end-cta p { font-size: 16px; margin-bottom: 28px; }
+  .end-cta { padding: 72px 0 88px; text-align: center; }
+  .end-cta h2 { margin-bottom: 14px; }
+  .end-cta p { font-size: 17px; margin-bottom: 32px; }
   .end-cta .cta-row {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
   }
@@ -560,41 +993,98 @@
   footer {
     border-top: 1px solid var(--border);
     background: var(--surface);
-    padding: 32px 0 24px;
+    padding: 40px 0 28px;
   }
   footer .container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
-    gap: 20px;
-    font-size: 13.5px;
-    color: var(--muted);
+    gap: 32px;
   }
-  footer .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
-  footer a { color: var(--text-soft); text-decoration: none; }
-  footer a:hover { color: var(--text); }
+  footer .footer-brand { font-size: 13.5px; color: var(--muted); max-width: 340px; }
+  footer .footer-brand .brand { margin-bottom: 8px; }
+  footer .footer-cols { display: flex; gap: 56px; flex-wrap: wrap; }
+  footer .footer-col h4 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  footer .footer-col a {
+    display: block;
+    color: var(--text-soft);
+    text-decoration: none;
+    font-size: 13.5px;
+    padding: 4px 0;
+    transition: color 0.15s;
+  }
+  footer .footer-col a:hover { color: var(--accent); }
+  footer .copyright {
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border-soft);
+    font-size: 12.5px;
+    color: var(--muted);
+    text-align: center;
+    width: 100%;
+  }
+
+  /* ===== STICKY WA ===== */
+  .wa-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+    transition: transform 0.2s;
+    text-decoration: none;
+  }
+  .wa-float:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(37, 211, 102, 0.45); }
+  .wa-float svg { width: 28px; height: 28px; fill: white; }
 
   /* ===== RESPONSIVE ===== */
-  @media (max-width: 800px) {
+  @media (max-width: 820px) {
     nav { display: none; }
-    .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-    .services { grid-template-columns: 1fr; }
-    section { padding: 56px 0; }
-    h1 { font-size: 30px; }
+    .hero-grid, .code-grid, .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .services, .problem-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .arch-agents { grid-template-columns: 1fr 1fr; }
+    section { padding: 64px 0; }
+    h1 { font-size: 32px; }
+    .hero-meta { grid-template-columns: 1fr 1fr; }
+    .demo-wrap::after { display: none; }
+  }
+  @media (max-width: 500px) {
+    .steps, .arch-agents { grid-template-columns: 1fr; }
+    .hero-meta { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
+<!-- ===== HEADER ===== -->
 <header>
   <div class="container">
-    <div class="brand">kamil<span class="dot">.</span>ai</div>
+    <div class="brand">
+      <span class="brand-mark">AI</span>
+      AICS
+      <span class="brand-sub">by Kamil Alfaris</span>
+    </div>
     <nav>
       <a href="#layanan">Layanan</a>
-      <a href="#tanya">Tanya jawab</a>
-      <a href="#tentang">Tentang gw</a>
-      <a href="#kontak" class="btn btn-sm">DM gw</a>
+      <a href="#cara-kerja">Cara Kerja</a>
+      <a href="#faq">FAQ</a>
+      <a href="#kontak" class="btn btn-sm">Mulai konsultasi</a>
     </nav>
   </div>
 </header>
@@ -604,164 +1094,369 @@
   <div class="container">
     <div class="hero-grid">
       <div>
-        <span class="pill"><span class="pill-dot"></span> Solo founder · Jakarta · 2026</span>
-        <h1>AI customer service tanpa drama agency Rp&nbsp;200&nbsp;juta.</h1>
-        <p class="lede">Gw bantu UMKM dan tim CS mid-stage Indonesia otomasi FAQ pakai LLM frontier. Bukan SaaS langganan ribet, bukan project agency 6 bulan. <strong>3 paket fixed-scope</strong> mulai Rp&nbsp;750rb, bayar di muka, refund kalau gw gagal deliver.</p>
+        <span class="pill"><span class="dot-live"></span> Solo founder · Berbasis di Jakarta · 2026</span>
+        <h1>Sistem AI customer support yang teraudit, terukur, dan reliable.</h1>
+        <p class="lede">Kami bantu UMKM dan tim customer experience mid-stage di Indonesia mengotomasi pertanyaan berulang menggunakan LLM frontier. Bukan SaaS langganan, bukan project agency 6 bulan. <strong>Tiga paket fixed-scope</strong> dengan harga transparan, mulai Rp 750.000.</p>
         <div class="hero-cta-row">
-          <a href="#layanan" class="btn btn-accent">Lihat 3 paket</a>
-          <a href="https://wa.me/62?text=Halo%20Kamil%2C%20gw%20liat%20kamil.ai%2C%20mau%20ngobrol" target="_blank" rel="noopener" class="btn btn-ghost">DM di WhatsApp</a>
+          <a href="#layanan" class="btn btn-accent">Lihat paket layanan <span class="arrow">→</span></a>
+          <a href="#demo" class="btn btn-ghost">Coba demo interaktif</a>
         </div>
         <div class="hero-meta">
-          <div class="hero-meta-item"><span class="num">3</span> paket fixed-scope</div>
-          <div class="hero-meta-item"><span class="num">7–14</span> hari delivery</div>
-          <div class="hero-meta-item"><span class="num">100%</span> refund kalau telat</div>
+          <div class="hero-meta-item">
+            <span class="num">3</span>
+            <span class="label">Paket fixed-scope</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="num">7–14</span>
+            <span class="label">Hari delivery</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="num">100%</span>
+            <span class="label">Refund jika telat</span>
+          </div>
         </div>
       </div>
 
-      <div class="demo-card" id="demo">
-        <div class="demo-head">
-          <div class="demo-head-title">
-            <span class="demo-head-status"></span> Demo: AI customer support
+      <div class="demo-wrap">
+        <div class="demo-card" id="demo">
+          <div class="demo-head">
+            <div class="demo-head-title">
+              <span class="demo-head-status"></span> Demo: Multi-agent customer support
+            </div>
+            <div class="demo-head-meta">supabase · edge runtime</div>
           </div>
-          <div class="demo-head-meta">live · supabase edge</div>
-        </div>
-        <div class="demo-msgs" id="demoMessages">
-          <div class="msg bot">Halo. Ini contoh sistem yang gw bangun — coba tanya apa aja kayak lu lagi jadi customer toko online. Klik tombol di bawah, atau ketik bebas.</div>
-        </div>
-        <div class="demo-suggest">
-          <button data-q="Pesanan saya kapan sampai?">Status pesanan</button>
-          <button data-q="Saya mau refund Rp 150000 untuk order ORD-1001">Refund kecil</button>
-          <button data-q="Saya minta refund Rp 2500000, barang tidak sesuai">Refund besar</button>
-          <button data-q="Saya lupa password akun saya">Reset password</button>
-          <button data-q="Saya akan tuntut perusahaan kalian">Ancaman hukum</button>
-        </div>
-        <div class="demo-input">
-          <input type="text" id="demoInput" placeholder="Coba ketik pertanyaan customer..." maxlength="300" />
-          <button id="demoSend">Kirim</button>
+          <div class="demo-msgs" id="demoMessages">
+            <div class="msg bot">Selamat datang. Ini contoh sistem yang kami bangun — silakan tanya seperti Anda sedang menjadi customer toko online. Klik salah satu contoh di bawah, atau ketik bebas.</div>
+          </div>
+          <div class="demo-suggest">
+            <button data-q="Pesanan saya kapan sampai?">Status pesanan</button>
+            <button data-q="Saya mau refund Rp 150000 untuk order ORD-1001">Refund kecil</button>
+            <button data-q="Saya minta refund Rp 2500000, barang tidak sesuai">Refund besar</button>
+            <button data-q="Saya lupa password akun saya">Reset password</button>
+            <button data-q="Saya akan tuntut perusahaan kalian">Ancaman hukum</button>
+          </div>
+          <div class="demo-input">
+            <input type="text" id="demoInput" placeholder="Coba ketik pertanyaan customer..." maxlength="300" />
+            <button id="demoSend">Kirim</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== FOR WHO ===== -->
-<section style="background: var(--surface); border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft);">
-  <div class="container narrow">
-    <div class="section-eyebrow">Cocok untuk siapa</div>
-    <h2>Lu di tempat yang bener kalau...</h2>
-    <ul class="for-list">
-      <li>Tim CS lu lagi copy-paste jawaban yang sama 80x sehari di WhatsApp atau email.</li>
-      <li>Lu pengen otomasi tapi gak ada budget Rp&nbsp;200jt buat agency 50 orang.</li>
-      <li>Lu udah coba chatbot rule-based tapi outputnya kaku — customer kabur.</li>
-      <li>Lu tech-savvy tapi gak ada 3 bulan buat trial-error prompt engineering + RAG sendiri.</li>
-      <li>Lu owner / head of CX yang butuh strategic clarity dulu sebelum invest gede.</li>
-    </ul>
+<!-- ===== TRUSTED BY ===== -->
+<section class="trusted sm">
+  <div class="container">
+    <div class="trusted-label">Dibangun dengan infrastruktur kelas enterprise</div>
+    <div class="trusted-grid">
+      <div class="trusted-item">Anthropic Claude</div>
+      <div class="trusted-item">Supabase</div>
+      <div class="trusted-item">Vercel</div>
+      <div class="trusted-item">PostgreSQL</div>
+      <div class="trusted-item">TypeScript</div>
+      <div class="trusted-item">UU PDP <span class="badge">2022</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROBLEM ===== -->
+<section id="masalah">
+  <div class="container">
+    <div class="section-eyebrow reveal">Masalah</div>
+    <h2 class="reveal">Tim customer service Anda kewalahan?</h2>
+    <p class="lede narrow reveal">Mayoritas perusahaan di Indonesia kehilangan ratusan juta per tahun untuk menangani pertanyaan yang seharusnya dapat diotomasi sepenuhnya — tanpa mengurangi kualitas layanan.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="problem-num">01</div>
+        <h3>Volume FAQ berulang</h3>
+        <p>Status pesanan, kebijakan refund, cara reset password — pertanyaan yang sama diulang puluhan kali per hari. Agent senior menghabiskan waktu untuk pekerjaan yang sebenarnya tidak butuh keahlian mereka.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-num">02</div>
+        <h3>Coverage 24/7 yang mahal</h3>
+        <p>Shift malam membutuhkan kompensasi 2–3x lipat untuk volume yang relatif kecil. Customer di Indonesia Timur seringkali tidak terlayani optimal di luar jam operasional.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-num">03</div>
+        <h3>Audit trail yang lemah</h3>
+        <p>Setiap agent memberikan jawaban berbeda. Sulit memastikan kebijakan perusahaan ditegakkan secara konsisten — terutama untuk industri yang regulated seperti fintech atau insurance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ARCHITECTURE ===== -->
+<section class="arch" id="arsitektur">
+  <div class="container">
+    <div class="section-eyebrow reveal">Arsitektur</div>
+    <h2 class="reveal">Lima AI agent yang berkolaborasi.</h2>
+    <p class="lede narrow reveal">Bukan single chatbot, bukan rule-based decision tree. Sistem multi-agent dengan role spesifik — seperti tim customer service profesional, tapi otomatis.</p>
+
+    <div class="arch-diagram reveal">
+      <svg class="arch-svg" viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Customer message -->
+        <rect class="accent" x="20" y="90" width="80" height="40" rx="6" />
+        <text class="accent-label" x="60" y="115" text-anchor="middle">Customer</text>
+
+        <!-- Arrows -->
+        <path class="line" d="M 100 110 L 160 110" marker-end="url(#arrow)" />
+
+        <!-- Triage -->
+        <rect class="node" x="160" y="80" width="100" height="60" rx="6" />
+        <text class="node-label" x="210" y="105" text-anchor="middle">Triage</text>
+        <text class="node-sub" x="210" y="124" text-anchor="middle">routing</text>
+
+        <path class="line" d="M 260 110 L 300 110" marker-end="url(#arrow)" />
+
+        <!-- 3 branches -->
+        <rect class="node" x="300" y="20" width="100" height="50" rx="6" />
+        <text class="node-label" x="350" y="42" text-anchor="middle">Knowledge</text>
+        <text class="node-sub" x="350" y="58" text-anchor="middle">RAG + cite</text>
+
+        <rect class="node" x="300" y="90" width="100" height="50" rx="6" />
+        <text class="node-label" x="350" y="112" text-anchor="middle">Action</text>
+        <text class="node-sub" x="350" y="128" text-anchor="middle">execute</text>
+
+        <rect class="node" x="300" y="160" width="100" height="50" rx="6" />
+        <text class="node-label" x="350" y="182" text-anchor="middle">Supervisor</text>
+        <text class="node-sub" x="350" y="198" text-anchor="middle">escalate</text>
+
+        <!-- Branches from triage -->
+        <path class="line" d="M 260 110 Q 280 110 280 45 L 300 45" />
+        <path class="line" d="M 260 110 Q 280 110 280 185 L 300 185" />
+
+        <!-- Validator -->
+        <path class="line" d="M 400 45 Q 440 45 440 110 L 480 110" marker-end="url(#arrow)" />
+        <path class="line" d="M 400 115 L 480 115" marker-end="url(#arrow)" />
+        <path class="line" d="M 400 185 Q 440 185 440 110 L 480 110" />
+
+        <rect class="node" x="480" y="80" width="100" height="60" rx="6" />
+        <text class="node-label" x="530" y="105" text-anchor="middle">Validator</text>
+        <text class="node-sub" x="530" y="124" text-anchor="middle">guardrail</text>
+
+        <path class="line" d="M 580 110 L 620 110" marker-end="url(#arrow)" />
+
+        <!-- Response -->
+        <rect class="accent" x="620" y="90" width="80" height="40" rx="6" />
+        <text class="accent-label" x="660" y="115" text-anchor="middle">Response</text>
+
+        <!-- Arrow marker -->
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path class="arrow-tip" d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="arch-agents reveal">
+      <div class="agent-row">
+        <div class="agent-num">01</div>
+        <div class="agent-name">Triage</div>
+        <div class="agent-desc">Klasifikasi intent, deteksi urgency &amp; sentimen, routing ke jalur penanganan yang tepat.</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-num">02</div>
+        <div class="agent-name">Knowledge</div>
+        <div class="agent-desc">Pencarian dari knowledge base dengan citation wajib. Mencegah hallucination LLM.</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-num">03</div>
+        <div class="agent-name">Action</div>
+        <div class="agent-desc">Eksekusi nyata: refund, reset password, cancel order — dengan policy gate &amp; idempotency.</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-num">04</div>
+        <div class="agent-name">Supervisor</div>
+        <div class="agent-desc">Eskalasi otomatis kasus kompleks ke human agent disertai briefing card lengkap.</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-num">05</div>
+        <div class="agent-name">Validator</div>
+        <div class="agent-desc">Guardrail layer: cek hallucination, PII leak, banned phrases sebelum response keluar.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CODE EXAMPLE ===== -->
+<section class="code-section">
+  <div class="container">
+    <div class="code-grid">
+      <div>
+        <div class="section-eyebrow">Bukan demo prototipe</div>
+        <h2>Code yang berjalan di production.</h2>
+        <p class="lede">Setiap response yang dihasilkan sistem kami menyertakan metadata lengkap: intent, confidence score, tools yang dipanggil, dan apakah perlu eskalasi. Semua dapat di-audit, di-monitor, dan di-evaluasi dengan eval harness.</p>
+        <p>Implementasi production-grade meliputi prompt engineering yang teruji, RAG retrieval dengan citation, idempotency layer untuk action, dan policy gate untuk high-risk operations.</p>
+      </div>
+
+      <div class="code-block">
+        <div class="code-head">
+          <div class="code-head-dots"><span></span><span></span><span></span></div>
+          <div class="code-head-file">response.json</div>
+        </div>
+        <pre class="code-body"><span class="punct">{</span>
+  <span class="key">"state"</span><span class="punct">:</span> <span class="str">"resolved"</span><span class="punct">,</span>
+  <span class="key">"triage"</span><span class="punct">:</span> <span class="punct">{</span>
+    <span class="key">"intent"</span><span class="punct">:</span> <span class="str">"refund_request"</span><span class="punct">,</span>
+    <span class="key">"urgency"</span><span class="punct">:</span> <span class="num">3</span><span class="punct">,</span>
+    <span class="key">"sentiment"</span><span class="punct">:</span> <span class="str">"neutral"</span><span class="punct">,</span>
+    <span class="key">"confidence"</span><span class="punct">:</span> <span class="num">0.92</span>
+  <span class="punct">},</span>
+  <span class="key">"action"</span><span class="punct">:</span> <span class="punct">{</span>
+    <span class="key">"type"</span><span class="punct">:</span> <span class="str">"refund"</span><span class="punct">,</span>
+    <span class="key">"amount_idr"</span><span class="punct">:</span> <span class="num">175000</span><span class="punct">,</span>
+    <span class="key">"transaction_id"</span><span class="punct">:</span> <span class="str">"REF-A21F4"</span>
+  <span class="punct">},</span>
+  <span class="key">"escalated"</span><span class="punct">:</span> <span class="kw">false</span><span class="punct">,</span>
+  <span class="key">"latency_ms"</span><span class="punct">:</span> <span class="num">847</span><span class="punct">,</span>
+  <span class="key">"cost_usd"</span><span class="punct">:</span> <span class="num">0.0027</span>
+<span class="punct">}</span></pre>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ===== SERVICES ===== -->
 <section id="layanan">
   <div class="container">
-    <div class="section-eyebrow">Layanan</div>
-    <h2>Yang gw bisa kerjain sekarang.</h2>
-    <p class="lede" style="max-width: 620px; margin-bottom: 0;">3 paket dengan scope dan harga yang jelas. Bayar 100% di muka, refund full kalau gw gak deliver dalam timeline yang udah commit. Mulai dari yang paling kecil — test capability gw dulu sebelum commit yang lebih besar.</p>
+    <div class="section-eyebrow reveal">Layanan</div>
+    <h2 class="reveal">Tiga paket dengan harga transparan.</h2>
+    <p class="lede narrow reveal">Pembayaran 100% di muka. Refund penuh jika kami gagal deliver sesuai timeline yang dikomitmen. Mulai dari paket terkecil — uji kapabilitas kami terlebih dahulu sebelum melangkah ke project yang lebih besar.</p>
 
     <div class="services">
-      <div class="service">
-        <div class="service-tag">01 / paling kecil</div>
-        <div class="service-title">Review Analyzer</div>
-        <div class="service-desc">Lu kasih gw link app PlayStore / Tokopedia / Shopee lu. Gw analisis 500+ review terakhir, return PDF report 8–10 halaman: top 5 keluhan customer, distribusi sentimen, estimasi % tiket yang bisa diotomasi, rekomendasi konkret.</div>
+      <div class="service reveal">
+        <div class="service-tag">Paket 01 — Entry</div>
+        <div class="service-title">Customer Review Analyzer</div>
+        <div class="service-desc">Anda kirimkan link aplikasi PlayStore, halaman Tokopedia, atau Shopee Mall. Kami analisis 500+ review terakhir dan kembalikan PDF report 8–10 halaman: top 5 keluhan, distribusi sentimen, estimasi % tiket yang bisa diotomasi, dan rekomendasi konkret.</div>
         <ul>
-          <li>Cocok untuk: test capability gw sebelum commit project lebih besar</li>
-          <li>Deliverable: PDF report + 30 menit Zoom walkthrough</li>
-          <li>Risk: rendah (refund kalau output generic)</li>
+          <li>Cocok untuk: validasi capability kami sebelum project lebih besar</li>
+          <li>Deliverable: PDF report + sesi walkthrough 30 menit via Zoom</li>
+          <li>Risiko: rendah — refund 100% jika output dinilai generic</li>
         </ul>
         <div class="service-meta">
-          <div class="price">Rp&nbsp;750.000</div>
+          <div class="price">Rp 750.000</div>
           <div class="duration">3 hari kerja</div>
         </div>
         <button class="btn btn-block" data-order="review_analyzer">Order Review Analyzer</button>
       </div>
 
-      <div class="service">
-        <div class="service-tag">02 / favorit</div>
-        <div class="service-title">WA Bot FAQ Setup</div>
-        <div class="service-desc">Gw setup chatbot AI yang handle FAQ customer lu — pakai LLM frontier dengan citation dari KB lu. Live di WhatsApp atau web. <strong>Source code dikasih</strong>, lu hosting sendiri (atau gw maintain Rp&nbsp;250rb/bulan, opsional).</div>
+      <div class="service featured reveal">
+        <div class="service-tag">Paket 02 — Implementation</div>
+        <div class="service-title">WhatsApp Bot FAQ Setup</div>
+        <div class="service-desc">Kami setup chatbot AI yang menangani pertanyaan FAQ customer Anda — menggunakan LLM frontier dengan citation dari knowledge base Anda. Live di WhatsApp atau website. <strong>Source code diserahkan</strong>, Anda hosting sendiri (atau retainer maintenance Rp 250rb/bulan, opsional).</div>
         <ul>
-          <li>Cocok untuk: UMKM dengan KB jelas + tim teknis untuk maintain</li>
-          <li>Deliverable: working bot + source code + setup guide + 2x training</li>
-          <li>Stack: TypeScript, Anthropic Claude API, Supabase</li>
+          <li>Cocok untuk: UMKM atau startup dengan KB jelas &amp; tim teknis untuk maintain</li>
+          <li>Deliverable: working bot + source code + setup guide + 2x training session</li>
+          <li>Stack: TypeScript, Anthropic Claude API, Supabase Edge Functions</li>
         </ul>
         <div class="service-meta">
-          <div class="price">Rp&nbsp;1.500.000</div>
+          <div class="price">Rp 1.500.000</div>
           <div class="duration">7–14 hari kerja</div>
         </div>
         <button class="btn btn-accent btn-block" data-order="wa_bot_setup">Order Bot Setup</button>
       </div>
 
-      <div class="service">
-        <div class="service-tag">03 / strategis</div>
-        <div class="service-title">Strategy Workshop</div>
-        <div class="service-desc">90 menit Zoom 1-on-1: gw audit operasional CS lu, identify 3 quick wins, mapping roadmap implementasi, breakdown budget realistis. 7 hari chat support setelah sesi. Roadmap PDF dikasih.</div>
+      <div class="service reveal">
+        <div class="service-tag">Paket 03 — Advisory</div>
+        <div class="service-title">Strategy Workshop 1-on-1</div>
+        <div class="service-desc">Sesi 90 menit via Zoom: kami audit operasional customer service Anda, identifikasi 3 quick wins, susun roadmap implementasi, dan breakdown budget realistis. Diikuti 7 hari chat support pasca-sesi. Roadmap PDF dikirimkan.</div>
         <ul>
-          <li>Cocok untuk: owner / COO yang butuh clarity sebelum hire/invest</li>
+          <li>Cocok untuk: founder, COO, atau head of CX yang butuh clarity sebelum invest</li>
           <li>Deliverable: roadmap PDF + budget breakdown + chat support 7 hari</li>
-          <li>Bukan untuk: yang udah tau pasti mau apa (langsung ambil paket 02)</li>
+          <li>Bukan untuk: yang sudah tahu pasti mau apa — langsung ke Paket 02</li>
         </ul>
         <div class="service-meta">
-          <div class="price">Rp&nbsp;2.500.000</div>
+          <div class="price">Rp 2.500.000</div>
           <div class="duration">1 minggu</div>
         </div>
         <button class="btn btn-block" data-order="strategy_workshop">Book Workshop</button>
       </div>
     </div>
 
-    <div class="custom-note">
-      <strong>Mau yang lebih custom?</strong> Untuk full implementation dengan integrasi backend, multi-channel, custom action automation — itu di luar 3 paket di atas. Mulai dari Rp&nbsp;15jt (4 minggu delivery). <a class="text-link" href="#" data-order="custom_quote">Minta quote di sini</a> atau DM langsung di WhatsApp.
+    <div class="custom-note reveal">
+      <div>
+        <strong>Butuh implementasi yang lebih besar?</strong> Project di luar 3 paket di atas (integrasi backend kompleks, multi-channel, action automation kustom) — mulai dari Rp 15.000.000 dengan timeline 4 minggu.
+      </div>
+      <a href="#" class="btn btn-sm" data-order="custom_quote">Minta quote custom</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section id="cara-kerja" style="background: var(--surface);">
+  <div class="container">
+    <div class="section-eyebrow reveal">Cara kerja</div>
+    <h2 class="reveal">Dari order ke delivery dalam 4 langkah.</h2>
+    <p class="lede narrow reveal">Proses yang sederhana dan transparan. Setiap milestone memiliki deliverable jelas, sehingga Anda selalu tahu apa yang sedang dikerjakan dan kapan selesai.</p>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">Step 01</div>
+        <h3>Submit order</h3>
+        <p>Pilih paket di atas, isi form singkat dengan brief project Anda. Data tersimpan aman di database kami.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">Step 02</div>
+        <h3>Transfer &amp; konfirmasi</h3>
+        <p>Anda dapatkan rincian rekening bank di email konfirmasi. Transfer, lalu kirim bukti via WhatsApp.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">Step 03</div>
+        <h3>Kickoff &amp; eksekusi</h3>
+        <p>Kami mulai pengerjaan maksimal 1 hari kerja setelah konfirmasi pembayaran. Anda dapat update progress mingguan.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">Step 04</div>
+        <h3>Delivery &amp; handover</h3>
+        <p>Deliverable diserahkan via email/Zoom sesuai paket. Disertai dokumentasi lengkap dan garansi delivery timeline.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ===== FAQ ===== -->
-<section id="tanya" style="background: var(--surface); border-top: 1px solid var(--border-soft);">
+<section id="faq" class="faq-section">
   <div class="container narrow">
-    <div class="section-eyebrow">Pertanyaan jujur</div>
-    <h2>Dan jawaban jujur.</h2>
+    <div class="section-eyebrow reveal">Pertanyaan</div>
+    <h2 class="reveal">Pertanyaan yang sering ditanyakan.</h2>
 
     <div style="margin-top: 32px;">
-      <div class="faq-item">
-        <h3>Kenapa gw gak bayar agency aja Rp 200 juta?</h3>
-        <p>Karena lu bayar mereka untuk overhead 50 orang, project manager, sales tim, kantor di SCBD. Gw solo founder — gw kerjain langsung. Trade-off-nya: gw <strong>gak bisa handle 100 klien sekaligus</strong>, scope gw lebih kecil dan specific. Kalau project lu butuh enterprise SLA + dedicated team, gw bukan pilihan tepat.</p>
+      <div class="faq-item reveal">
+        <h3>Mengapa tidak menggunakan agency Rp 200 juta yang sudah established?</h3>
+        <p>Agency tersebut memiliki overhead tinggi: tim 50+ orang, project manager, sales team, kantor di area premium. Sebagai solo founder, kami bekerja langsung dengan Anda — scope lebih kecil dan spesifik, harga lebih rendah, decision lebih cepat. Trade-off-nya: kami <strong>tidak bisa menangani 100 klien sekaligus</strong>. Jika project Anda membutuhkan enterprise SLA dan dedicated team 24/7, kami akan dengan senang hati merujuk ke partner kami.</p>
       </div>
 
-      <div class="faq-item">
-        <h3>Kenapa gw gak build sendiri pakai ChatGPT API?</h3>
-        <p>Lu bisa. Tapi production-grade AI customer support butuh: prompt engineering yang gak halu, RAG retrieval akurat, eval harness untuk validate output, fallback ke human, idempotency untuk action (refund dll), policy gate. Itu <strong>3–6 minggu trial-error</strong> solo. Kalau lu engineer dan ada waktu — gas, gw rekomendasiin. Kalau enggak, gw udah lalui semua jalur itu, lu beli waktu.</p>
+      <div class="faq-item reveal">
+        <h3>Mengapa tidak membangun sendiri menggunakan API LLM yang sudah ada?</h3>
+        <p>Itu pilihan yang sangat valid. Namun production-grade AI customer support memerlukan: prompt engineering yang tidak hallucinate, RAG retrieval yang akurat, eval harness untuk validasi output, fallback mechanism ke human agent, idempotency untuk action (refund dll), dan policy gate untuk operasi sensitif. Kami sudah menjalani trial-error <strong>3–6 minggu</strong> untuk membangun semua itu. Jika Anda memiliki engineer in-house dan waktu, silakan build sendiri. Jika tidak, kami menjual waktu pengembangan yang sudah dilalui.</p>
       </div>
 
-      <div class="faq-item">
-        <h3>Gimana kalau hasilnya jelek?</h3>
-        <p><strong>Review Analyzer:</strong> kalau output generic atau gak actionable, refund 100%, no questions asked. <strong>WA Bot Setup:</strong> kalau gw gak deliver dalam 14 hari kerja, refund 100%. <strong>Strategy Workshop:</strong> kalau setelah sesi lu rasa gak dapat insight baru, refund 50%. Gw lebih rugi waktu kalau salah deliver — incentive gw align.</p>
+      <div class="faq-item reveal">
+        <h3>Bagaimana jika hasilnya tidak sesuai ekspektasi?</h3>
+        <p><strong>Review Analyzer:</strong> jika output dinilai generic atau tidak actionable, refund 100% tanpa pertanyaan. <strong>WA Bot Setup:</strong> jika kami gagal deliver dalam 14 hari kerja, refund 100%. <strong>Strategy Workshop:</strong> jika setelah sesi Anda tidak mendapatkan insight baru, refund 50%. Kami lebih dirugikan jika salah deliver — incentive kami terjajar dengan kepentingan Anda.</p>
       </div>
 
-      <div class="faq-item">
-        <h3>Apa beda gw sama Cekat, Wati, Qontak, Mekari?</h3>
-        <p>Mereka SaaS subscription model — bayar tiap bulan, mereka host, gak ada source code. Bagus kalau lu mau plug-and-play. Gw <strong>productized service model</strong> — bayar sekali, lu pegang source code, gak ada vendor lock-in, gak ada per-conversation fee. Trade-off: lu yang tanggung hosting + maintenance (atau bayar gw retainer kecil).</p>
+      <div class="faq-item reveal">
+        <h3>Apa bedanya dengan Cekat, Wati, Qontak, atau Mekari?</h3>
+        <p>Mereka menggunakan model SaaS subscription — pembayaran bulanan, mereka host infrastruktur, source code tidak diserahkan. Ini ideal jika Anda menginginkan plug-and-play. Kami menggunakan model <strong>productized service</strong> — pembayaran sekali, Anda memiliki source code, tidak ada vendor lock-in, tidak ada per-conversation fee. Trade-off-nya: Anda yang menanggung hosting &amp; maintenance, atau bayar retainer maintenance kami (Rp 250rb/bulan, opsional).</p>
       </div>
 
-      <div class="faq-item">
-        <h3>Lu siapa? Apa bukti track record?</h3>
-        <p>Gw solo founder, baru launch. Track record yang gw punya: <strong>working demo di hero atas</strong> — coba sendiri sekarang, beneran jalan. Code di GitHub, infrastructure di Supabase + Vercel. Bukti lain belum ada — gw baru mulai. Makanya gw tawarin paket Rp&nbsp;750rb dulu sebagai entry point. Lu test, kalau bagus lanjut.</p>
+      <div class="faq-item reveal">
+        <h3>Bukti track record apa yang dimiliki?</h3>
+        <p>Kami solo founder yang baru launch. Bukti yang dapat diverifikasi sekarang: <strong>working demo di hero atas</strong> — silakan coba sekarang, berjalan secara real. Code base tersedia di GitHub, infrastruktur menggunakan Supabase + Vercel kelas enterprise. Untuk testimonial klien dan case study, kami sedang membangun. Karena itu Paket 01 (Rp 750.000) dirancang sebagai entry point — Anda uji, jika hasilnya berguna lanjut ke paket lebih besar, jika tidak refund.</p>
       </div>
 
-      <div class="faq-item">
-        <h3>Bayar gimana? Aman?</h3>
-        <p>Bayar transfer bank (BCA / BNI / Mandiri) atau e-wallet. Setelah order form di-submit, lu dapet email dengan detail rekening + invoice. Konfirmasi via WhatsApp setelah transfer. Gw mulai kerjain max 1 hari kerja setelah konfirmasi. Untuk paket besar (custom), invoice formal + termin 50/50.</p>
+      <div class="faq-item reveal">
+        <h3>Bagaimana proses pembayaran? Aman?</h3>
+        <p>Pembayaran via transfer bank (BCA, BNI, Mandiri) atau e-wallet. Setelah form order disubmit, Anda mendapatkan rincian rekening + invoice. Konfirmasi pembayaran via WhatsApp. Pengerjaan dimulai maksimal 1 hari kerja setelah konfirmasi. Untuk project >Rp 15 juta tersedia invoice formal dengan termin 50/50 dan PKS (perjanjian kerja sama) tertulis.</p>
       </div>
 
-      <div class="faq-item">
-        <h3>Apa data customer gw aman?</h3>
-        <p>Untuk Review Analyzer: lu kasih gw URL publik, gw scrape review publik — gak ada data sensitif. Untuk WA Bot Setup: lu pegang infrastructure sendiri, KB lu gak masuk database gw. Gw <strong>gak akses customer data lu</strong> kecuali lu explicitly share untuk debug. DPA / NDA bisa di-sign untuk project >Rp&nbsp;15jt.</p>
+      <div class="faq-item reveal">
+        <h3>Bagaimana keamanan data customer kami?</h3>
+        <p>Untuk Review Analyzer: kami menganalisis review publik yang sudah dapat diakses siapa saja — tidak ada data sensitif. Untuk WA Bot Setup: Anda memegang infrastruktur sendiri, knowledge base Anda tidak masuk ke database kami. Kami <strong>tidak mengakses customer data Anda</strong> kecuali Anda secara eksplisit share untuk debugging. DPA (Data Processing Agreement) dan NDA tersedia untuk project >Rp 15 juta sesuai UU PDP No. 27/2022.</p>
       </div>
     </div>
   </div>
@@ -769,26 +1464,45 @@
 
 <!-- ===== ABOUT ===== -->
 <section id="tentang" class="about">
-  <div class="container narrow">
-    <div class="section-eyebrow">Tentang gw</div>
-    <h2>Halo, gw Kamil.</h2>
-    <p>Solo founder dari Jakarta. Background tech — udah building software 5+ tahun, lately deep ke LLM dan AI agents. Spent waktu terakhir explore production patterns untuk customer support AI: multi-agent orchestration, RAG retrieval, eval harness, guardrails.</p>
-    <p>Gw bangun ini karena ngeliat <strong>gap di market Indonesia</strong>: banyak UMKM masih CS-nya manual, agency AI charge Rp&nbsp;200jt+ untuk scope yang sebenarnya bisa dikecilin, dan SaaS chatbot lokal terlalu kaku untuk use case spesifik. Gw mau isi gap itu — small scope, fixed price, ship cepat.</p>
-    <p>Approach gw: build small, ship dalam minggu (bukan bulan), refund kalau gagal. Bukan janji muluk, bukan SaaS lock-in. Kalau lu butuh enterprise solution dengan tim 20 orang, gw bukan pilihan tepat — gw refer ke partner gw.</p>
-    <p>Kalau mau ngobrol langsung tanpa form, DM aja di <a class="text-link" href="https://wa.me/62?text=Halo%20Kamil%2C%20gw%20liat%20kamil.ai" target="_blank" rel="noopener">WhatsApp</a> atau <a class="text-link" href="https://www.linkedin.com/in/" target="_blank" rel="noopener">LinkedIn</a>. Gw biasa balas dalam 4 jam jam kerja.</p>
-    <div class="signature">— Kamil, May 2026</div>
+  <div class="container">
+    <div class="section-eyebrow reveal">Tentang Kami</div>
+    <h2 class="reveal">Solo founder. Direct accountability.</h2>
+
+    <div class="about-grid">
+      <div class="reveal">
+        <p>AICS dibangun oleh <strong>Kamil Alfaris</strong>, seorang founder independen yang berbasis di Jakarta. Dengan latar belakang teknis di pengembangan software dan eksplorasi mendalam terhadap LLM serta sistem AI agents, kami fokus membangun solusi customer support yang teraudit, terukur, dan dapat dipertanggungjawabkan.</p>
+        <p>Kami melihat <strong>gap di market Indonesia</strong>: banyak UMKM masih menangani customer service secara manual, sementara agency AI menawarkan paket Rp 200jt+ untuk scope yang sebenarnya bisa dimodularkan. Sementara itu, SaaS chatbot lokal seringkali terlalu rigid untuk use case spesifik. AICS hadir untuk mengisi gap tersebut — small scope, fixed price, ship cepat, refund jika gagal.</p>
+        <p>Sebagai entitas solo founder, kami sadar akan keterbatasan kapasitas. Karena itu kami hanya menerima 4–6 project aktif per bulan untuk memastikan setiap klien mendapatkan attention dan kualitas yang konsisten. Untuk project enterprise dengan kebutuhan dedicated team 20 orang, kami akan dengan transparan merujuk ke partner kami.</p>
+        <p>Selain AICS, Kamil aktif membangun beberapa venture lain di domain cybersecurity, edukasi teknologi, dan IT infrastructure. Pengalaman cross-domain ini memberikan perspektif yang lebih kaya saat menangani problem customer service yang seringkali bersinggungan dengan area teknis lain.</p>
+        <div class="signature">— Kamil Alfaris, Founder · Jakarta, Mei 2026</div>
+      </div>
+
+      <div class="about-card reveal">
+        <div class="about-card-name">Kamil Alfaris</div>
+        <div class="about-card-role">Founder &amp; Solution Architect</div>
+        <ul class="about-card-list">
+          <li><span class="label">Lokasi</span> Jakarta, ID</li>
+          <li><span class="label">Fokus</span> AI · LLM · Customer Experience</li>
+          <li><span class="label">Stack</span> TypeScript · Python · Postgres</li>
+          <li><span class="label">LinkedIn</span> <a href="https://www.linkedin.com/in/kamil-alfaris/" target="_blank" rel="noopener">kamil-alfaris</a></li>
+          <li><span class="label">WhatsApp</span> <a href="https://wa.me/6281293988757" target="_blank" rel="noopener">+62 812-9398-8757</a></li>
+          <li><span class="label">GitHub</span> <a href="https://github.com/AlvaricVon" target="_blank" rel="noopener">AlvaricVon</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ===== END CTA ===== -->
 <section class="end-cta" id="kontak">
   <div class="container narrow">
-    <h2>Mulai dari mana?</h2>
-    <p class="small">Pilih satu sesuai komitmen lu sekarang.</p>
+    <div class="section-eyebrow">Mulai konsultasi</div>
+    <h2>Siap memulai?</h2>
+    <p>Pilih satu langkah sesuai komitmen Anda saat ini.</p>
     <div class="cta-row">
-      <button class="btn btn-accent" data-order="review_analyzer">Test gw lewat Review Analyzer · Rp 750rb</button>
-      <a href="#demo" class="btn btn-ghost">Coba demo di atas dulu</a>
-      <a href="https://wa.me/62?text=Halo%20Kamil%2C%20gw%20liat%20kamil.ai" target="_blank" rel="noopener" class="btn btn-ghost">DM langsung di WhatsApp</a>
+      <button class="btn btn-accent" data-order="review_analyzer">Mulai dengan Review Analyzer · Rp 750rb</button>
+      <a href="#demo" class="btn btn-ghost">Coba demo terlebih dulu</a>
+      <a href="https://wa.me/6281293988757?text=Halo%20Kamil%2C%20saya%20tertarik%20dengan%20layanan%20AICS" target="_blank" rel="noopener" class="btn btn-ghost">Diskusi via WhatsApp</a>
     </div>
   </div>
 </section>
@@ -796,26 +1510,53 @@
 <!-- ===== FOOTER ===== -->
 <footer>
   <div class="container">
-    <div>
-      <div class="brand">kamil<span class="dot">.</span>ai</div>
-      <div style="margin-top: 6px; font-size: 12.5px;">© 2026 · Made in Jakarta</div>
+    <div class="footer-brand">
+      <div class="brand">
+        <span class="brand-mark">AI</span>
+        AICS
+      </div>
+      <p style="margin-top: 12px;">Sistem AI customer support untuk perusahaan Indonesia. Solo founder venture by Kamil Alfaris. Berbasis di Jakarta.</p>
     </div>
-    <div class="footer-links">
-      <a href="#layanan">Layanan</a>
-      <a href="#tanya">Tanya jawab</a>
-      <a href="https://github.com/alvaricvon/aics-web" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://wa.me/62" target="_blank" rel="noopener">WhatsApp</a>
-      <a href="mailto:hello@kamil.ai">Email</a>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>Layanan</h4>
+        <a href="#layanan">Review Analyzer</a>
+        <a href="#layanan">WA Bot FAQ</a>
+        <a href="#layanan">Strategy Workshop</a>
+        <a href="#layanan">Custom Build</a>
+      </div>
+      <div class="footer-col">
+        <h4>Informasi</h4>
+        <a href="#cara-kerja">Cara Kerja</a>
+        <a href="#faq">FAQ</a>
+        <a href="#tentang">Tentang Kami</a>
+        <a href="#arsitektur">Arsitektur</a>
+      </div>
+      <div class="footer-col">
+        <h4>Kontak</h4>
+        <a href="https://wa.me/6281293988757" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://www.linkedin.com/in/kamil-alfaris/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/AlvaricVon/aics-web" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:kamilalfaris@gmail.com">Email</a>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2026 AICS — by Kamil Alfaris. Made in Jakarta. Compliant dengan UU PDP No. 27/2022.
     </div>
   </div>
 </footer>
+
+<!-- ===== FLOATING WA BUTTON ===== -->
+<a href="https://wa.me/6281293988757?text=Halo%20Kamil%2C%20saya%20tertarik%20dengan%20AICS" target="_blank" rel="noopener" class="wa-float" aria-label="Chat via WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
 
 <!-- ===== ORDER MODAL ===== -->
 <div class="modal-bg" id="modalBg">
   <div class="modal" id="modal">
     <div class="modal-head">
       <h2 id="modalTitle">—</h2>
-      <button class="close" id="modalClose" aria-label="Close">×</button>
+      <button class="close" id="modalClose" aria-label="Tutup">×</button>
     </div>
     <p class="modal-desc" id="modalDesc">—</p>
     <div class="modal-price">
@@ -835,16 +1576,15 @@
         <input type="email" name="email" required maxlength="120" />
       </div>
       <div class="field">
-        <label>WhatsApp <span class="req">*</span></label>
+        <label>Nomor WhatsApp <span class="req">*</span></label>
         <input type="tel" name="whatsapp" required maxlength="20" placeholder="+62..." />
-        <div class="field-help">Gw konfirmasi order via WA setelah lu transfer.</div>
+        <div class="field-help">Kami konfirmasi order via WhatsApp setelah pembayaran diterima.</div>
       </div>
       <div class="field">
         <label>Nama perusahaan / brand</label>
         <input type="text" name="company" maxlength="120" />
       </div>
 
-      <!-- Service-specific field -->
       <div class="field" id="specificField">
         <label id="specificLabel">—</label>
         <textarea name="specific_detail" id="specificInput" maxlength="600"></textarea>
@@ -853,7 +1593,7 @@
 
       <div class="field">
         <label>Catatan tambahan (opsional)</label>
-        <textarea name="notes" maxlength="500" placeholder="Kalau ada pertanyaan atau preference khusus..."></textarea>
+        <textarea name="notes" maxlength="500" placeholder="Jika ada pertanyaan atau preferensi khusus..."></textarea>
       </div>
 
       <button type="submit" class="btn btn-accent btn-block" id="orderSubmit">Submit order</button>
@@ -872,13 +1612,28 @@
   const DEMO_FN = `${SUPABASE_URL}/functions/v1/cs-demo`;
   const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // UTM tracking
+  // ===== UTM TRACKING =====
   const params = new URLSearchParams(location.search);
   const utm = { utm_source: params.get("utm_source") || null, utm_campaign: params.get("utm_campaign") || null };
 
+  // ===== SCROLL REVEAL =====
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
+  }
+
   // ===== DEMO WIDGET =====
-  const sessionId = sessionStorage.getItem("k_session") || crypto.randomUUID();
-  sessionStorage.setItem("k_session", sessionId);
+  const sessionId = sessionStorage.getItem("aics_session") || crypto.randomUUID();
+  sessionStorage.setItem("aics_session", sessionId);
   const msgEl = document.getElementById("demoMessages");
   const inEl = document.getElementById("demoInput");
   const sendBtn = document.getElementById("demoSend");
@@ -923,41 +1678,36 @@
   // ===== ORDER MODAL =====
   const SERVICES = {
     review_analyzer: {
-      title: "Review Analyzer",
-      desc: "Analisis 500+ review terakhir app/marketplace lu. PDF report 8-10 halaman + 30 menit walkthrough.",
-      price: 750000,
-      priceLabel: "Rp 750.000",
-      specificLabel: "Link app / marketplace yang mau dianalisis",
-      specificHelp: "Contoh: link PlayStore, Tokopedia official store, Shopee Mall. Boleh lebih dari 1.",
+      title: "Customer Review Analyzer",
+      desc: "Analisis 500+ review terakhir app/marketplace Anda. PDF report 8-10 halaman + walkthrough 30 menit.",
+      price: 750000, priceLabel: "Rp 750.000",
+      specificLabel: "Link app / marketplace yang akan dianalisis",
+      specificHelp: "Contoh: link PlayStore, Tokopedia official store, Shopee Mall. Boleh lebih dari satu.",
     },
     wa_bot_setup: {
-      title: "WA Bot FAQ Setup",
-      desc: "Setup chatbot AI yang handle FAQ customer lu. Live di WhatsApp/web dengan source code dikasih.",
-      price: 1500000,
-      priceLabel: "Rp 1.500.000",
+      title: "WhatsApp Bot FAQ Setup",
+      desc: "Setup chatbot AI yang menangani FAQ customer Anda. Live di WhatsApp/web dengan source code diserahkan.",
+      price: 1500000, priceLabel: "Rp 1.500.000",
       specificLabel: "Brief project (KB content, use case, channel target)",
-      specificHelp: "Ceritain singkat: KB lu udah ada di mana (Notion, Google Docs?), channel target (WA / web), top 5 FAQ yang mau diotomasi.",
+      specificHelp: "Ceritakan singkat: di mana KB Anda saat ini (Notion, Google Docs?), channel target (WA / web), top 5 FAQ yang ingin diotomasi.",
     },
     strategy_workshop: {
       title: "Strategy Workshop 1-on-1",
       desc: "90 menit Zoom + 7 hari chat support. Roadmap PDF + budget breakdown.",
-      price: 2500000,
-      priceLabel: "Rp 2.500.000",
-      specificLabel: "Konteks bisnis lu",
-      specificHelp: "Singkat aja: industri lu, ukuran tim CS sekarang, pain point utama, decision lu lagi cari clarity buat apa.",
+      price: 2500000, priceLabel: "Rp 2.500.000",
+      specificLabel: "Konteks bisnis Anda",
+      specificHelp: "Singkat saja: industri Anda, ukuran tim CS sekarang, pain point utama, decision yang ingin Anda buat clarity.",
     },
     custom_quote: {
       title: "Custom Quote Request",
-      desc: "Project di luar 3 paket di atas. Gw kirim quote dalam 2 hari kerja setelah baca brief lu.",
-      price: 0,
-      priceLabel: "Quote dalam 2 hari",
+      desc: "Project di luar 3 paket di atas. Kami kirim quote dalam 2 hari kerja setelah membaca brief Anda.",
+      price: 0, priceLabel: "Quote dalam 2 hari",
       specificLabel: "Brief project (scope, channel, timeline, budget range)",
-      specificHelp: "Ceritain lengkap: apa yang mau lu otomasi, channel apa, integrasi backend apa, timeline, dan budget range lu.",
+      specificHelp: "Ceritakan lengkap: apa yang ingin diotomasi, channel apa, integrasi backend yang dibutuhkan, timeline, dan budget range Anda.",
     },
   };
 
   const modalBg = document.getElementById("modalBg");
-  const modal = document.getElementById("modal");
   const modalTitle = document.getElementById("modalTitle");
   const modalDesc = document.getElementById("modalDesc");
   const modalPrice = document.getElementById("modalPrice");
@@ -970,38 +1720,30 @@
   const orderSubmit = document.getElementById("orderSubmit");
   const orderResult = document.getElementById("orderResult");
 
-  function openModal(serviceKey) {
-    const s = SERVICES[serviceKey];
-    if (!s) return;
+  function openModal(key) {
+    const s = SERVICES[key]; if (!s) return;
     modalTitle.textContent = s.title;
     modalDesc.textContent = s.desc;
     modalPrice.textContent = s.priceLabel;
-    serviceField.value = serviceKey;
-    amountField.value = s.price;
     specificLabel.textContent = s.specificLabel;
     specificHelp.textContent = s.specificHelp;
+    orderForm.reset();
+    serviceField.value = key;
+    amountField.value = s.price;
     specificInput.value = "";
     orderResult.style.display = "none";
     orderResult.className = "form-msg";
-    orderForm.reset();
-    serviceField.value = serviceKey;
-    amountField.value = s.price;
     orderSubmit.disabled = false;
-    orderSubmit.textContent = serviceKey === "custom_quote" ? "Kirim brief" : "Submit order";
+    orderSubmit.textContent = key === "custom_quote" ? "Kirim brief" : "Submit order";
     modalBg.classList.add("open");
     document.body.style.overflow = "hidden";
   }
-
   function closeModal() {
     modalBg.classList.remove("open");
     document.body.style.overflow = "";
   }
-
   document.querySelectorAll("[data-order]").forEach(el => {
-    el.addEventListener("click", e => {
-      e.preventDefault();
-      openModal(el.dataset.order);
-    });
+    el.addEventListener("click", e => { e.preventDefault(); openModal(el.dataset.order); });
   });
   document.getElementById("modalClose").addEventListener("click", closeModal);
   modalBg.addEventListener("click", e => { if (e.target === modalBg) closeModal(); });
@@ -1011,7 +1753,7 @@
     e.preventDefault();
     orderResult.style.display = "none";
     orderSubmit.disabled = true;
-    orderSubmit.textContent = "Submitting...";
+    orderSubmit.textContent = "Memproses...";
 
     const fd = new FormData(orderForm);
     const service = fd.get("service");
@@ -1020,39 +1762,44 @@
       : service === "wa_bot_setup" ? "brief"
       : service === "strategy_workshop" ? "context"
       : "custom_brief";
+
     const payload = {
-      service,
-      amount_idr: amount,
+      service, amount_idr: amount,
       customer_name: fd.get("customer_name"),
       email: fd.get("email"),
       whatsapp: fd.get("whatsapp"),
       company: fd.get("company") || null,
       service_details: { [specificKey]: fd.get("specific_detail") || null },
       notes: fd.get("notes") || null,
-      utm_source: utm.utm_source,
-      utm_campaign: utm.utm_campaign,
+      utm_source: utm.utm_source, utm_campaign: utm.utm_campaign,
     };
 
     const { error } = await sb.from("orders").insert(payload);
 
     if (error) {
       orderResult.className = "form-msg error";
-      orderResult.textContent = `Error: ${error.message}. Coba lagi atau DM langsung di WhatsApp.`;
+      orderResult.textContent = `Terjadi kesalahan: ${error.message}. Silakan coba lagi atau hubungi via WhatsApp.`;
       orderResult.style.display = "block";
       orderSubmit.disabled = false;
       orderSubmit.textContent = "Submit order";
       return;
     }
 
+    const formattedAmount = amount.toLocaleString("id-ID");
     const successHtml = service === "custom_quote"
-      ? `<strong>Brief diterima.</strong> Gw baca dalam 24 jam jam kerja, lalu kirim quote ke email lu max 2 hari kerja. Kalau ada follow-up question, gw WhatsApp.`
-      : `<strong>Order recorded.</strong> Transfer ke rekening di bawah, lalu konfirmasi via WhatsApp gw.
-<div class="mono-block">BCA  4671 23xx xx
-an. Kamil Alfaris
-Total: ${amount.toLocaleString("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 })}
+      ? `<strong>Brief Anda telah kami terima.</strong> Kami akan review dalam 24 jam kerja dan mengirimkan quote ke email Anda maksimal 2 hari kerja. Jika ada follow-up question, kami hubungi via WhatsApp.`
+      : `<strong>Order tercatat. Berikut detail pembayaran:</strong>
+<div class="mono-block">Bank      : BCA
+No. Rek   : 683-129-7252
+Atas Nama : Kamil Alfaris
+Total     : Rp ${formattedAmount}
 
-Konfirmasi: <a class="text-link" style="color:#FAFAF7" href="https://wa.me/62?text=Halo%20Kamil%2C%20gw%20udah%20transfer%20untuk%20order%20${encodeURIComponent(service)}" target="_blank" rel="noopener">wa.me/62…</a>
-Gw mulai kerjain max 1 hari kerja setelah konfirmasi.</div>`;
+Konfirmasi pembayaran via WhatsApp:
+<a href="https://wa.me/6281293988757?text=Halo%20Kamil%2C%20saya%20sudah%20transfer%20Rp%20${amount}%20untuk%20order%20${encodeURIComponent(service)}" target="_blank" rel="noopener">wa.me/6281293988757</a>
+
+Pengerjaan dimulai maksimal 1 hari kerja
+setelah konfirmasi pembayaran diterima.</div>`;
+
     orderResult.className = "form-msg success";
     orderResult.innerHTML = successHtml;
     orderResult.style.display = "block";
