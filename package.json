@@ -1,0 +1,9 @@
+{
+  "name": "aics-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AICS — AI Customer Support landing page",
+  "scripts": {
+    "build": "echo 'Static site, no build step.'"
+  }
+}
