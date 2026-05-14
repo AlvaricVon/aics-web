@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AICS Dashboard</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FAFAF7; --surface: #FFFFFF; --surface-alt: #F5F4F1;
+    --text: #1C1917; --text-soft: #44403C; --muted: #78716C;
+    --border: #E7E5E4; --border-soft: #F1F0EE;
+    --accent: #C2410C; --accent-hover: #9A3412; --accent-soft: #FED7AA; --accent-bg: #FFF7ED;
+    --success: #15803D; --success-bg: #DCFCE7;
+    --danger: #DC2626; --danger-bg: #FEE2E2;
+    --info: #2563EB; --info-bg: #DBEAFE;
+    --warning: #D97706; --warning-bg: #FEF3C7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    font-size: 14.5px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== LOGIN ===== */
+  .login-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 24px 60px -24px rgba(28, 25, 23, 0.1);
+  }
+  .login-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  .login-brand .mark {
+    width: 28px; height: 28px;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .login-card h1 { font-size: 22px; font-weight: 700; margin: 16px 0 6px; letter-spacing: -0.02em; }
+  .login-card p { color: var(--text-soft); font-size: 14px; margin-bottom: 22px; }
+  .login-card label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .login-card input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-size: 14.5px;
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 14px;
+    background: var(--bg);
+  }
+  .login-card input:focus { border-color: var(--text); }
+  .login-card button {
+    width: 100%;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 12px;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 14.5px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .login-card button:hover { background: var(--accent); }
+  .login-card .alt {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+  .login-card .alt a { color: var(--accent); text-decoration: none; font-weight: 600; }
+
+  .err {
+    padding: 11px 14px;
+    background: var(--danger-bg);
+    color: #991B1B;
+    border-radius: 7px;
+    font-size: 13.5px;
+    margin-top: 10px;
+    display: none;
+  }
+  .err.show { display: block; }
+
+  /* ===== APP ===== */
+  .app { display: none; }
+  .app.active { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 800;
+    font-size: 16px;
+    padding: 6px 8px;
+    margin-bottom: 24px;
+  }
+  .sidebar-brand .mark {
+    width: 26px; height: 26px;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .nav-section {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 700;
+    padding: 12px 8px 6px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--text-soft);
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-link:hover { background: var(--surface-alt); color: var(--text); }
+  .nav-link.active { background: var(--text); color: var(--bg); font-weight: 600; }
+  .nav-link.active:hover { background: var(--text); }
+  .nav-link .ico { width: 16px; flex-shrink: 0; opacity: 0.7; }
+  .nav-link.active .ico { opacity: 1; }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .tenant-card {
+    padding: 12px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-soft);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 12.5px;
+  }
+  .tenant-card .name { font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .tenant-card .meta { color: var(--text-soft); }
+  .plan-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .plan-trial { background: var(--info-bg); color: var(--info); }
+  .plan-lite { background: var(--surface-alt); color: var(--text-soft); }
+  .plan-pro { background: var(--accent-bg); color: var(--accent); }
+  .plan-business { background: var(--success-bg); color: var(--success); }
+  .plan-expired { background: var(--danger-bg); color: var(--danger); }
+
+  .main {
+    flex: 1;
+    padding: 28px 40px;
+    overflow-y: auto;
+    min-width: 0;
+  }
+  .page-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .page-head h1 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .page-head .sub { color: var(--muted); font-size: 14px; }
+  .btn {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { background: var(--accent); }
+  .btn-sm { padding: 6px 12px; font-size: 12.5px; }
+  .btn-accent { background: var(--accent); }
+  .btn-accent:hover { background: var(--accent-hover); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--surface); border-color: var(--text); }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-danger:hover { background: #991B1B; }
+
+  /* ===== PANELS ===== */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .panel h2 { font-size: 17px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .panel .sub { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .stat .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .stat .num {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .stat .delta {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stat.usage-warn .num { color: var(--warning); }
+  .stat.usage-danger .num { color: var(--danger); }
+
+  /* ===== EMBED ===== */
+  .embed-code {
+    background: #1C1917;
+    color: #FAFAF7;
+    padding: 18px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    overflow-x: auto;
+    margin-bottom: 12px;
+    line-height: 1.6;
+    position: relative;
+  }
+  .embed-code .copy {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .embed-code .copy:hover { background: rgba(255,255,255,0.2); }
+
+  /* ===== FORMS ===== */
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+  .field input, .field textarea, .field select {
+    width: 100%;
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    background: var(--surface);
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--text); }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field-help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ===== TABLE ===== */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: var(--surface-alt); border-bottom: 1px solid var(--border); }
+  th { text-align: left; padding: 10px 14px; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--border-soft); font-size: 13.5px; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td .pri { color: var(--text); font-weight: 600; }
+  td .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+  .empty { padding: 60px 20px; text-align: center; color: var(--muted); }
+
+  .status-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .s-resolved { background: var(--success-bg); color: #166534; }
+  .s-escalated { background: var(--warning-bg); color: #78350F; }
+  .s-awaiting_customer { background: var(--info-bg); color: #1E40AF; }
+
+  /* ===== KB ===== */
+  .kb-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border 0.15s, background 0.15s;
+  }
+  .kb-item:hover { background: var(--surface-alt); border-color: var(--accent-soft); }
+  .kb-item .title { font-weight: 700; margin-bottom: 4px; }
+  .kb-item .category { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
+  .kb-item .preview { color: var(--text-soft); font-size: 13px; line-height: 1.5; }
+  .kb-item .keywords { margin-top: 8px; }
+  .kb-keyword {
+    display: inline-block;
+    background: var(--surface-alt);
+    color: var(--text-soft);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-right: 4px;
+    margin-top: 4px;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-bg {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(28,25,23,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 32px 16px;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 12px;
+    max-width: 560px;
+    width: 100%;
+    padding: 30px 32px 28px;
+  }
+  .modal h2 { font-size: 22px; margin-bottom: 16px; letter-spacing: -0.02em; }
+  .modal-close {
+    position: absolute;
+    margin-left: -34px;
+    margin-top: 16px;
+  }
+
+  /* ===== UPGRADE BANNER ===== */
+  .upgrade-banner {
+    background: var(--accent);
+    color: white;
+    padding: 14px 24px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .upgrade-banner a {
+    background: white;
+    color: var(--accent);
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  @media (max-width: 720px) {
+    .app.active { flex-direction: column; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 14px; }
+    .sidebar-bottom { margin-top: 0; }
+    .main { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-brand">
+      <span class="mark">AI</span>
+      AICS
+    </div>
+    <h1>Login</h1>
+    <p>Masuk ke dashboard untuk mengelola chatbot Anda.</p>
+
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="emailInput" required maxlength="120" />
+      <label>Password</label>
+      <input type="password" id="passwordInput" required />
+      <button type="submit" id="loginBtn">Login</button>
+    </form>
+    <div class="err" id="loginErr"></div>
+    <div class="alt">
+      Belum punya akun? <a href="/signup">Daftar trial gratis 14 hari →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="mark">AI</span>
+      AICS
+    </div>
+
+    <div class="nav-section">Workspace</div>
+    <button class="nav-link active" data-page="home">📊 Overview</button>
+    <button class="nav-link" data-page="kb">📚 Knowledge Base</button>
+    <button class="nav-link" data-page="chats">💬 Chat Logs</button>
+
+    <div class="nav-section">Setup</div>
+    <button class="nav-link" data-page="embed">🔌 Embed Code</button>
+    <button class="nav-link" data-page="settings">⚙️ Settings</button>
+    <button class="nav-link" data-page="billing">💳 Billing</button>
+
+    <div class="sidebar-bottom">
+      <div class="tenant-card" id="tenantCard">
+        <div class="name" id="tenantName">—</div>
+        <div class="meta" id="tenantMeta">—</div>
+        <div id="planBadge"></div>
+      </div>
+      <button class="nav-link" id="logoutBtn">↩ Logout</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="upgradeBanner"></div>
+
+    <div id="pageHome" class="page">
+      <div class="page-head">
+        <div>
+          <h1>Overview</h1>
+          <p class="sub">Ringkasan performa chatbot Anda.</p>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat"><div class="label">Total pesan</div><div class="num" id="statTotal">—</div><div class="delta">all-time</div></div>
+        <div class="stat" id="statUsageCard"><div class="label">Pemakaian bulan ini</div><div class="num" id="statUsage">—</div><div class="delta" id="statUsageLimit">—</div></div>
+        <div class="stat"><div class="label">Auto-resolved</div><div class="num" id="statResolved">—</div><div class="delta">no human needed</div></div>
+        <div class="stat"><div class="label">Eskalasi</div><div class="num" id="statEscalated">—</div><div class="delta">forwarded to you</div></div>
+        <div class="stat"><div class="label">Sesi unik</div><div class="num" id="statSessions">—</div><div class="delta">visitors</div></div>
+      </div>
+
+      <div class="panel">
+        <h2>Quick setup</h2>
+        <p class="sub">3 langkah untuk pasang chatbot di website Anda:</p>
+        <ol style="padding-left: 22px; color: var(--text-soft); font-size: 14px; line-height: 1.8;">
+          <li><strong>Tambahkan artikel Knowledge Base</strong> — buka tab <a href="#" data-page="kb" class="goto" style="color: var(--accent);">Knowledge Base</a></li>
+          <li><strong>Copy embed code</strong> — buka tab <a href="#" data-page="embed" class="goto" style="color: var(--accent);">Embed Code</a></li>
+          <li><strong>Paste sebelum tag <code>&lt;/body&gt;</code> di website Anda</strong> — selesai!</li>
+        </ol>
+      </div>
+
+      <div class="panel">
+        <h2>Aktivitas terakhir</h2>
+        <div class="table-wrap" id="recentTableWrap">
+          <table>
+            <thead><tr><th>Waktu</th><th>Pesan customer</th><th>Status</th></tr></thead>
+            <tbody id="recentTable"></tbody>
+          </table>
+          <div class="empty" id="recentEmpty" style="display:none;">Belum ada percakapan. Pasang embed code untuk mulai!</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pageKb" class="page" style="display:none;">
+      <div class="page-head">
+        <div>
+          <h1>Knowledge Base</h1>
+          <p class="sub">Artikel yang dipakai AI untuk menjawab. Semakin lengkap KB, semakin akurat jawaban.</p>
+        </div>
+        <button class="btn btn-accent" id="addKbBtn">+ Tambah artikel</button>
+      </div>
+
+      <div id="kbList"></div>
+    </div>
+
+    <div id="pageChats" class="page" style="display:none;">
+      <div class="page-head">
+        <div>
+          <h1>Chat Logs</h1>
+          <p class="sub">Semua percakapan customer dengan bot Anda.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Waktu</th><th>Sesi</th><th>Pesan</th><th>Status</th></tr></thead>
+          <tbody id="chatsTable"></tbody>
+        </table>
+        <div class="empty" id="chatsEmpty" style="display:none;">Belum ada percakapan tercatat.</div>
+      </div>
+    </div>
+
+    <div id="pageEmbed" class="page" style="display:none;">
+      <div class="page-head">
+        <div>
+          <h1>Embed Code</h1>
+          <p class="sub">Pasang 1 baris kode ini di website Anda — chatbot langsung muncul di pojok kanan bawah.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Snippet untuk website</h2>
+        <p class="sub">Paste sebelum tag <code>&lt;/body&gt;</code> di setiap halaman website Anda.</p>
+        <div class="embed-code" id="embedCode">
+          <button class="copy" data-copy="embedCode">Copy</button>
+          <span id="embedSnippet"></span>
+        </div>
+        <p class="field-help">Bekerja di WordPress, Shopify, Webflow, atau HTML custom — tinggal paste.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Test URL standalone</h2>
+        <p class="sub">Jika Anda ingin share link chatbot langsung (tanpa embed):</p>
+        <div class="embed-code" id="standaloneCode">
+          <button class="copy" data-copy="standaloneCode">Copy</button>
+          <span id="standaloneUrl"></span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Preview live</h2>
+        <p class="sub">Bot Anda berjalan sekarang — coba di kanan bawah halaman ini.</p>
+        <button class="btn btn-accent" id="previewBtn">Buka preview</button>
+      </div>
+    </div>
+
+    <div id="pageSettings" class="page" style="display:none;">
+      <div class="page-head">
+        <div>
+          <h1>Settings</h1>
+          <p class="sub">Branding &amp; konfigurasi chatbot.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Branding</h2>
+        <div class="field">
+          <label>Nama bot (muncul di header chat)</label>
+          <input type="text" id="setBotName" maxlength="40" />
+        </div>
+        <div class="field">
+          <label>Pesan sambutan</label>
+          <textarea id="setWelcome" maxlength="300"></textarea>
+        </div>
+        <div class="field">
+          <label>Warna brand (HEX)</label>
+          <input type="text" id="setColor" maxlength="7" pattern="#[0-9a-fA-F]{6}" />
+          <div class="field-help">Format: #RRGGBB (contoh: #C2410C untuk oranye AICS)</div>
+        </div>
+        <button class="btn btn-accent" id="saveBrandingBtn">Simpan branding</button>
+      </div>
+
+      <div class="panel">
+        <h2>Eskalasi</h2>
+        <p class="sub">Bot akan teruskan kasus kompleks ke email/WA Anda.</p>
+        <div class="field">
+          <label>Email eskalasi</label>
+          <input type="email" id="setEscEmail" maxlength="120" />
+        </div>
+        <div class="field">
+          <label>WhatsApp eskalasi</label>
+          <input type="tel" id="setEscWA" maxlength="20" placeholder="+62..." />
+        </div>
+        <button class="btn btn-accent" id="saveEscalationBtn">Simpan eskalasi</button>
+      </div>
+    </div>
+
+    <div id="pageBilling" class="page" style="display:none;">
+      <div class="page-head">
+        <div>
+          <h1>Billing &amp; Plan</h1>
+          <p class="sub">Kelola langganan Anda.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Plan saat ini</h2>
+        <p style="margin-bottom: 16px;">Plan: <strong id="billPlan">—</strong></p>
+        <p id="billStatus" class="sub" style="margin-bottom: 18px;"></p>
+
+        <div class="stats-grid">
+          <div class="price-card" style="background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px; padding: 20px;">
+            <h3 style="font-size: 16px; margin-bottom: 4px;">Lite</h3>
+            <div style="font-size: 22px; font-weight: 800; color: var(--accent); margin-bottom: 6px;">Rp 99.000<small style="font-size: 12px; color: var(--muted); font-weight: 500;">/bulan</small></div>
+            <ul style="list-style: none; font-size: 13px; color: var(--text-soft); margin-bottom: 14px;">
+              <li>✓ 500 pesan/bulan</li>
+              <li>✓ 1 channel</li>
+              <li>✓ Basic analytics</li>
+            </ul>
+            <button class="btn btn-sm btn-ghost" data-plan="lite">Pilih Lite</button>
+          </div>
+          <div class="price-card" style="background: var(--accent-bg); border: 2px solid var(--accent); border-radius: 10px; padding: 20px;">
+            <h3 style="font-size: 16px; margin-bottom: 4px;">Pro <span style="font-size: 10px; background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; margin-left: 4px;">POPULAR</span></h3>
+            <div style="font-size: 22px; font-weight: 800; color: var(--accent); margin-bottom: 6px;">Rp 299.000<small style="font-size: 12px; color: var(--muted); font-weight: 500;">/bulan</small></div>
+            <ul style="list-style: none; font-size: 13px; color: var(--text-soft); margin-bottom: 14px;">
+              <li>✓ 3.000 pesan/bulan</li>
+              <li>✓ 3 channel</li>
+              <li>✓ Full analytics</li>
+              <li>✓ Action automation</li>
+            </ul>
+            <button class="btn btn-sm btn-accent" data-plan="pro">Upgrade ke Pro</button>
+          </div>
+          <div class="price-card" style="background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px; padding: 20px;">
+            <h3 style="font-size: 16px; margin-bottom: 4px;">Business</h3>
+            <div style="font-size: 22px; font-weight: 800; color: var(--accent); margin-bottom: 6px;">Rp 999.000<small style="font-size: 12px; color: var(--muted); font-weight: 500;">/bulan</small></div>
+            <ul style="list-style: none; font-size: 13px; color: var(--text-soft); margin-bottom: 14px;">
+              <li>✓ Unlimited pesan</li>
+              <li>✓ Unlimited channel</li>
+              <li>✓ Priority support</li>
+              <li>✓ Custom features</li>
+            </ul>
+            <button class="btn btn-sm btn-ghost" data-plan="business">Pilih Business</button>
+          </div>
+        </div>
+
+        <p style="margin-top: 24px; padding: 14px 18px; background: var(--surface-alt); border-radius: 8px; font-size: 13px; color: var(--text-soft); line-height: 1.6;">
+          <strong>Cara upgrade:</strong> Klik tombol plan di atas → muncul detail transfer bank → setelah transfer, konfirmasi via WhatsApp <a href="https://wa.me/6281293988757" target="_blank" style="color: var(--accent);">+62 812-9398-8757</a>. Plan aktif max 1 hari kerja setelah konfirmasi.
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===== KB MODAL ===== -->
+<div class="modal-bg" id="kbModal">
+  <div class="modal">
+    <h2 id="kbModalTitle">Tambah artikel</h2>
+    <input type="hidden" id="kbId" />
+    <div class="field">
+      <label>Judul</label>
+      <input type="text" id="kbTitle" maxlength="150" placeholder="Contoh: Cara order online" />
+    </div>
+    <div class="field">
+      <label>Kategori</label>
+      <select id="kbCategory">
+        <option value="general">General</option>
+        <option value="order">Order</option>
+        <option value="payment">Pembayaran</option>
+        <option value="refund">Refund</option>
+        <option value="account">Akun</option>
+        <option value="complaint">Komplain</option>
+        <option value="promo">Promo</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Keywords (pisahkan dengan koma)</label>
+      <input type="text" id="kbKeywords" maxlength="300" placeholder="order, pesan, beli, bagaimana" />
+      <div class="field-help">Bantuan untuk AI menemukan artikel ini berdasarkan kata-kata customer.</div>
+    </div>
+    <div class="field">
+      <label>Isi artikel</label>
+      <textarea id="kbContent" rows="6" maxlength="2000" placeholder="Tulis jawaban lengkap untuk pertanyaan customer..."></textarea>
+    </div>
+    <div style="display: flex; gap: 8px; justify-content: space-between; margin-top: 16px;">
+      <button class="btn btn-danger" id="kbDeleteBtn" style="display:none;">Hapus</button>
+      <div style="display: flex; gap: 8px; margin-left: auto;">
+        <button class="btn btn-ghost" id="kbCancelBtn">Batal</button>
+        <button class="btn btn-accent" id="kbSaveBtn">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== JS ===== -->
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+
+  const SB_URL = "https://stcywvcnbbapshrzqblk.supabase.co";
+  const SB_KEY = "sb_publishable_WUxbFG3866P7BANLSqv-Sw_4NcXMLSr";
+  const sb = createClient(SB_URL, SB_KEY);
+
+  const loginWrap = document.getElementById("loginWrap");
+  const app = document.getElementById("app");
+  const loginForm = document.getElementById("loginForm");
+  const loginBtn = document.getElementById("loginBtn");
+  const loginErr = document.getElementById("loginErr");
+
+  let tenant = null;
+  let kbCache = [];
+  let chatsCache = [];
+
+  // ===== Auth =====
+  async function checkAuth() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) await initApp(session.user);
+    else { loginWrap.style.display = "flex"; app.classList.remove("active"); }
+  }
+  await checkAuth();
+  sb.auth.onAuthStateChange((e, s) => { if (e === "SIGNED_IN" && s) initApp(s.user); if (e === "SIGNED_OUT") { loginWrap.style.display = "flex"; app.classList.remove("active"); } });
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    loginErr.classList.remove("show");
+    loginBtn.disabled = true; loginBtn.textContent = "Memproses...";
+    const email = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    loginBtn.disabled = false; loginBtn.textContent = "Login";
+    if (error) { loginErr.textContent = error.message; loginErr.classList.add("show"); }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await sb.auth.signOut();
+    location.reload();
+  });
+
+  async function initApp(user) {
+    loginWrap.style.display = "none";
+    app.classList.add("active");
+
+    // Load tenant info
+    const { data: membership } = await sb.from("tenant_users").select("tenant_id, role").eq("user_id", user.id).limit(1).maybeSingle();
+    if (!membership) {
+      app.innerHTML = `<div style="padding: 40px; text-align: center;"><h1>Tidak ada workspace ditemukan</h1><p>Akun Anda belum dikaitkan ke tenant. <a href="/signup" style="color: var(--accent);">Daftar dulu di sini</a>.</p></div>`;
+      return;
+    }
+    const { data: t } = await sb.from("tenants").select("*").eq("id", membership.tenant_id).maybeSingle();
+    if (!t) {
+      app.innerHTML = `<div style="padding: 40px;">Tenant tidak ditemukan.</div>`;
+      return;
+    }
+    tenant = t;
+    renderTenantCard();
+    renderUpgradeBanner();
+    bindNav();
+    bindKB();
+    bindEmbed();
+    bindSettings();
+    bindBilling();
+    await loadKB();
+    await loadChats();
+    renderStats();
+  }
+
+  function renderTenantCard() {
+    document.getElementById("tenantName").textContent = tenant.name;
+    document.getElementById("tenantMeta").textContent = `aics-web.vercel.app/c/${tenant.slug}`;
+    const badge = document.getElementById("planBadge");
+    badge.innerHTML = `<span class="plan-badge plan-${tenant.plan}">${tenant.plan.toUpperCase()}</span>`;
+  }
+
+  function renderUpgradeBanner() {
+    const banner = document.getElementById("upgradeBanner");
+    const now = new Date();
+    if (tenant.plan === "trial") {
+      const ends = new Date(tenant.trial_ends_at);
+      const days = Math.max(0, Math.ceil((ends - now) / (1000 * 60 * 60 * 24)));
+      if (days <= 3) {
+        banner.innerHTML = `<div class="upgrade-banner">
+          <span>Trial berakhir dalam ${days} hari. Upgrade sekarang biar chatbot Anda tetap online.</span>
+          <a href="#" data-page="billing">Lihat plan →</a>
+        </div>`;
+        banner.querySelector("a").addEventListener("click", e => { e.preventDefault(); showPage("billing"); });
+      } else {
+        banner.innerHTML = `<div style="background: var(--info-bg); color: var(--info); padding: 12px 24px; text-align: center; font-size: 13.5px; border-radius: 8px; margin-bottom: 20px;">
+          <strong>Mode trial</strong> · ${days} hari tersisa · ${tenant.monthly_message_used}/${tenant.monthly_message_limit} pesan terpakai
+        </div>`;
+      }
+    } else if (tenant.plan === "expired") {
+      banner.innerHTML = `<div class="upgrade-banner" style="background: var(--danger);">
+        <span>⚠️ Plan Anda expired. Chatbot tidak melayani customer hingga upgrade.</span>
+        <a href="#" data-page="billing">Upgrade sekarang →</a>
+      </div>`;
+      banner.querySelector("a").addEventListener("click", e => { e.preventDefault(); showPage("billing"); });
+    } else {
+      banner.innerHTML = "";
+    }
+  }
+
+  function bindNav() {
+    document.querySelectorAll(".nav-link[data-page], .goto[data-page]").forEach(el => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        showPage(el.dataset.page);
+      });
+    });
+  }
+
+  function showPage(name) {
+    document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+    const target = document.getElementById("page" + name.charAt(0).toUpperCase() + name.slice(1));
+    if (target) target.style.display = "block";
+    document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+    document.querySelector(`.nav-link[data-page="${name}"]`)?.classList.add("active");
+  }
+
+  // ===== KB =====
+  async function loadKB() {
+    const { data } = await sb.from("tenant_kb_articles").select("*").eq("tenant_id", tenant.id).order("created_at", { ascending: false });
+    kbCache = data || [];
+    renderKB();
+  }
+  function renderKB() {
+    const list = document.getElementById("kbList");
+    if (kbCache.length === 0) {
+      list.innerHTML = `<div class="empty" style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 60px 20px;">Belum ada artikel. Klik <strong>+ Tambah artikel</strong> untuk mulai.</div>`;
+      return;
+    }
+    list.innerHTML = kbCache.map(a => `
+      <div class="kb-item" data-id="${a.id}">
+        <div class="category">${a.category}</div>
+        <div class="title">${escapeHtml(a.title)}</div>
+        <div class="preview">${escapeHtml((a.content || "").slice(0, 160))}${(a.content || "").length > 160 ? "..." : ""}</div>
+        <div class="keywords">${(a.keywords || []).map(k => `<span class="kb-keyword">${escapeHtml(k)}</span>`).join("")}</div>
+      </div>
+    `).join("");
+    list.querySelectorAll(".kb-item").forEach(el => {
+      el.addEventListener("click", () => openKBModal(el.dataset.id));
+    });
+  }
+  function bindKB() {
+    document.getElementById("addKbBtn").addEventListener("click", () => openKBModal(null));
+    document.getElementById("kbCancelBtn").addEventListener("click", closeKBModal);
+    document.getElementById("kbSaveBtn").addEventListener("click", saveKB);
+    document.getElementById("kbDeleteBtn").addEventListener("click", deleteKB);
+    document.getElementById("kbModal").addEventListener("click", e => { if (e.target.id === "kbModal") closeKBModal(); });
+  }
+  function openKBModal(id) {
+    const m = document.getElementById("kbModal");
+    document.getElementById("kbId").value = id || "";
+    if (id) {
+      const a = kbCache.find(x => x.id === id);
+      document.getElementById("kbModalTitle").textContent = "Edit artikel";
+      document.getElementById("kbTitle").value = a.title;
+      document.getElementById("kbCategory").value = a.category;
+      document.getElementById("kbKeywords").value = (a.keywords || []).join(", ");
+      document.getElementById("kbContent").value = a.content;
+      document.getElementById("kbDeleteBtn").style.display = "inline-flex";
+    } else {
+      document.getElementById("kbModalTitle").textContent = "Tambah artikel";
+      document.getElementById("kbTitle").value = "";
+      document.getElementById("kbCategory").value = "general";
+      document.getElementById("kbKeywords").value = "";
+      document.getElementById("kbContent").value = "";
+      document.getElementById("kbDeleteBtn").style.display = "none";
+    }
+    m.classList.add("open");
+  }
+  function closeKBModal() { document.getElementById("kbModal").classList.remove("open"); }
+  async function saveKB() {
+    const id = document.getElementById("kbId").value;
+    const title = document.getElementById("kbTitle").value.trim();
+    const category = document.getElementById("kbCategory").value;
+    const keywords = document.getElementById("kbKeywords").value.split(",").map(s => s.trim()).filter(Boolean);
+    const content = document.getElementById("kbContent").value.trim();
+    if (!title || !content) { alert("Judul dan isi wajib diisi."); return; }
+    if (id) {
+      await sb.from("tenant_kb_articles").update({ title, category, keywords, content }).eq("id", id);
+    } else {
+      await sb.from("tenant_kb_articles").insert({ tenant_id: tenant.id, title, category, keywords, content });
+    }
+    closeKBModal();
+    await loadKB();
+  }
+  async function deleteKB() {
+    const id = document.getElementById("kbId").value;
+    if (!id || !confirm("Hapus artikel ini?")) return;
+    await sb.from("tenant_kb_articles").delete().eq("id", id);
+    closeKBModal();
+    await loadKB();
+  }
+
+  // ===== Chat logs =====
+  async function loadChats() {
+    const { data } = await sb.from("tenant_chat_messages").select("*").eq("tenant_id", tenant.id).order("created_at", { ascending: false }).limit(200);
+    chatsCache = data || [];
+    renderChats();
+  }
+  function renderChats() {
+    const tbody = document.getElementById("chatsTable");
+    const empty = document.getElementById("chatsEmpty");
+    const customerMsgs = chatsCache.filter(m => m.role === "customer");
+    if (customerMsgs.length === 0) {
+      tbody.innerHTML = ""; empty.style.display = "block"; return;
+    }
+    empty.style.display = "none";
+    tbody.innerHTML = customerMsgs.slice(0, 100).map(m => {
+      const botReply = chatsCache.find(b => b.role === "bot" && b.session_key === m.session_key && new Date(b.created_at) >= new Date(m.created_at));
+      return `<tr>
+        <td><span class="mono">${fmtTime(m.created_at)}</span></td>
+        <td><span class="mono" style="font-size: 11px;">${m.session_key.slice(0, 8)}</span></td>
+        <td><div class="pri" style="margin-bottom: 4px;">${escapeHtml(m.content)}</div>${botReply ? `<div style="color: var(--text-soft); font-size: 12.5px;">↳ ${escapeHtml((botReply.content || "").slice(0, 100))}${(botReply.content || "").length > 100 ? "..." : ""}</div>` : ""}</td>
+        <td>${botReply ? `<span class="status-pill s-${botReply.state}">${botReply.state || "—"}</span>` : "—"}</td>
+      </tr>`;
+    }).join("");
+
+    // Also render recent on home
+    const recentTbody = document.getElementById("recentTable");
+    const recentEmpty = document.getElementById("recentEmpty");
+    if (customerMsgs.length === 0) {
+      recentTbody.innerHTML = ""; recentEmpty.style.display = "block";
+    } else {
+      recentEmpty.style.display = "none";
+      recentTbody.innerHTML = customerMsgs.slice(0, 5).map(m => {
+        const botReply = chatsCache.find(b => b.role === "bot" && b.session_key === m.session_key && new Date(b.created_at) >= new Date(m.created_at));
+        return `<tr>
+          <td><span class="mono">${fmtTime(m.created_at)}</span></td>
+          <td><div class="pri">${escapeHtml(m.content.slice(0, 70))}${m.content.length > 70 ? "..." : ""}</div></td>
+          <td>${botReply ? `<span class="status-pill s-${botReply.state}">${botReply.state || "—"}</span>` : "—"}</td>
+        </tr>`;
+      }).join("");
+    }
+  }
+
+  function renderStats() {
+    const customerMsgs = chatsCache.filter(m => m.role === "customer").length;
+    const botMsgs = chatsCache.filter(m => m.role === "bot");
+    const resolved = botMsgs.filter(m => m.state === "resolved").length;
+    const escalated = botMsgs.filter(m => m.escalated).length;
+    const sessions = new Set(chatsCache.map(m => m.session_key)).size;
+
+    document.getElementById("statTotal").textContent = customerMsgs;
+    document.getElementById("statUsage").textContent = tenant.monthly_message_used;
+    document.getElementById("statUsageLimit").textContent = `/ ${tenant.monthly_message_limit} limit`;
+    document.getElementById("statResolved").textContent = resolved;
+    document.getElementById("statEscalated").textContent = escalated;
+    document.getElementById("statSessions").textContent = sessions;
+
+    const usageCard = document.getElementById("statUsageCard");
+    const pct = tenant.monthly_message_used / tenant.monthly_message_limit;
+    usageCard.classList.remove("usage-warn", "usage-danger");
+    if (pct >= 0.9) usageCard.classList.add("usage-danger");
+    else if (pct >= 0.7) usageCard.classList.add("usage-warn");
+  }
+
+  // ===== Embed =====
+  function bindEmbed() {
+    const snippet = `&lt;script src="${SB_URL.replace("stcywvcnbbapshrzqblk.supabase.co", "aics-web.vercel.app")}/embed.js" data-tenant="${tenant.slug}"&gt;&lt;/script&gt;`.replace("https://", "https://").replace("stcywvcnbbapshrzqblk.supabase.co", "aics-web.vercel.app");
+    document.getElementById("embedSnippet").innerHTML = `&lt;script src=&quot;https://aics-web.vercel.app/embed.js&quot; data-tenant=&quot;${escapeHtml(tenant.slug)}&quot;&gt;&lt;/script&gt;`;
+    document.getElementById("standaloneUrl").innerHTML = `https://aics-web.vercel.app/c/${escapeHtml(tenant.slug)}`;
+
+    document.querySelectorAll("[data-copy]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const el = document.getElementById(btn.dataset.copy);
+        const text = el.querySelector("span").textContent.replace(/<[^>]+>/g, "");
+        navigator.clipboard.writeText(text);
+        const orig = btn.textContent;
+        btn.textContent = "Copied!";
+        setTimeout(() => { btn.textContent = orig; }, 1500);
+      });
+    });
+
+    document.getElementById("previewBtn").addEventListener("click", () => {
+      // Lazy-load embed script for preview
+      if (!window.AICS) {
+        const s = document.createElement("script");
+        s.src = "/embed.js";
+        s.setAttribute("data-tenant", tenant.slug);
+        document.body.appendChild(s);
+        setTimeout(() => window.AICS?.open(), 700);
+      } else {
+        window.AICS.open();
+      }
+    });
+  }
+
+  // ===== Settings =====
+  function bindSettings() {
+    document.getElementById("setBotName").value = tenant.bot_name || "";
+    document.getElementById("setWelcome").value = tenant.welcome_message || "";
+    document.getElementById("setColor").value = tenant.brand_color || "#C2410C";
+    document.getElementById("setEscEmail").value = tenant.escalate_email || "";
+    document.getElementById("setEscWA").value = tenant.escalate_whatsapp || "";
+
+    document.getElementById("saveBrandingBtn").addEventListener("click", async () => {
+      const updates = {
+        bot_name: document.getElementById("setBotName").value.trim(),
+        welcome_message: document.getElementById("setWelcome").value.trim(),
+        brand_color: document.getElementById("setColor").value.trim(),
+      };
+      const { error } = await sb.from("tenants").update(updates).eq("id", tenant.id);
+      if (error) alert("Error: " + error.message); else { Object.assign(tenant, updates); alert("Branding tersimpan."); }
+    });
+
+    document.getElementById("saveEscalationBtn").addEventListener("click", async () => {
+      const updates = {
+        escalate_email: document.getElementById("setEscEmail").value.trim() || null,
+        escalate_whatsapp: document.getElementById("setEscWA").value.trim() || null,
+      };
+      const { error } = await sb.from("tenants").update(updates).eq("id", tenant.id);
+      if (error) alert("Error: " + error.message); else { Object.assign(tenant, updates); alert("Setting eskalasi tersimpan."); }
+    });
+  }
+
+  // ===== Billing =====
+  function bindBilling() {
+    document.getElementById("billPlan").textContent = tenant.plan.toUpperCase();
+    const status = tenant.plan === "trial"
+      ? `Trial berakhir ${new Date(tenant.trial_ends_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}`
+      : tenant.paid_until
+        ? `Aktif hingga ${new Date(tenant.paid_until).toLocaleDateString("id-ID")}`
+        : "Status: " + tenant.status;
+    document.getElementById("billStatus").textContent = status;
+
+    document.querySelectorAll("[data-plan]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const plan = btn.dataset.plan;
+        const prices = { lite: 99000, pro: 299000, business: 999000 };
+        const limits = { lite: 500, pro: 3000, business: 100000 };
+        const amount = prices[plan];
+        const msg = `Untuk upgrade ke ${plan.toUpperCase()} (Rp ${amount.toLocaleString("id-ID")}/bulan):
+
+1. Transfer ke:
+   BCA 683-129-7252
+   a.n. Kamil Alfaris
+   Total: Rp ${amount.toLocaleString("id-ID")}
+
+2. Konfirmasi via WhatsApp:
+   wa.me/6281293988757
+
+Plan aktif max 1 hari kerja setelah konfirmasi.`;
+        alert(msg);
+        // Record pending subscription
+        sb.from("tenant_subscriptions").insert({
+          tenant_id: tenant.id, plan, amount_idr: amount,
+          period_start: new Date().toISOString(),
+          period_end: new Date(Date.now() + 30 * 86400 * 1000).toISOString(),
+          status: "pending",
+        });
+      });
+    });
+  }
+
+  // ===== Utils =====
+  function fmtTime(iso) {
+    const d = new Date(iso);
+    const now = new Date();
+    const diff = (now - d) / 1000;
+    if (diff < 60) return "baru saja";
+    if (diff < 3600) return `${Math.floor(diff / 60)}m lalu`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}j lalu`;
+    return d.toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  }
+  function escapeHtml(s) {
+    return String(s || "").replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
+  }
+</script>
+
+</body>
+</html>

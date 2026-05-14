@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daftar AICS — Trial 14 hari gratis</title>
+<meta name="description" content="Daftar AICS, sistem AI customer support untuk bisnis Anda. Trial 14 hari gratis, tidak perlu kartu kredit." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FAFAF7; --surface: #FFFFFF; --surface-alt: #F5F4F1;
+    --text: #1C1917; --text-soft: #44403C; --muted: #78716C;
+    --border: #E7E5E4; --border-soft: #F1F0EE;
+    --accent: #C2410C; --accent-hover: #9A3412; --accent-soft: #FED7AA; --accent-bg: #FFF7ED;
+    --success: #15803D; --success-bg: #DCFCE7;
+    --danger: #DC2626; --danger-bg: #FEE2E2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+  .left {
+    padding: 56px 64px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .right {
+    padding: 56px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 32px;
+  }
+  .brand .mark {
+    width: 28px; height: 28px;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  h1 {
+    font-size: clamp(28px, 4vw, 38px);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .lede {
+    font-size: 17px;
+    color: var(--text-soft);
+    margin-bottom: 32px;
+    line-height: 1.55;
+  }
+  .feature-list {
+    list-style: none;
+    margin-bottom: 24px;
+  }
+  .feature-list li {
+    padding: 10px 0;
+    display: flex;
+    gap: 12px;
+    font-size: 14.5px;
+    color: var(--text-soft);
+    align-items: flex-start;
+  }
+  .feature-list li::before {
+    content: "✓";
+    color: var(--success);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .feature-list li strong { color: var(--text); }
+
+  .pricing-mini {
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-soft);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .price-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .price-card .name { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .price-card .amt { font-size: 16px; font-weight: 800; color: var(--accent); }
+  .price-card .desc { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: 0 20px 50px -20px rgba(28, 25, 23, 0.1);
+  }
+  .card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .card .sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .field .help {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .field input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-size: 14.5px;
+    font-family: inherit;
+    outline: none;
+    background: var(--bg);
+    transition: border 0.15s;
+  }
+  .field input:focus { border-color: var(--text); }
+  .field input[readonly] { background: var(--surface-alt); color: var(--muted); }
+  .input-prefix {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .input-prefix .prefix {
+    background: var(--surface-alt);
+    padding: 11px 12px;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+  .input-prefix .suffix {
+    background: var(--surface-alt);
+    padding: 11px 12px;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    border-left: 1px solid var(--border);
+  }
+  .input-prefix input {
+    flex: 1;
+    border: none;
+    padding: 11px 12px;
+    background: transparent;
+    outline: none;
+    font-size: 14.5px;
+    font-family: inherit;
+    min-width: 0;
+  }
+  .submit {
+    width: 100%;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 13px;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 8px;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .submit:hover { background: var(--accent); transform: translateY(-1px); }
+  .submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .footer-link {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+  .footer-link a { color: var(--accent); text-decoration: none; }
+  .footer-link a:hover { text-decoration: underline; }
+
+  .msg {
+    padding: 12px 14px;
+    border-radius: 7px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin-top: 14px;
+    display: none;
+  }
+  .msg.error { background: var(--danger-bg); color: #991B1B; display: block; }
+  .msg.success { background: var(--success-bg); color: #166534; display: block; }
+
+  @media (max-width: 880px) {
+    .wrap { grid-template-columns: 1fr; }
+    .left { padding: 40px 24px; border-right: none; border-bottom: 1px solid var(--border); }
+    .right { padding: 40px 24px; }
+    .pricing-mini { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="left">
+    <a href="/" class="brand" style="text-decoration: none; color: inherit;">
+      <span class="mark">AI</span>
+      AICS
+    </a>
+
+    <h1>Mulai trial 14 hari, gratis.</h1>
+    <p class="lede">Pasang AI chatbot di website Anda dalam 5 menit. Tidak perlu kartu kredit. Tidak perlu integrasi rumit.</p>
+
+    <ul class="feature-list">
+      <li><strong>14 hari trial</strong> dengan 100 pesan gratis</li>
+      <li><strong>1 baris embed code</strong> — tinggal copy-paste ke website</li>
+      <li><strong>Custom branding</strong> (warna, nama bot, sambutan)</li>
+      <li><strong>Knowledge base</strong> sendiri — AI jawab dari konten Anda</li>
+      <li><strong>Dashboard analytics</strong> + chat history lengkap</li>
+      <li><strong>Auto eskalasi</strong> ke WhatsApp/email Anda untuk kasus kompleks</li>
+    </ul>
+
+    <div class="pricing-mini">
+      <div class="price-card">
+        <div class="name">Lite</div>
+        <div class="amt">Rp 99rb/bln</div>
+        <div class="desc">500 pesan, 1 channel</div>
+      </div>
+      <div class="price-card" style="border-color: var(--accent); background: var(--accent-bg);">
+        <div class="name">Pro</div>
+        <div class="amt">Rp 299rb/bln</div>
+        <div class="desc">3.000 pesan, 3 channel</div>
+      </div>
+      <div class="price-card">
+        <div class="name">Business</div>
+        <div class="amt">Rp 999rb/bln</div>
+        <div class="desc">Unlimited, all features</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h2>Buat akun</h2>
+      <p class="sub">Sudah punya akun? <a href="/dashboard" style="color: var(--accent); text-decoration: none;">Login di sini</a></p>
+
+      <form id="signupForm">
+        <div class="field">
+          <label>Nama perusahaan / brand</label>
+          <input type="text" name="company" id="companyInput" required maxlength="80" placeholder="Toko Bunga Mawar" />
+        </div>
+
+        <div class="field">
+          <label>URL chatbot Anda</label>
+          <div class="input-prefix">
+            <span class="prefix">aics-web.vercel.app/c/</span>
+            <input type="text" name="slug" id="slugInput" required maxlength="40" pattern="[a-z0-9\-]+" placeholder="toko-mawar" />
+          </div>
+          <div class="help">a-z, 0-9, dash (-) saja</div>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" id="emailInput" required maxlength="120" placeholder="anda@email.com" />
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" id="passwordInput" required minlength="8" placeholder="Min. 8 karakter" />
+        </div>
+
+        <button type="submit" class="submit" id="submitBtn">Mulai trial 14 hari</button>
+
+        <div class="msg" id="msg"></div>
+      </form>
+
+      <div class="footer-link">
+        Dengan daftar Anda menyetujui akan menerima email konfirmasi. Tidak ada spam.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+
+  const SB_URL = "https://stcywvcnbbapshrzqblk.supabase.co";
+  const SB_KEY = "sb_publishable_WUxbFG3866P7BANLSqv-Sw_4NcXMLSr";
+  const sb = createClient(SB_URL, SB_KEY);
+
+  // Already signed in? Redirect
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) location.href = "/dashboard";
+
+  // Auto-slug from company name
+  const companyInput = document.getElementById("companyInput");
+  const slugInput = document.getElementById("slugInput");
+  let slugTouched = false;
+  slugInput.addEventListener("input", () => { slugTouched = true; });
+  companyInput.addEventListener("input", (e) => {
+    if (slugTouched) return;
+    const slug = e.target.value
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .trim()
+      .replace(/\s+/g, "-")
+      .slice(0, 40);
+    slugInput.value = slug;
+  });
+
+  const form = document.getElementById("signupForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const msg = document.getElementById("msg");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    msg.style.display = "none";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Memproses...";
+
+    const company = companyInput.value.trim();
+    const slug = slugInput.value.trim().toLowerCase();
+    const email = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
+
+    if (!/^[a-z0-9\-]+$/.test(slug)) {
+      showError("URL slug hanya boleh huruf kecil, angka, dan dash.");
+      reset();
+      return;
+    }
+
+    // Check slug availability
+    const { data: existing } = await sb.rpc("get_tenant_public_config", { p_slug: slug });
+    if (existing && existing.id) {
+      showError(`URL "${slug}" sudah dipakai. Coba lain.`);
+      reset();
+      return;
+    }
+
+    // Sign up
+    const { data: authData, error: authErr } = await sb.auth.signUp({
+      email, password,
+      options: {
+        emailRedirectTo: location.origin + "/dashboard",
+        data: { company, slug }
+      }
+    });
+
+    if (authErr) {
+      showError(authErr.message);
+      reset();
+      return;
+    }
+
+    if (!authData.user) {
+      showError("Signup gagal — coba lagi.");
+      reset();
+      return;
+    }
+
+    // If session already exists (auto-confirm enabled in Supabase), create tenant immediately
+    if (authData.session) {
+      const { data: tenantId, error: tErr } = await sb.rpc("create_tenant_for_user", {
+        p_user_id: authData.user.id,
+        p_email: email,
+        p_slug: slug,
+        p_name: company,
+      });
+      if (tErr) {
+        showError(`Akun dibuat tapi tenant gagal: ${tErr.message}. Hubungi support.`);
+        reset();
+        return;
+      }
+      location.href = "/dashboard?welcome=1";
+      return;
+    }
+
+    // Otherwise email confirmation needed
+    showSuccess(`Akun dibuat. Cek email ${email} untuk konfirmasi sebelum login. Cek folder spam juga.`);
+    submitBtn.textContent = "✓ Cek email";
+  });
+
+  function showError(text) {
+    msg.className = "msg error"; msg.textContent = text; msg.style.display = "block";
+  }
+  function showSuccess(text) {
+    msg.className = "msg success"; msg.textContent = text; msg.style.display = "block";
+  }
+  function reset() {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Mulai trial 14 hari";
+  }
+</script>
+
+</body>
+</html>

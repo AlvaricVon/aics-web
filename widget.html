@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AICS Chat Widget</title>
+<style>
+  :root {
+    --brand: #C2410C;
+    --brand-dark: #9A3412;
+    --bg: #FFFFFF;
+    --surface: #F8FAFC;
+    --text: #1C1917;
+    --text-soft: #44403C;
+    --muted: #78716C;
+    --border: #E7E5E4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14.5px;
+    overflow: hidden;
+  }
+  .chat {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--bg);
+  }
+  .header {
+    padding: 14px 18px;
+    background: var(--brand);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-info { display: flex; align-items: center; gap: 10px; }
+  .header-avatar {
+    width: 32px; height: 32px;
+    background: white;
+    color: var(--brand);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 15px;
+  }
+  .header-title { font-weight: 600; font-size: 14px; line-height: 1.2; }
+  .header-status { font-size: 11px; opacity: 0.85; display: flex; align-items: center; gap: 5px; }
+  .status-dot {
+    width: 6px; height: 6px;
+    background: #4ADE80;
+    border-radius: 50%;
+  }
+  .header-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .header-close:hover { background: rgba(255,255,255,0.25); }
+  .msgs {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .msgs::-webkit-scrollbar { width: 4px; }
+  .msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .msg {
+    max-width: 85%;
+    padding: 9px 13px;
+    border-radius: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: 13.5px;
+    animation: slideIn 0.2s ease-out;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg.customer {
+    align-self: flex-end;
+    background: var(--brand);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.bot {
+    align-self: flex-start;
+    background: white;
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+  }
+  .typing { display: flex; gap: 3px; align-items: center; padding: 4px 0; }
+  .typing span {
+    width: 6px; height: 6px;
+    background: var(--muted);
+    border-radius: 50%;
+    animation: blink 1.3s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes blink {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+  .input {
+    padding: 12px 16px;
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+  .input input {
+    flex: 1;
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-family: inherit;
+    outline: none;
+    background: var(--surface);
+  }
+  .input input:focus { border-color: var(--brand); }
+  .input button {
+    background: var(--brand);
+    color: white;
+    border: none;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .input button:hover { background: var(--brand-dark); }
+  .input button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .branding {
+    text-align: center;
+    padding: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    background: white;
+    border-top: 1px solid var(--border);
+  }
+  .branding a { color: var(--muted); text-decoration: none; }
+  .branding a:hover { color: var(--brand); }
+  .error {
+    padding: 16px;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="chat" id="chat">
+  <div class="header">
+    <div class="header-info">
+      <div class="header-avatar" id="avatar">AI</div>
+      <div>
+        <div class="header-title" id="botName">Loading...</div>
+        <div class="header-status"><span class="status-dot"></span> Online</div>
+      </div>
+    </div>
+    <button class="header-close" id="closeBtn" aria-label="Tutup">×</button>
+  </div>
+  <div class="msgs" id="msgs"></div>
+  <form class="input" id="inputForm" autocomplete="off">
+    <input type="text" id="textInput" placeholder="Ketik pesan..." maxlength="500" required />
+    <button type="submit" id="sendBtn" aria-label="Kirim">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      </svg>
+    </button>
+  </form>
+  <div class="branding">
+    Powered by <a href="https://aics-web.vercel.app" target="_blank" rel="noopener">AICS</a>
+  </div>
+</div>
+
+<script type="module">
+  const SUPA_URL = "https://stcywvcnbbapshrzqblk.supabase.co";
+  const SUPA_KEY = "sb_publishable_WUxbFG3866P7BANLSqv-Sw_4NcXMLSr";
+
+  const params = new URLSearchParams(location.search);
+  const tenant = params.get("t");
+
+  const msgsEl = document.getElementById("msgs");
+  const textInput = document.getElementById("textInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const form = document.getElementById("inputForm");
+  const botNameEl = document.getElementById("botName");
+  const avatarEl = document.getElementById("avatar");
+  const closeBtn = document.getElementById("closeBtn");
+
+  let sessionKey = sessionStorage.getItem(`aics_session_${tenant}`) || crypto.randomUUID();
+  sessionStorage.setItem(`aics_session_${tenant}`, sessionKey);
+
+  closeBtn.addEventListener("click", () => {
+    try { parent.postMessage({ type: "aics:close" }, "*"); } catch (_) {}
+  });
+
+  if (!tenant) {
+    document.getElementById("chat").innerHTML = `<div class="error">Widget belum dikonfigurasi. Tenant ID tidak ditemukan.</div>`;
+  } else {
+    init();
+  }
+
+  async function init() {
+    try {
+      const res = await fetch(`${SUPA_URL}/rest/v1/rpc/get_tenant_public_config`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPA_KEY,
+          Authorization: `Bearer ${SUPA_KEY}`,
+        },
+        body: JSON.stringify({ p_slug: tenant }),
+      });
+      const cfg = await res.json();
+      if (!cfg || !cfg.id) {
+        document.getElementById("chat").innerHTML = `<div class="error">Tenant "${tenant}" tidak ditemukan.</div>`;
+        return;
+      }
+      // Apply branding
+      if (cfg.brand_color) {
+        document.documentElement.style.setProperty("--brand", cfg.brand_color);
+        document.documentElement.style.setProperty("--brand-dark", darken(cfg.brand_color, 15));
+        avatarEl.style.color = cfg.brand_color;
+      }
+      botNameEl.textContent = cfg.bot_name || cfg.name || "Asisten";
+      avatarEl.textContent = (cfg.bot_name || cfg.name || "AI").charAt(0).toUpperCase();
+      if (!cfg.active) {
+        addMsg("bot", "Chatbot ini sedang tidak aktif. Pemilik perlu mengaktifkan langganan.");
+        textInput.disabled = true; sendBtn.disabled = true;
+        return;
+      }
+      addMsg("bot", cfg.welcome_message || "Halo! Ada yang bisa saya bantu?");
+    } catch (err) {
+      console.error(err);
+      document.getElementById("chat").innerHTML = `<div class="error">Error: ${err.message}</div>`;
+    }
+  }
+
+  function darken(hex, percent) {
+    const f = parseInt(hex.slice(1), 16);
+    const r = Math.max(0, (f >> 16) - Math.round(2.55 * percent));
+    const g = Math.max(0, ((f >> 8) & 0xff) - Math.round(2.55 * percent));
+    const b = Math.max(0, (f & 0xff) - Math.round(2.55 * percent));
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+  }
+
+  function addMsg(role, text) {
+    const d = document.createElement("div");
+    d.className = `msg ${role}`;
+    d.textContent = text;
+    msgsEl.appendChild(d);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  }
+  function addTyping() {
+    const d = document.createElement("div");
+    d.className = "msg bot";
+    d.id = "typing";
+    d.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+    msgsEl.appendChild(d);
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  }
+  function removeTyping() { document.getElementById("typing")?.remove(); }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = textInput.value.trim();
+    if (!text) return;
+    addMsg("customer", text);
+    textInput.value = "";
+    sendBtn.disabled = true;
+    addTyping();
+    try {
+      const res = await fetch(`${SUPA_URL}/functions/v1/tenant-chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPA_KEY },
+        body: JSON.stringify({ tenant, message: text, session_key: sessionKey }),
+      });
+      removeTyping();
+      const data = await res.json();
+      if (data.response) {
+        addMsg("bot", data.response);
+        if (data.session_key) {
+          sessionKey = data.session_key;
+          sessionStorage.setItem(`aics_session_${tenant}`, sessionKey);
+        }
+      } else {
+        addMsg("bot", data.message || "Maaf, ada kendala. Coba lagi sebentar.");
+      }
+    } catch (err) {
+      removeTyping();
+      addMsg("bot", `Error: ${err.message}`);
+    } finally {
+      sendBtn.disabled = false;
+      textInput.focus();
+    }
+  });
+</script>
+
+</body>
+</html>
