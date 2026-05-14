@@ -7,7 +7,7 @@
   "installCommand": null,
   "framework": null,
   "rewrites": [
-    { "source": "/c/(.+)", "destination": "/chat.html" }
+    { "source": "/c/:slug", "destination": "/chat.html?t=:slug" }
   ],
   "headers": [
     {
