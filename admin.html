@@ -443,6 +443,16 @@
 
     <div class="login-msg" id="loginMsg"></div>
 
+    <div style="margin-top: 14px; text-align: center; font-size: 13px;">
+      <a href="#" id="adminForgot" style="color: var(--text-soft); text-decoration: none;">Lupa password?</a>
+    </div>
+    <div id="adminResetForm" style="display: none; margin-top: 14px; padding: 14px 16px; background: var(--surface-alt); border-radius: 7px;">
+      <p style="font-size: 13px; color: var(--text-soft); margin-bottom: 10px;">Kirim link reset ke email Anda.</p>
+      <input type="email" id="adminResetEmail" placeholder="kamilalfaris@gmail.com" required maxlength="120" style="width: 100%; padding: 9px 13px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; font-family: inherit; outline: none; background: var(--bg); margin-bottom: 8px;" />
+      <button type="button" id="adminResetBtn" style="width: 100%; background: var(--text); color: var(--bg); border: none; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 13.5px; cursor: pointer; font-family: inherit;">Kirim link reset</button>
+      <div id="adminResetMsg" style="margin-top: 10px; font-size: 13px;"></div>
+    </div>
+
     <details style="margin-top: 24px; padding: 14px 16px; background: var(--surface-alt); border-radius: 7px; font-size: 13px;">
       <summary style="cursor: pointer; font-weight: 600; color: var(--text);">Magic link redirect ke localhost?</summary>
       <p style="margin-top: 12px; color: var(--text-soft); line-height: 1.55;">
@@ -624,6 +634,28 @@
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     await sb.auth.signOut();
+  });
+
+  // ===== FORGOT PASSWORD =====
+  document.getElementById("adminForgot").addEventListener("click", (e) => {
+    e.preventDefault();
+    const f = document.getElementById("adminResetForm");
+    f.style.display = f.style.display === "none" ? "block" : "none";
+    const em = document.getElementById("emailInput").value;
+    if (em) document.getElementById("adminResetEmail").value = em;
+  });
+  document.getElementById("adminResetBtn").addEventListener("click", async () => {
+    const em = document.getElementById("adminResetEmail").value.trim();
+    const m = document.getElementById("adminResetMsg");
+    if (!em) { m.innerHTML = `<span style="color: var(--danger);">Email wajib.</span>`; return; }
+    const { error } = await sb.auth.resetPasswordForEmail(em, {
+      redirectTo: location.origin + "/reset-password",
+    });
+    if (error) {
+      m.innerHTML = `<span style="color: var(--danger);">${error.message.includes("rate limit") ? "Rate limit kena. Tunggu 1 jam." : error.message}</span>`;
+    } else {
+      m.innerHTML = `<span style="color: var(--success);">✓ Link reset terkirim ke ${em}. Cek inbox.</span>`;
+    }
   });
 
   // ===== RECOVERY: paste localhost URL fragment =====

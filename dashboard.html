@@ -479,7 +479,16 @@
     </form>
     <div class="err" id="loginErr"></div>
     <div class="alt">
-      Belum punya akun? <a href="/signup">Daftar trial gratis 14 hari →</a>
+      <a href="#" id="forgotLink" style="color: var(--text-soft); text-decoration: none; margin-right: 8px;">Lupa password?</a>
+      ·
+      <a href="/signup" style="margin-left: 8px;">Daftar trial gratis →</a>
+    </div>
+
+    <div id="resetForm" style="display: none; margin-top: 16px; padding: 16px; background: var(--surface-alt); border-radius: 8px;">
+      <p style="font-size: 13.5px; color: var(--text-soft); margin-bottom: 10px;">Masukkan email Anda — kami kirim link reset password.</p>
+      <input type="email" id="resetEmail" placeholder="anda@email.com" required maxlength="120" />
+      <button type="button" id="resetBtn" style="margin-top: 8px;">Kirim link reset</button>
+      <div id="resetMsg" style="margin-top: 10px; font-size: 13px;"></div>
     </div>
   </div>
 </div>
@@ -796,16 +805,103 @@
     location.reload();
   });
 
+  // Forgot password flow
+  document.getElementById("forgotLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    const form = document.getElementById("resetForm");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+    const emailVal = document.getElementById("emailInput").value;
+    if (emailVal) document.getElementById("resetEmail").value = emailVal;
+  });
+  document.getElementById("resetBtn").addEventListener("click", async () => {
+    const email = document.getElementById("resetEmail").value.trim();
+    const msg = document.getElementById("resetMsg");
+    if (!email) { msg.innerHTML = `<span style="color: var(--danger);">Email wajib diisi.</span>`; return; }
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: location.origin + "/reset-password",
+    });
+    if (error) {
+      msg.innerHTML = `<span style="color: var(--danger);">${error.message.includes("rate limit") ? "Rate limit kena. Coba 1 jam lagi atau email langsung ke support." : error.message}</span>`;
+    } else {
+      msg.innerHTML = `<span style="color: var(--success);">✓ Link reset terkirim ke ${email}. Cek inbox + spam.</span>`;
+    }
+  });
+
   async function initApp(user) {
     loginWrap.style.display = "none";
     app.classList.add("active");
 
     // Load tenant info
-    const { data: membership } = await sb.from("tenant_users").select("tenant_id, role").eq("user_id", user.id).limit(1).maybeSingle();
+    let { data: membership } = await sb.from("tenant_users").select("tenant_id, role").eq("user_id", user.id).limit(1).maybeSingle();
+
+    // If no membership yet (e.g. user just confirmed email after signup), auto-create tenant from user_metadata
+    if (!membership && user.user_metadata?.company && user.user_metadata?.slug) {
+      const meta = user.user_metadata;
+      // Try create — auto-suffix if slug taken
+      let slug = meta.slug;
+      let attempt = 0;
+      while (attempt < 5) {
+        const { data: existing } = await sb.rpc("get_tenant_public_config", { p_slug: slug });
+        if (!existing || !existing.id) break;
+        attempt += 1;
+        slug = `${meta.slug}-${attempt + 1}`;
+      }
+      const { error: createErr } = await sb.rpc("create_tenant_for_user", {
+        p_user_id: user.id,
+        p_email: user.email,
+        p_slug: slug,
+        p_name: meta.company,
+      });
+      if (createErr) {
+        app.innerHTML = `<div style="padding: 40px; text-align: center;">
+          <h1>Setup workspace gagal</h1>
+          <p>Error: ${escapeHtml(createErr.message)}</p>
+          <p>Silakan hubungi support via WhatsApp: <a href="https://wa.me/6281293988757" style="color: var(--accent);">+62 812-9398-8757</a></p>
+        </div>`;
+        return;
+      }
+      // Reload membership
+      const reload = await sb.from("tenant_users").select("tenant_id, role").eq("user_id", user.id).limit(1).maybeSingle();
+      membership = reload.data;
+    }
+
     if (!membership) {
-      app.innerHTML = `<div style="padding: 40px; text-align: center;"><h1>Tidak ada workspace ditemukan</h1><p>Akun Anda belum dikaitkan ke tenant. <a href="/signup" style="color: var(--accent);">Daftar dulu di sini</a>.</p></div>`;
+      app.innerHTML = `<div style="padding: 40px; text-align: center; max-width: 480px; margin: 60px auto;">
+        <h1 style="font-size: 24px; margin-bottom: 12px;">Workspace belum dibuat</h1>
+        <p style="color: var(--text-soft); margin-bottom: 20px;">Akun Anda terverifikasi tapi belum ada workspace. Buat sekarang:</p>
+        <form id="bootstrapForm" style="text-align: left;">
+          <div class="field"><label>Nama perusahaan / brand</label><input type="text" id="bsCompany" required maxlength="80" /></div>
+          <div class="field"><label>URL chatbot (a-z, 0-9, dash)</label><input type="text" id="bsSlug" required maxlength="40" pattern="[a-z0-9\\-]+" /></div>
+          <button type="submit" class="btn btn-accent btn-block">Buat workspace</button>
+          <div id="bsMsg" style="margin-top: 12px; font-size: 13px;"></div>
+        </form>
+      </div>`;
+      document.getElementById("bootstrapForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const company = document.getElementById("bsCompany").value.trim();
+        let slug = document.getElementById("bsSlug").value.trim().toLowerCase();
+        const msg = document.getElementById("bsMsg");
+        // Auto-suffix if taken
+        let attempt = 0;
+        let finalSlug = slug;
+        while (attempt < 5) {
+          const { data: existing } = await sb.rpc("get_tenant_public_config", { p_slug: finalSlug });
+          if (!existing || !existing.id) break;
+          attempt += 1;
+          finalSlug = `${slug}-${attempt + 1}`;
+        }
+        if (attempt > 0) {
+          msg.innerHTML = `<span style="color: var(--warning);">"${slug}" sudah dipakai. Memakai "${finalSlug}" sebagai gantinya.</span>`;
+        }
+        const { error } = await sb.rpc("create_tenant_for_user", {
+          p_user_id: user.id, p_email: user.email, p_slug: finalSlug, p_name: company,
+        });
+        if (error) { msg.innerHTML = `<span style="color: var(--danger);">${error.message}</span>`; return; }
+        location.reload();
+      });
       return;
     }
+
     const { data: t } = await sb.from("tenants").select("*").eq("id", membership.tenant_id).maybeSingle();
     if (!t) {
       app.innerHTML = `<div style="padding: 40px;">Tenant tidak ditemukan.</div>`;

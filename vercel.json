@@ -6,8 +6,8 @@
   "buildCommand": null,
   "installCommand": null,
   "framework": null,
-  "rewrites": [
-    { "source": "/c/:slug", "destination": "/chat.html?t=:slug" }
+  "redirects": [
+    { "source": "/c/:slug", "destination": "/chat.html?t=:slug", "permanent": false }
   ],
   "headers": [
     {

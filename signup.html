@@ -361,12 +361,24 @@
       return;
     }
 
-    // Check slug availability
-    const { data: existing } = await sb.rpc("get_tenant_public_config", { p_slug: slug });
-    if (existing && existing.id) {
-      showError(`URL "${slug}" sudah dipakai. Coba lain.`);
+    // Check slug availability — auto-suffix if taken
+    let finalSlug = slug;
+    let attempt = 0;
+    while (attempt < 10) {
+      const { data: existing } = await sb.rpc("get_tenant_public_config", { p_slug: finalSlug });
+      if (!existing || !existing.id) break;
+      attempt += 1;
+      finalSlug = `${slug}-${attempt + 1}`;
+    }
+    if (attempt >= 10) {
+      showError(`Slug "${slug}" dan variannya sudah dipakai. Coba nama lain.`);
       reset();
       return;
+    }
+    if (attempt > 0) {
+      showSuccess(`URL "${slug}" sudah dipakai. Kami pakai "${finalSlug}" untuk Anda.`);
+      slugInput.value = finalSlug;
+      slug = finalSlug;
     }
 
     // Sign up
