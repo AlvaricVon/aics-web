@@ -439,6 +439,18 @@
     </form>
 
     <div class="login-msg" id="loginMsg"></div>
+
+    <details style="margin-top: 24px; padding: 14px 16px; background: var(--surface-alt); border-radius: 7px; font-size: 13px;">
+      <summary style="cursor: pointer; font-weight: 600; color: var(--text);">Magic link redirect ke localhost?</summary>
+      <p style="margin-top: 12px; color: var(--text-soft); line-height: 1.55;">
+        Konfigurasi Supabase Auth Site URL masih default <code>localhost:3000</code>. Sementara, copy URL dari tab error localhost yang muncul, lalu paste <strong>hanya bagian setelah tanda <code>#</code></strong> di sini:
+      </p>
+      <input type="text" id="recoveryInput" placeholder="access_token=eyJ...&token_type=bearer&..." style="margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px;" />
+      <button type="button" id="recoveryBtn" style="margin-top: 10px;">Login pakai token</button>
+      <p style="margin-top: 10px; font-size: 11.5px; color: var(--muted);">
+        Atau cara cepat: di address bar tab error localhost, ganti <code>localhost:3000</code> jadi <code>aics-web.vercel.app/admin</code> dan tekan Enter — akan auto-login.
+      </p>
+    </details>
   </div>
 </div>
 
@@ -580,6 +592,21 @@
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     await sb.auth.signOut();
+  });
+
+  // ===== RECOVERY: paste localhost URL fragment =====
+  document.getElementById("recoveryBtn").addEventListener("click", () => {
+    let frag = document.getElementById("recoveryInput").value.trim();
+    if (!frag) return;
+    if (frag.startsWith("#")) frag = frag.slice(1);
+    if (frag.startsWith("localhost") || frag.includes("://")) {
+      // Full URL pasted — extract fragment
+      const idx = frag.indexOf("#");
+      if (idx >= 0) frag = frag.slice(idx + 1);
+    }
+    // Reload with fragment so supabase-js detects session
+    location.hash = "#" + frag;
+    location.reload();
   });
 
   // ===== APP STATE =====
