@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<title>AICS · OG image (1200×630)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#1C1917;color:#FAFAF7}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .frame{
+    width:1200px;height:630px;background:#FAFAF7;color:#1C1917;
+    padding:64px 72px;display:grid;grid-template-rows:auto 1fr auto;gap:32px;
+    position:relative;overflow:hidden;
+  }
+  .frame::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(900px 380px at 110% -10%, rgba(194,65,12,.10),transparent 60%),
+      radial-gradient(700px 320px at -10% 110%, rgba(28,25,23,.05),transparent 60%);
+  }
+  .top{display:flex;align-items:center;justify-content:space-between;position:relative}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand-mark{width:48px;height:48px;border-radius:10px;background:#1C1917;color:#FAFAF7;display:grid;place-items:center;font-size:18px;font-weight:800;letter-spacing:-.02em}
+  .brand-name{font-size:22px;font-weight:700;letter-spacing:-.02em}
+  .brand-name small{display:block;font-size:13px;color:#78716C;font-weight:500;margin-top:2px}
+  .pill{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border:1px solid #E7E5E4;background:#fff;border-radius:999px;font-size:14px;color:#44403C;font-weight:500}
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:#15803D;box-shadow:0 0 0 4px rgba(21,128,61,.18)}
+
+  .middle{position:relative;display:flex;flex-direction:column;justify-content:center;gap:24px}
+  h1{font-size:64px;font-weight:800;letter-spacing:-.03em;line-height:1.02;text-wrap:balance;max-width:980px}
+  h1 em{font-style:normal;color:#C2410C}
+  .sub{font-size:22px;color:#44403C;max-width:780px;line-height:1.45}
+
+  .bottom{display:flex;justify-content:space-between;align-items:center;position:relative;padding-top:24px;border-top:1px dashed #D6D3D1}
+  .meta-row{display:flex;gap:40px}
+  .meta{display:flex;flex-direction:column;gap:4px}
+  .meta-k{font-family:'JetBrains Mono',monospace;font-size:12px;color:#78716C;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .meta-v{font-size:18px;font-weight:700;letter-spacing:-.012em}
+  .meta-v .num{font-family:'JetBrains Mono',monospace}
+  .stack{display:flex;gap:14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#78716C;align-items:center}
+  .stack span{display:flex;align-items:center;gap:8px}
+  .stack span::before{content:"";width:6px;height:6px;border-radius:50%;background:#D6D3D1}
+  .stack span:first-child::before{display:none}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="top">
+    <div class="brand">
+      <span class="brand-mark">AI</span>
+      <span class="brand-name">AICS<small>by Kamil Alfaris</small></span>
+    </div>
+    <span class="pill"><span class="dot"></span>Trial 14 hari · tanpa kartu kredit</span>
+  </div>
+
+  <div class="middle">
+    <h1>Chatbot AI customer service untuk UMKM Indonesia. Pasang <em>5 menit</em>, jalan 24/7.</h1>
+    <p class="sub">Multi-agent architecture · self-serve · mulai Rp 99rb/bulan. Tanpa setup fee, tanpa kontrak.</p>
+  </div>
+
+  <div class="bottom">
+    <div class="meta-row">
+      <div class="meta"><span class="meta-k">SETUP</span><span class="meta-v">5 menit</span></div>
+      <div class="meta"><span class="meta-k">TRIAL</span><span class="meta-v">14 hari</span></div>
+      <div class="meta"><span class="meta-k">MULAI</span><span class="meta-v"><span class="num">Rp 99rb</span>/bln</span></div>
+    </div>
+    <div class="stack">
+      <span>Anthropic</span><span>Supabase</span><span>Vercel</span><span>UU PDP</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -203,7 +203,7 @@
   // ─── Load tenant config ───
   async function loadConfig(){
     try{
-      const { data, error } = await supabase.rpc('get_tenant_public_config',{ p_slug: tenant });
+      const { data, error } = await supabase.rpc('get_tenant_config',{ p_slug: tenant });
       if(error || !data) return;
       if(data.bot_name){ botName.textContent = data.bot_name; botAvatar.textContent = data.bot_name.slice(0,2).toUpperCase(); }
       if(data.welcome_message) welcome.textContent = data.welcome_message;
@@ -280,10 +280,10 @@
     addTyping();
     let result;
     try{
-      const res = await fetch(SUPABASE_URL+'/functions/v1/tenant-chat',{
+      const res = await fetch(SUPABASE_URL+'/functions/v1/cs-demo',{
         method:'POST',
         headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
-        body: JSON.stringify({message:text, session_key:sessionId, tenant})
+        body: JSON.stringify({message:text, session_id:sessionId, tenant})
       });
       if(!res.ok) throw new Error('http '+res.status);
       result = await res.json();
@@ -292,7 +292,7 @@
       result = localFallback(text);
     }
     removeTyping();
-    addBot(result.response || result.reply || result.message || 'Maaf, terjadi kendala.', result);
+    addBot(result.reply || result.message || 'Maaf, terjadi kendala.', result);
     sendBtn.disabled=false;
     input.focus();
   }

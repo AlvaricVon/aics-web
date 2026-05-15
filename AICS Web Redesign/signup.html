@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Daftar trial gratis · AICS</title>
+<meta name="description" content="Mulai trial 14 hari AICS. Tanpa kartu kredit." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FAFAF7;--surface:#FFFFFF;--surface-alt:#F5F4F1;
+    --text:#1C1917;--text-soft:#44403C;--muted:#78716C;
+    --border:#E7E5E4;--border-strong:#D6D3D1;
+    --accent:#C2410C;--accent-hover:#9A3412;--accent-bg:#FFF7ED;
+    --success:#15803D;--danger:#DC2626;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+  header.top{border-bottom:1px solid var(--border);background:var(--surface)}
+  .nav{max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+  @media(max-width:640px){.nav{padding:14px 20px}}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.02em}
+  .brand-mark{width:30px;height:30px;border-radius:7px;background:var(--text);color:var(--bg);display:grid;place-items:center;font-size:13px;font-weight:800}
+  .brand-name{font-size:15px}
+  .brand-name small{color:var(--muted);font-weight:500;margin-left:6px}
+  .nav-back{font-size:13.5px;color:var(--text-soft);display:flex;align-items:center;gap:6px}
+  .nav-back:hover{color:var(--accent)}
+
+  .grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:calc(100vh - 60px)}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+
+  .left{padding:64px 56px;background:var(--surface-alt);border-right:1px solid var(--border)}
+  @media (max-width:960px){.left{padding:48px 32px;border-right:none;border-bottom:1px solid var(--border)}}
+  @media (max-width:640px){.left{padding:40px 20px}}
+
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);background:var(--surface);border-radius:999px;font-size:12.5px;color:var(--text-soft);font-weight:500;margin-bottom:18px}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 0 3px rgba(21,128,61,.18)}
+
+  h1{font-size:34px;font-weight:800;letter-spacing:-.025em;line-height:1.08;margin:0 0 16px;text-wrap:balance}
+  .lead{font-size:16px;color:var(--text-soft);margin:0 0 36px;max-width:440px;line-height:1.6}
+
+  .benefits{list-style:none;padding:0;margin:0 0 40px;display:flex;flex-direction:column;gap:18px}
+  .benefits li{display:flex;gap:14px;align-items:flex-start;font-size:14.5px;color:var(--text-soft);line-height:1.5}
+  .benefits .ic{width:24px;height:24px;flex-shrink:0;background:var(--accent-bg);border-radius:6px;display:grid;place-items:center;margin-top:1px}
+  .benefits strong{color:var(--text);font-weight:600;display:block;margin-bottom:2px;font-size:14.5px}
+
+  .mini-plans{border:1px dashed var(--border-strong);border-radius:12px;background:var(--surface);padding:18px;margin-top:auto}
+  .mini-plans h4{font-family:'JetBrains Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 14px;font-weight:600}
+  .mp{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px dashed var(--border)}
+  .mp:first-of-type{border-top:none}
+  .mp-name{font-weight:600;font-size:14px}
+  .mp-name .featured{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--text);color:var(--bg);padding:2px 6px;border-radius:3px;margin-left:8px;letter-spacing:.05em;text-transform:uppercase}
+  .mp-price{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--text-soft)}
+
+  .right{padding:64px 56px;display:flex;align-items:center}
+  @media (max-width:960px){.right{padding:48px 32px}}
+  @media (max-width:640px){.right{padding:40px 20px}}
+  .form-wrap{width:100%;max-width:440px;margin:0 auto}
+  .form-wrap h2{font-size:24px;font-weight:700;letter-spacing:-.015em;margin:0 0 6px}
+  .form-wrap .sub{font-size:14px;color:var(--text-soft);margin:0 0 32px}
+
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+  label{font-size:13px;font-weight:600;color:var(--text)}
+  label .opt{font-weight:500;color:var(--muted);font-size:12px;margin-left:6px}
+  input[type=text],input[type=email],input[type=password]{
+    font-family:inherit;font-size:15px;padding:11px 13px;border:1px solid var(--border-strong);
+    border-radius:7px;background:var(--surface);color:var(--text);outline:none;
+    transition:border-color .12s,box-shadow .12s;
+  }
+  input:focus{border-color:var(--text);box-shadow:0 0 0 3px rgba(28,25,23,.06)}
+  .slug-wrap{display:flex;border:1px solid var(--border-strong);border-radius:7px;overflow:hidden;background:var(--surface);transition:border-color .12s,box-shadow .12s}
+  .slug-wrap:focus-within{border-color:var(--text);box-shadow:0 0 0 3px rgba(28,25,23,.06)}
+  .slug-wrap .pre{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);padding:11px 0 11px 13px;white-space:nowrap}
+  .slug-wrap input{border:none;padding:11px 13px 11px 4px;font-family:'JetBrains Mono',monospace;font-size:13px;flex:1;background:transparent}
+  .slug-wrap input:focus{box-shadow:none}
+  .hint{font-size:12px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px}
+  .hint.ok{color:var(--success)}
+  .hint.err{color:var(--danger)}
+
+  .plan-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+  .plan-pick label{display:flex;flex-direction:column;gap:2px;padding:12px 10px;border:1px solid var(--border-strong);border-radius:7px;cursor:pointer;transition:all .12s;background:var(--surface);text-align:center}
+  .plan-pick label:hover{border-color:var(--text)}
+  .plan-pick input{position:absolute;opacity:0;pointer-events:none}
+  .plan-pick input:checked + .plan-card{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+  .plan-card{display:flex;flex-direction:column;gap:2px;padding:12px 10px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface);transition:all .12s;text-align:center}
+  .plan-card:hover{border-color:var(--text)}
+  .plan-card .pn{font-size:13px;font-weight:600}
+  .plan-card .pp{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted)}
+  .plan-pick label:has(input:checked) .plan-card{border-color:var(--accent);background:var(--accent-bg)}
+  .plan-pick label:has(input:checked) .plan-card .pp{color:var(--accent)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:7px;font-weight:600;font-size:14.5px;border:1px solid transparent;transition:all .15s;width:100%}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 6px 16px -6px rgba(194,65,12,.36)}
+  .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+
+  .legal{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5;text-align:center}
+  .legal a{color:var(--text);text-decoration:underline}
+  .or{text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin:20px 0;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:12px}
+  .or::before,.or::after{content:"";flex:1;height:1px;background:var(--border)}
+  .sign-in{text-align:center;font-size:13.5px;color:var(--text-soft)}
+  .sign-in a{color:var(--accent);font-weight:600}
+
+  .alert{padding:12px 14px;border-radius:8px;font-size:13.5px;margin-bottom:18px;display:none}
+  .alert.show{display:block}
+  .alert.error{background:#FEF2F2;color:var(--danger);border:1px solid #FECACA}
+  .alert.success{background:#F0FDF4;color:var(--success);border:1px solid #BBF7D0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="nav">
+    <a class="brand" href="/">
+      <span class="brand-mark">AI</span>
+      <span class="brand-name">AICS <small>by Kamil Alfaris</small></span>
+    </a>
+    <a class="nav-back" href="/">← Kembali ke landing</a>
+  </div>
+</header>
+
+<div class="grid">
+  <div class="left">
+    <span class="pill"><span class="dot"></span> Trial 14 hari · tanpa kartu kredit</span>
+    <h1>Pasang AICS di toko Anda dalam 5 menit.</h1>
+    <p class="lead">Trial 14 hari penuh akses ke fitur Pro. Tidak ada batasan, tidak ada kartu kredit. Cancel kapan saja dari dashboard.</p>
+
+    <ul class="benefits">
+      <li>
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10L12 3.5" stroke="#C2410C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><strong>Setup wizard</strong>Kami pandu Anda dari signup sampai widget pertama live.</div>
+      </li>
+      <li>
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10L12 3.5" stroke="#C2410C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><strong>Knowledge base instan</strong>Import dari Notion, Google Docs, atau paste teks biasa.</div>
+      </li>
+      <li>
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10L12 3.5" stroke="#C2410C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><strong>Eskalasi otomatis</strong>WA Business / email Anda kena notifikasi kalau perlu intervensi.</div>
+      </li>
+      <li>
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10L12 3.5" stroke="#C2410C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><strong>WhatsApp support langsung</strong>Saya jawab WA Anda sendiri jika ada masalah. Bukan tim ghost.</div>
+      </li>
+    </ul>
+
+    <div class="mini-plans">
+      <h4>Paket setelah trial</h4>
+      <div class="mp">
+        <span class="mp-name">Lite</span>
+        <span class="mp-price">Rp 99rb<span style="color:var(--muted);font-weight:500">/bln</span></span>
+      </div>
+      <div class="mp">
+        <span class="mp-name">Pro <span class="featured">paling diminati</span></span>
+        <span class="mp-price">Rp 299rb<span style="color:var(--muted);font-weight:500">/bln</span></span>
+      </div>
+      <div class="mp">
+        <span class="mp-name">Business</span>
+        <span class="mp-price">Rp 999rb<span style="color:var(--muted);font-weight:500">/bln</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="form-wrap">
+      <h2>Buat akun</h2>
+      <p class="sub">Gratis 14 hari. Pilih paket setelah trial.</p>
+
+      <div class="alert error" id="alertError"></div>
+      <div class="alert success" id="alertSuccess"></div>
+
+      <form id="signupForm">
+        <div class="plan-pick">
+          <label>
+            <input type="radio" name="plan" value="lite" />
+            <div class="plan-card"><span class="pn">Lite</span><span class="pp">Rp 99rb</span></div>
+          </label>
+          <label>
+            <input type="radio" name="plan" value="pro" checked />
+            <div class="plan-card"><span class="pn">Pro</span><span class="pp">Rp 299rb</span></div>
+          </label>
+          <label>
+            <input type="radio" name="plan" value="business" />
+            <div class="plan-card"><span class="pn">Business</span><span class="pp">Rp 999rb</span></div>
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="company">Nama perusahaan / toko</label>
+          <input type="text" id="company" name="company" placeholder="Toko Skincare Bandung" required />
+        </div>
+
+        <div class="field">
+          <label for="slug">URL standalone <span class="opt">(huruf kecil, angka, dash)</span></label>
+          <div class="slug-wrap">
+            <span class="pre">aics-web.vercel.app/c/</span>
+            <input type="text" id="slug" name="slug" placeholder="toko-anda" required />
+          </div>
+          <div class="hint" id="slugHint">URL Anda untuk standalone chat page.</div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="anda@toko.com" required autocomplete="email" />
+        </div>
+
+        <div class="field">
+          <label for="password">Password <span class="opt">min. 8 karakter</span></label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required minlength="8" autocomplete="new-password" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <span id="submitText">Mulai trial 14 hari →</span>
+        </button>
+
+        <div class="legal">
+          Dengan mendaftar, Anda menyetujui <a href="/terms.html">Syarat Layanan</a> dan <a href="/privacy.html">Kebijakan Privasi</a> AICS (sesuai UU No. 27/2022 tentang PDP).
+        </div>
+      </form>
+
+      <div class="or">atau</div>
+      <div class="sign-in">Sudah punya akun? <a href="/admin.html">Masuk di sini →</a></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+
+  const SUPABASE_URL = 'https://stcywvcnbbapshrzqblk.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_WUxbFG3866P7BANLSqv-Sw_4NcXMLSr';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const form = document.getElementById('signupForm');
+  const slugInput = document.getElementById('slug');
+  const companyInput = document.getElementById('company');
+  const slugHint = document.getElementById('slugHint');
+  const submitBtn = document.getElementById('submitBtn');
+  const submitText = document.getElementById('submitText');
+  const alertError = document.getElementById('alertError');
+  const alertSuccess = document.getElementById('alertSuccess');
+
+  // pick plan from URL
+  const params = new URLSearchParams(location.search);
+  const plan = params.get('plan');
+  if(plan){ const r = document.querySelector(`input[name="plan"][value="${plan}"]`); if(r) r.checked = true; }
+
+  // auto-slug from company name
+  companyInput.addEventListener('input', () => {
+    if(slugInput.dataset.touched) return;
+    slugInput.value = slugify(companyInput.value);
+  });
+  slugInput.addEventListener('input', () => {
+    slugInput.dataset.touched = '1';
+    slugInput.value = slugify(slugInput.value);
+    checkSlug();
+  });
+
+  function slugify(s){
+    return s.toLowerCase().trim()
+      .replace(/[^a-z0-9\s-]/g,'')
+      .replace(/\s+/g,'-')
+      .replace(/-+/g,'-')
+      .slice(0,40);
+  }
+
+  let slugTimer;
+  function checkSlug(){
+    clearTimeout(slugTimer);
+    const v = slugInput.value;
+    if(!v){ slugHint.className='hint'; slugHint.textContent='URL Anda untuk standalone chat page.'; return; }
+    slugHint.className='hint'; slugHint.textContent='Memeriksa ketersediaan…';
+    slugTimer = setTimeout(async ()=>{
+      // simulate uniqueness check; in real backend hit RPC
+      const taken = ['admin','app','www','demo','aics','test'].includes(v);
+      if(taken){
+        const suffix = Math.random().toString(36).slice(2,5);
+        slugInput.value = v+'-'+suffix;
+        slugHint.className='hint err'; slugHint.textContent=`"${v}" sudah dipakai — diubah jadi "${v}-${suffix}"`;
+        setTimeout(()=>{ slugHint.className='hint ok'; slugHint.textContent='✓ URL tersedia'; },1500);
+      } else {
+        slugHint.className='hint ok'; slugHint.textContent='✓ URL tersedia';
+      }
+    }, 400);
+  }
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    alertError.classList.remove('show');
+    alertSuccess.classList.remove('show');
+    submitBtn.disabled = true;
+    submitText.textContent = 'Memproses…';
+
+    const data = {
+      email: form.email.value,
+      password: form.password.value,
+      company: form.company.value,
+      slug: form.slug.value,
+      plan: form.plan.value
+    };
+
+    try{
+      const { data: auth, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options:{
+          data: { company: data.company, slug: data.slug, plan: data.plan }
+        }
+      });
+      if(error) throw error;
+
+      alertSuccess.textContent = '✓ Akun berhasil dibuat! Cek email Anda untuk verifikasi. Mengalihkan ke dashboard…';
+      alertSuccess.classList.add('show');
+      setTimeout(()=>{ location.href = '/dashboard.html'; }, 1800);
+    }catch(err){
+      console.error(err);
+      alertError.textContent = err.message || 'Gagal mendaftar. Coba lagi.';
+      alertError.classList.add('show');
+      submitBtn.disabled = false;
+      submitText.textContent = 'Mulai trial 14 hari →';
+    }
+  });
+</script>
+
+</body>
+</html>

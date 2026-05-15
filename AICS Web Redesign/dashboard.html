@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dashboard · AICS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FAFAF7;--surface:#FFFFFF;--surface-alt:#F5F4F1;
+    --text:#1C1917;--text-soft:#44403C;--muted:#78716C;
+    --border:#E7E5E4;--border-strong:#D6D3D1;
+    --accent:#C2410C;--accent-hover:#9A3412;--accent-bg:#FFF7ED;
+    --success:#15803D;--warning:#D97706;--danger:#DC2626;
+    --info:#2563EB;
+    --sidebar-w:248px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100vh}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,textarea,select{font-family:inherit}
+
+  /* ─── LAYOUT ─── */
+  .app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;min-height:100vh}
+  @media (max-width:900px){.app{grid-template-columns:1fr}.sidebar{display:none}}
+
+  .sidebar{
+    background:var(--surface);border-right:1px solid var(--border);
+    padding:20px 16px;display:flex;flex-direction:column;gap:24px;position:sticky;top:0;height:100vh;
+  }
+  .brand{display:flex;align-items:center;gap:10px;padding:4px 8px;font-weight:700;letter-spacing:-.02em}
+  .brand-mark{width:30px;height:30px;border-radius:7px;background:var(--text);color:var(--bg);display:grid;place-items:center;font-size:13px;font-weight:800}
+  .brand-name{font-size:14.5px}
+  .brand-name small{color:var(--muted);font-weight:500;display:block;font-size:11.5px}
+
+  .nav{display:flex;flex-direction:column;gap:2px;flex:1}
+  .nav-group{font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:14px 12px 6px;font-weight:600}
+  .nav a{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;font-size:14px;color:var(--text-soft);transition:all .12s}
+  .nav a:hover{background:var(--surface-alt);color:var(--text)}
+  .nav a.active{background:var(--text);color:var(--bg);font-weight:600}
+  .nav a .ic{width:16px;height:16px;flex-shrink:0;opacity:.9}
+  .nav a .badge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--accent-bg);color:var(--accent);padding:1px 6px;border-radius:3px;font-weight:600}
+  .nav a.active .badge{background:rgba(255,255,255,.18);color:#fff}
+
+  .tenant-card{
+    border:1px solid var(--border);border-radius:10px;padding:12px;
+    background:var(--surface-alt);font-size:13px;
+  }
+  .tenant-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .tenant-name{font-weight:600;font-size:13.5px;letter-spacing:-.01em}
+  .tenant-plan{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:var(--accent-bg);color:var(--accent);padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .tenant-usage{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
+  .tenant-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+  .tenant-bar > div{height:100%;background:var(--accent);width:42%}
+  .tenant-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:11.5px}
+  .tenant-foot a{color:var(--accent);font-weight:600}
+  .tenant-foot .day{color:var(--muted);font-family:'JetBrains Mono',monospace}
+
+  /* ─── MAIN ─── */
+  .main{display:flex;flex-direction:column;min-height:100vh}
+
+  .topbar{
+    height:60px;border-bottom:1px solid var(--border);background:var(--surface);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 32px;position:sticky;top:0;z-index:20;
+  }
+  @media(max-width:640px){.topbar{padding:0 20px}}
+  .crumbs{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+  .crumbs strong{color:var(--text);font-weight:600}
+  .top-right{display:flex;align-items:center;gap:10px}
+  .icon-btn{width:34px;height:34px;border-radius:7px;border:1px solid var(--border);display:grid;place-items:center;transition:all .12s;background:var(--surface)}
+  .icon-btn:hover{border-color:var(--text);background:var(--surface-alt)}
+  .user-pill{display:flex;align-items:center;gap:8px;padding:5px 11px 5px 5px;border:1px solid var(--border);border-radius:999px;font-size:13px;background:var(--surface);cursor:pointer}
+  .user-pill:hover{border-color:var(--text)}
+  .user-avatar{width:26px;height:26px;border-radius:50%;background:var(--text);color:var(--bg);display:grid;place-items:center;font-size:11.5px;font-weight:700}
+
+  .upgrade-banner{
+    background:linear-gradient(135deg,#FFF7ED,#FFEDD5);
+    border:1px solid #FED7AA;border-radius:10px;padding:14px 18px;margin:24px 32px 0;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  @media(max-width:640px){.upgrade-banner{margin:20px 20px 0}}
+  .upgrade-banner .txt{font-size:14px;color:#7C2D12}
+  .upgrade-banner .txt strong{font-weight:700}
+  .upgrade-banner .actions{display:flex;gap:8px}
+
+  /* ─── PAGES ─── */
+  .page{padding:32px;flex:1;display:none}
+  .page.active{display:block}
+  @media(max-width:640px){.page{padding:24px 20px}}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+  .page-head h1{font-size:24px;font-weight:700;letter-spacing:-.018em;margin:0 0 4px;line-height:1.2}
+  .page-head .desc{font-size:14px;color:var(--text-soft);margin:0}
+  .page-actions{display:flex;gap:8px;align-items:center}
+
+  /* ─── BUTTONS ─── */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 14px;border-radius:7px;font-weight:600;font-size:13.5px;border:1px solid transparent;transition:all .12s;cursor:pointer;line-height:1;white-space:nowrap}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(194,65,12,.32)}
+  .btn-ghost{background:var(--surface);color:var(--text);border-color:var(--border-strong)}
+  .btn-ghost:hover{border-color:var(--text);background:var(--surface-alt)}
+  .btn-dark{background:var(--text);color:var(--bg)}
+  .btn-dark:hover{background:#000}
+  .btn-sm{padding:6px 10px;font-size:12.5px}
+
+  /* ─── STAT CARDS ─── */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px}
+  @media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{
+    border:1px solid var(--border);border-radius:10px;padding:16px 18px;background:var(--surface);
+    transition:border-color .15s;
+  }
+  .stat:hover{border-color:var(--border-strong)}
+  .stat-label{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .stat-value{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:6px 0 2px;font-family:'JetBrains Mono',monospace}
+  .stat-trend{font-size:11.5px;color:var(--success);font-family:'JetBrains Mono',monospace}
+  .stat-trend.down{color:var(--danger)}
+
+  /* ─── PANELS ─── */
+  .panel{
+    border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden;
+    margin-bottom:20px;
+  }
+  .panel-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .panel-head h3{font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em}
+  .panel-head .sub{font-size:12.5px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+  .panel-body{padding:0}
+  .panel-body.padded{padding:20px}
+
+  /* ─── TABLE ─── */
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  thead th{
+    background:var(--surface-alt);font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+    font-weight:600;text-align:left;padding:10px 16px;border-bottom:1px dashed var(--border-strong)
+  }
+  tbody td{padding:12px 16px;border-bottom:1px dashed var(--border);color:var(--text-soft);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-alt)}
+  td.col-key{color:var(--text);font-weight:500}
+  td.col-mono{font-family:'JetBrains Mono',monospace;font-size:12.5px}
+
+  .badge{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:4px;font-weight:600;border:1px solid transparent;line-height:1;display:inline-block}
+  .b-resolved{background:rgba(21,128,61,.10);color:var(--success);border-color:rgba(21,128,61,.20)}
+  .b-escalated{background:rgba(217,119,6,.10);color:var(--warning);border-color:rgba(217,119,6,.22)}
+  .b-await{background:rgba(28,25,23,.06);color:var(--text-soft);border-color:var(--border)}
+  .b-paid{background:rgba(21,128,61,.10);color:var(--success);border-color:rgba(21,128,61,.20)}
+  .b-pending{background:rgba(217,119,6,.10);color:var(--warning);border-color:rgba(217,119,6,.22)}
+  .b-info{background:rgba(37,99,235,.08);color:var(--info);border-color:rgba(37,99,235,.18)}
+
+  /* ─── CHECKLIST ─── */
+  .checklist{display:flex;flex-direction:column}
+  .check-item{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px dashed var(--border)}
+  .check-item:last-child{border-bottom:none}
+  .check-box{
+    width:22px;height:22px;border:1.5px solid var(--border-strong);border-radius:6px;
+    flex-shrink:0;display:grid;place-items:center;background:var(--surface)
+  }
+  .check-item.done .check-box{background:var(--success);border-color:var(--success);color:#fff}
+  .check-item.done .check-text{color:var(--muted);text-decoration:line-through}
+  .check-text{flex:1;font-size:14px}
+  .check-text strong{display:block;font-weight:600;color:var(--text)}
+  .check-text small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+  .check-action{font-size:12.5px;color:var(--accent);font-weight:600}
+
+  /* ─── FORM ─── */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:760px){.form-grid{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+  .field.full{grid-column:1/-1}
+  label{font-size:13px;font-weight:600;color:var(--text)}
+  label .opt{font-weight:500;color:var(--muted);font-size:12px;margin-left:6px}
+  input[type=text],input[type=email],input[type=password],input[type=url],textarea,select{
+    font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--border-strong);
+    border-radius:7px;background:var(--surface);color:var(--text);outline:none;width:100%;
+    transition:border-color .12s,box-shadow .12s;
+  }
+  textarea{min-height:120px;resize:vertical;font-family:inherit}
+  input:focus,textarea:focus,select:focus{border-color:var(--text);box-shadow:0 0 0 3px rgba(28,25,23,.06)}
+  .color-input{display:flex;gap:8px;align-items:center}
+  .color-input input[type=color]{width:42px;height:42px;border:1px solid var(--border-strong);border-radius:7px;padding:2px;cursor:pointer}
+  .color-input input[type=text]{flex:1;font-family:'JetBrains Mono',monospace}
+
+  /* ─── EMBED CODE ─── */
+  .code-snip{background:#1C1917;color:#FAFAF7;border-radius:10px;padding:18px 22px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;overflow-x:auto;position:relative}
+  .code-snip .copy{position:absolute;top:14px;right:14px;font-size:11px;background:rgba(255,255,255,.08);color:#FAFAF7;padding:5px 10px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;border:1px solid rgba(255,255,255,.10);transition:all .12s}
+  .code-snip .copy:hover{background:rgba(255,255,255,.15)}
+  .tok-tag{color:#F59E5C}.tok-attr{color:#7DD3FC}.tok-str{color:#FCD34D}.tok-com{color:#78716C;font-style:italic}
+
+  .embed-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+  @media(max-width:760px){.embed-grid{grid-template-columns:1fr}}
+  .embed-card{border:1px solid var(--border);border-radius:10px;padding:18px;background:var(--surface)}
+  .embed-card h4{font-size:14px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+  .embed-card p{font-size:13px;color:var(--text-soft);margin:0 0 12px}
+  .url-pill{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--surface-alt);padding:8px 12px;border-radius:7px;border:1px solid var(--border);color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .url-pill a{color:var(--accent);font-size:11px;font-weight:600}
+
+  /* ─── PRICING IN BILLING ─── */
+  .bill-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+  @media(max-width:900px){.bill-grid{grid-template-columns:1fr}}
+  .plan-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+  @media(max-width:760px){.plan-row{grid-template-columns:1fr}}
+  .plan-bill{border:1px solid var(--border);border-radius:10px;padding:18px;background:var(--surface);position:relative}
+  .plan-bill.current{border-color:var(--accent);background:var(--accent-bg)}
+  .plan-bill .current-tag{position:absolute;top:-8px;left:14px;font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--accent);color:#fff;padding:2px 7px;border-radius:3px;letter-spacing:.06em;font-weight:600;text-transform:uppercase}
+  .plan-bill .pn{font-size:14px;font-weight:700;letter-spacing:-.012em}
+  .plan-bill .pp{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;margin:4px 0 10px}
+  .plan-bill ul{list-style:none;padding:0;margin:0 0 12px;font-size:12.5px;color:var(--text-soft);line-height:1.6}
+  .plan-bill ul li::before{content:"✓ ";color:var(--accent)}
+  .plan-bill .btn{width:100%;font-size:12.5px;padding:8px 10px}
+
+  .bank-box{border:1px dashed var(--border-strong);border-radius:10px;padding:18px;background:var(--surface-alt)}
+  .bank-box h4{font-family:'JetBrains Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 12px;font-weight:600}
+  .bank-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--border);font-size:13px}
+  .bank-row:last-child{border-bottom:none}
+  .bank-row .k{color:var(--muted)}
+  .bank-row .v{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text)}
+
+  /* ─── MODAL ─── */
+  .modal-bg{position:fixed;inset:0;background:rgba(28,25,23,.45);backdrop-filter:blur(6px);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--surface);border-radius:14px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px -12px rgba(28,25,23,.32)}
+  .modal-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+  .modal-head h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.012em}
+  .modal-head .close{font-size:20px;color:var(--muted);cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:6px;transition:all .12s}
+  .modal-head .close:hover{background:var(--surface-alt);color:var(--text)}
+  .modal-body{padding:24px}
+  .modal-foot{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+
+  /* ─── KB list ─── */
+  .kb-list{display:flex;flex-direction:column}
+  .kb-row{display:grid;grid-template-columns:1fr auto auto;gap:16px;padding:14px 20px;border-bottom:1px dashed var(--border);align-items:center}
+  .kb-row:last-child{border-bottom:none}
+  .kb-title{font-weight:600;font-size:14px;letter-spacing:-.01em}
+  .kb-title small{display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px}
+  .kb-cat{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border:1px solid var(--border);border-radius:4px}
+
+  /* ─── activity strip ─── */
+  .filter-row{display:flex;gap:6px;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+  .filter-row .search{flex:1;min-width:200px;border:1px solid var(--border-strong);border-radius:7px;padding:6px 12px 6px 32px;font-size:13px;background:var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2378716C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") no-repeat 10px center}
+  .chip-filter{font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;color:var(--text-soft);background:var(--surface);cursor:pointer;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .chip-filter:hover{border-color:var(--text)}
+  .chip-filter.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      <span class="brand-mark">AI</span>
+      <span class="brand-name">AICS<small>Customer dashboard</small></span>
+    </a>
+
+    <nav class="nav">
+      <div class="nav-group">Workspace</div>
+      <a href="#overview" data-page="overview" class="active">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Overview
+      </a>
+      <a href="#kb" data-page="kb">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Knowledge Base <span class="badge">12</span>
+      </a>
+      <a href="#logs" data-page="logs">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Chat Logs
+      </a>
+      <a href="#embed" data-page="embed">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Embed Code
+      </a>
+      <a href="#settings" data-page="settings">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+      <a href="#billing" data-page="billing">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Billing
+      </a>
+    </nav>
+
+    <div class="tenant-card">
+      <div class="tenant-row">
+        <span class="tenant-name">Toko Skincare BDG</span>
+        <span class="tenant-plan">PRO TRIAL</span>
+      </div>
+      <div class="tenant-usage"><span>2,134 / 5,000 chat</span><span>42%</span></div>
+      <div class="tenant-bar"><div></div></div>
+      <div class="tenant-foot">
+        <span class="day">7 hari tersisa</span>
+        <a href="#billing">Upgrade →</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN ─── -->
+  <main class="main">
+    <div class="topbar">
+      <div class="crumbs">
+        <span>workspace</span><span>/</span><strong id="crumb">overview</strong>
+      </div>
+      <div class="top-right">
+        <button class="icon-btn" aria-label="Notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <div class="user-pill">
+          <span class="user-avatar">KA</span>
+          <span>kamil@toko.com</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="upgrade-banner">
+      <div class="txt">⏰ <strong>Trial Anda berakhir dalam 7 hari.</strong> Upgrade sekarang agar widget tetap aktif tanpa interupsi.</div>
+      <div class="actions">
+        <a href="#billing" class="btn btn-sm btn-dark">Lihat paket</a>
+      </div>
+    </div>
+
+    <!-- ─── OVERVIEW ─── -->
+    <section class="page active" id="page-overview">
+      <div class="page-head">
+        <div>
+          <h1>Overview</h1>
+          <p class="desc">Statistik 30 hari terakhir · diperbarui realtime</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">30 hari ↓</button>
+          <button class="btn btn-ghost btn-sm">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Total pesan</div>
+          <div class="stat-value">2,134</div>
+          <div class="stat-trend">↑ 18% vs 30 hari</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Pemakaian bln ini</div>
+          <div class="stat-value">42%</div>
+          <div class="stat-trend">2,134 / 5,000</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Auto-resolved</div>
+          <div class="stat-value">87%</div>
+          <div class="stat-trend">↑ 3% vs minggu lalu</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Eskalasi</div>
+          <div class="stat-value">42</div>
+          <div class="stat-trend down">↓ 12 dari minggu lalu</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Sesi unik</div>
+          <div class="stat-value">847</div>
+          <div class="stat-trend">↑ 9% vs 30 hari</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px" class="overview-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Aktivitas terbaru</h3>
+            <span class="sub">live · last 10</span>
+          </div>
+          <table>
+            <thead><tr><th>Waktu</th><th>Sesi</th><th>Intent</th><th>State</th></tr></thead>
+            <tbody>
+              <tr><td class="col-mono">14:28</td><td>sesi_4f29</td><td class="col-key">order_status</td><td><span class="badge b-resolved">RESOLVED</span></td></tr>
+              <tr><td class="col-mono">14:24</td><td>sesi_8a13</td><td class="col-key">refund_large</td><td><span class="badge b-escalated">ESCALATED</span></td></tr>
+              <tr><td class="col-mono">14:19</td><td>sesi_2c91</td><td class="col-key">password_reset</td><td><span class="badge b-resolved">RESOLVED</span></td></tr>
+              <tr><td class="col-mono">14:11</td><td>sesi_7e02</td><td class="col-key">product_info</td><td><span class="badge b-resolved">RESOLVED</span></td></tr>
+              <tr><td class="col-mono">13:58</td><td>sesi_b56f</td><td class="col-key">unknown</td><td><span class="badge b-await">AWAITING</span></td></tr>
+              <tr><td class="col-mono">13:42</td><td>sesi_31a8</td><td class="col-key">shipping_status</td><td><span class="badge b-resolved">RESOLVED</span></td></tr>
+              <tr><td class="col-mono">13:30</td><td>sesi_9c14</td><td class="col-key">refund_small</td><td><span class="badge b-resolved">RESOLVED</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Quick setup</h3>
+            <span class="sub">3 / 5 selesai</span>
+          </div>
+          <div class="checklist">
+            <div class="check-item done">
+              <div class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5L5 9.5L10 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="check-text"><strong>Buat akun</strong><small>Selesai 14 Mei 2026</small></div>
+            </div>
+            <div class="check-item done">
+              <div class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5L5 9.5L10 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="check-text"><strong>Set brand color</strong><small>#C2410C</small></div>
+            </div>
+            <div class="check-item done">
+              <div class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5L5 9.5L10 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="check-text"><strong>Tambah 5 artikel KB</strong><small>12 artikel aktif</small></div>
+            </div>
+            <div class="check-item">
+              <div class="check-box"></div>
+              <div class="check-text"><strong>Pasang embed di website</strong><small>Salin 1 baris kode</small></div>
+              <a href="#embed" class="check-action">Setup →</a>
+            </div>
+            <div class="check-item">
+              <div class="check-box"></div>
+              <div class="check-text"><strong>Set WA escalation</strong><small>Notifikasi otomatis untuk eskalasi</small></div>
+              <a href="#settings" class="check-action">Setup →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── KNOWLEDGE BASE ─── -->
+    <section class="page" id="page-kb">
+      <div class="page-head">
+        <div>
+          <h1>Knowledge Base</h1>
+          <p class="desc">Artikel yang dipakai agent untuk menjawab pelanggan</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">Import Notion</button>
+          <button class="btn btn-primary btn-sm" id="kbAddBtn">+ Tambah artikel</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="filter-row">
+          <input class="search" placeholder="Cari artikel…" />
+          <button class="chip-filter active">Semua</button>
+          <button class="chip-filter">FAQ</button>
+          <button class="chip-filter">Refund</button>
+          <button class="chip-filter">Shipping</button>
+          <button class="chip-filter">Produk</button>
+        </div>
+        <div class="kb-list">
+          <div class="kb-row"><div class="kb-title">Cara cek status pesanan<small>Dipakai 247× dalam 30 hari</small></div><span class="kb-cat">faq</span><button class="btn btn-ghost btn-sm">Edit</button></div>
+          <div class="kb-row"><div class="kb-title">Kebijakan refund (di bawah Rp 100rb)<small>Dipakai 89× dalam 30 hari</small></div><span class="kb-cat">refund</span><button class="btn btn-ghost btn-sm">Edit</button></div>
+          <div class="kb-row"><div class="kb-title">Kebijakan refund (Rp 100rb–1jt)<small>Dipakai 23× dalam 30 hari</small></div><span class="kb-cat">refund</span><button class="btn btn-ghost btn-sm">Edit</button></div>
+          <div class="kb-row"><div class="kb-title">Estimasi pengiriman per kota<small>Dipakai 156× dalam 30 hari</small></div><span class="kb-cat">shipping</span><button class="btn btn-ghost btn-sm">Edit</button></div>
+          <div class="kb-row"><div class="kb-title">Cara reset password akun<small>Dipakai 74× dalam 30 hari</small></div><span class="kb-cat">faq</span><button class="btn btn-ghost btn-sm">Edit</button></div>
+          <div class="kb-row"><div class="kb-title">Daftar produk & varian<small>Dipakai 203× dalam 30 hari</small></div><span class="kb-cat">produk</span><button class="btn btn-ghost btn-sm">Edit</button></div>
+          <div class="kb-row"><div class="kb-title">Jam operasional & hari libur<small>Dipakai 42× dalam 30 hari</small></div><span class="kb-cat">faq</span><button class="btn btn-ghost btn-sm">Edit</button></div>
+          <div class="kb-row"><div class="kb-title">Cara redeem voucher promo<small>Dipakai 31× dalam 30 hari</small></div><span class="kb-cat">faq</span><button class="btn btn-ghost btn-sm">Edit</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CHAT LOGS ─── -->
+    <section class="page" id="page-logs">
+      <div class="page-head">
+        <div>
+          <h1>Chat Logs</h1>
+          <p class="desc">Semua percakapan customer · 30 hari terakhir</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="filter-row">
+          <input class="search" placeholder="Cari berdasarkan pesan atau sesi ID…" />
+          <button class="chip-filter active">Semua</button>
+          <button class="chip-filter">Resolved</button>
+          <button class="chip-filter">Escalated</button>
+          <button class="chip-filter">Awaiting</button>
+        </div>
+        <table>
+          <thead><tr><th>Sesi</th><th>Pesan pertama</th><th>Intent</th><th>Pesan</th><th>State</th><th>Waktu</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="col-mono">sesi_4f29</td><td class="col-key">Status pesanan #28471</td><td>order_status</td><td class="col-mono">3</td><td><span class="badge b-resolved">RESOLVED</span></td><td class="col-mono">14:28</td><td><button class="btn btn-ghost btn-sm">Lihat →</button></td></tr>
+            <tr><td class="col-mono">sesi_8a13</td><td class="col-key">Saya mau refund Rp 2.5jt</td><td>refund_large</td><td class="col-mono">5</td><td><span class="badge b-escalated">ESCALATED</span></td><td class="col-mono">14:24</td><td><button class="btn btn-ghost btn-sm">Lihat →</button></td></tr>
+            <tr><td class="col-mono">sesi_2c91</td><td class="col-key">Bagaimana cara reset password</td><td>password_reset</td><td class="col-mono">2</td><td><span class="badge b-resolved">RESOLVED</span></td><td class="col-mono">14:19</td><td><button class="btn btn-ghost btn-sm">Lihat →</button></td></tr>
+            <tr><td class="col-mono">sesi_7e02</td><td class="col-key">Apakah serum ini cocok untuk kulit berminyak</td><td>product_info</td><td class="col-mono">4</td><td><span class="badge b-resolved">RESOLVED</span></td><td class="col-mono">14:11</td><td><button class="btn btn-ghost btn-sm">Lihat →</button></td></tr>
+            <tr><td class="col-mono">sesi_b56f</td><td class="col-key">qwerty test</td><td>unknown</td><td class="col-mono">1</td><td><span class="badge b-await">AWAITING</span></td><td class="col-mono">13:58</td><td><button class="btn btn-ghost btn-sm">Lihat →</button></td></tr>
+            <tr><td class="col-mono">sesi_31a8</td><td class="col-key">Paket saya sampai mana</td><td>shipping_status</td><td class="col-mono">2</td><td><span class="badge b-resolved">RESOLVED</span></td><td class="col-mono">13:42</td><td><button class="btn btn-ghost btn-sm">Lihat →</button></td></tr>
+            <tr><td class="col-mono">sesi_9c14</td><td class="col-key">Refund 50rb karena salah ukuran</td><td>refund_small</td><td class="col-mono">3</td><td><span class="badge b-resolved">RESOLVED</span></td><td class="col-mono">13:30</td><td><button class="btn btn-ghost btn-sm">Lihat →</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─── EMBED ─── -->
+    <section class="page" id="page-embed">
+      <div class="page-head">
+        <div>
+          <h1>Embed Code</h1>
+          <p class="desc">Pasang widget di website Anda dengan satu baris script</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">📖 Panduan visual</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Snippet HTML</h3>
+          <span class="sub">copy → paste sebelum &lt;/body&gt;</span>
+        </div>
+        <div class="panel-body padded">
+          <div class="code-snip">
+            <button class="copy" data-copy="embed">Copy</button>
+            <span class="tok-com">&lt;!-- AICS chat widget --&gt;</span><br>
+            <span class="tok-tag">&lt;script</span> <span class="tok-attr">src</span>=<span class="tok-str">"https://aics-web.vercel.app/embed.js"</span> <span class="tok-attr">data-tenant</span>=<span class="tok-str">"toko-skincare-bdg"</span> <span class="tok-attr">defer</span><span class="tok-tag">&gt;&lt;/script&gt;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="embed-grid">
+        <div class="embed-card">
+          <h4>Standalone chat URL</h4>
+          <p>Share link ini di bio Instagram, katalog WA, atau dimanapun.</p>
+          <div class="url-pill"><span>aics-web.vercel.app/c/toko-skincare-bdg</span><a href="#" data-copy="url">Copy</a></div>
+        </div>
+        <div class="embed-card">
+          <h4>Preview widget</h4>
+          <p>Cek bagaimana widget Anda terlihat sebelum dipasang.</p>
+          <a href="/widget.html?t=toko-skincare-bdg" target="_blank" class="btn btn-dark btn-sm" style="width:100%">Buka preview →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SETTINGS ─── -->
+    <section class="page" id="page-settings">
+      <div class="page-head">
+        <div>
+          <h1>Settings</h1>
+          <p class="desc">Branding widget & pengaturan eskalasi</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>Branding</h3></div>
+        <div class="panel-body padded">
+          <div class="form-grid">
+            <div class="field">
+              <label>Nama bot</label>
+              <input type="text" value="Asisten Toko" placeholder="Asisten Toko" />
+            </div>
+            <div class="field">
+              <label>Welcome message</label>
+              <input type="text" value="Halo! Ada yang bisa saya bantu?" />
+            </div>
+            <div class="field full">
+              <label>Brand color</label>
+              <div class="color-input">
+                <input type="color" value="#C2410C" id="brandColor" />
+                <input type="text" value="#C2410C" id="brandHex" maxlength="7" />
+              </div>
+            </div>
+            <div class="field full">
+              <label>Voice & tone <span class="opt">opsional</span></label>
+              <textarea placeholder="Contoh: Gunakan bahasa Indonesia non-formal, panggil customer dengan 'kak'. Jangan terlalu formal."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>Eskalasi & notifikasi</h3></div>
+        <div class="panel-body padded">
+          <div class="form-grid">
+            <div class="field">
+              <label>Email notifikasi</label>
+              <input type="email" value="kamil@toko.com" />
+            </div>
+            <div class="field">
+              <label>WhatsApp <span class="opt">format internasional</span></label>
+              <input type="text" value="+6281234567890" />
+            </div>
+            <div class="field full">
+              <label>Threshold confidence untuk eskalasi <span class="opt">default 70%</span></label>
+              <input type="text" value="70" />
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px">
+            <button class="btn btn-ghost">Batal</button>
+            <button class="btn btn-primary">Simpan perubahan</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── BILLING ─── -->
+    <section class="page" id="page-billing">
+      <div class="page-head">
+        <div>
+          <h1>Billing</h1>
+          <p class="desc">Paket aktif & riwayat pembayaran</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>Paket Anda</h3><span class="badge b-info">TRIAL · 7 HARI TERSISA</span></div>
+        <div class="panel-body padded">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace">PAKET AKTIF</div>
+              <div style="font-size:24px;font-weight:700;letter-spacing:-.015em;margin:4px 0">Pro <span class="badge b-info" style="font-size:11px">trial</span></div>
+              <div style="font-size:13px;color:var(--text-soft)">5.000 chat/bulan · 5 KB · Multi-channel</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace">BIAYA SETELAH TRIAL</div>
+              <div style="font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace">Rp 299.000<span style="font-size:13px;font-weight:500;color:var(--muted)">/bulan</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="plan-row">
+        <div class="plan-bill">
+          <div class="pn">Lite</div>
+          <div class="pp">Rp 99rb<span style="font-size:11px;color:var(--muted);font-weight:500">/bln</span></div>
+          <ul><li>1.000 chat</li><li>1 KB</li><li>Email escalation</li></ul>
+          <button class="btn btn-ghost">Downgrade</button>
+        </div>
+        <div class="plan-bill current">
+          <span class="current-tag">paket aktif</span>
+          <div class="pn">Pro</div>
+          <div class="pp">Rp 299rb<span style="font-size:11px;color:var(--muted);font-weight:500">/bln</span></div>
+          <ul><li>5.000 chat</li><li>5 KB</li><li>Multi-channel</li><li>WA + email escalation</li></ul>
+          <button class="btn btn-primary">Lanjutkan Pro →</button>
+        </div>
+        <div class="plan-bill">
+          <div class="pn">Business</div>
+          <div class="pp">Rp 999rb<span style="font-size:11px;color:var(--muted);font-weight:500">/bln</span></div>
+          <ul><li>25.000 chat</li><li>Unlimited KB</li><li>SSO + SLA 99.5%</li><li>Priority WA Kamil</li></ul>
+          <button class="btn btn-dark">Upgrade →</button>
+        </div>
+      </div>
+
+      <div class="bill-grid">
+        <div class="panel">
+          <div class="panel-head"><h3>Riwayat tagihan</h3></div>
+          <table>
+            <thead><tr><th>Invoice</th><th>Periode</th><th>Total</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="col-mono">INV-2026-0014</td><td>15 Apr — 14 Mei 2026</td><td class="col-mono">Rp 299.000</td><td><span class="badge b-paid">PAID</span></td><td><button class="btn btn-ghost btn-sm">Unduh PDF</button></td></tr>
+              <tr><td class="col-mono">INV-2026-0009</td><td>15 Mar — 14 Apr 2026</td><td class="col-mono">Rp 299.000</td><td><span class="badge b-paid">PAID</span></td><td><button class="btn btn-ghost btn-sm">Unduh PDF</button></td></tr>
+              <tr><td class="col-mono">INV-2026-0003</td><td>15 Feb — 14 Mar 2026</td><td class="col-mono">Rp 99.000</td><td><span class="badge b-paid">PAID</span></td><td><button class="btn btn-ghost btn-sm">Unduh PDF</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="bank-box">
+            <h4>Instruksi transfer</h4>
+            <div class="bank-row"><span class="k">Bank</span><span class="v">BCA</span></div>
+            <div class="bank-row"><span class="k">No. rekening</span><span class="v">0123456789</span></div>
+            <div class="bank-row"><span class="k">Atas nama</span><span class="v">Kamil Alfaris</span></div>
+            <div class="bank-row"><span class="k">Berita</span><span class="v">AICS-PRO-toko-skincare-bdg</span></div>
+            <div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);font-size:12px;color:var(--text-soft);line-height:1.5">Setelah transfer, konfirmasi via WA bot kami akan otomatis mendeteksi pembayaran dalam 15 menit.</div>
+            <button class="btn btn-dark btn-sm" style="width:100%;margin-top:14px">Konfirmasi via WhatsApp →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ─── KB MODAL ─── -->
+<div class="modal-bg" id="kbModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Tambah artikel knowledge base</h3>
+      <button class="close" onclick="closeKB()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Judul</label>
+        <input type="text" placeholder="Cara cek status pesanan" />
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Kategori</label>
+          <select><option>FAQ</option><option>Refund</option><option>Shipping</option><option>Produk</option></select>
+        </div>
+        <div class="field">
+          <label>Keywords <span class="opt">comma-separated</span></label>
+          <input type="text" placeholder="status, pesanan, tracking" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Isi artikel</label>
+        <textarea placeholder="Customer bisa cek status pesanan dengan klik link tracking di email konfirmasi…"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeKB()">Batal</button>
+      <button class="btn btn-primary" onclick="closeKB()">Simpan artikel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── Hash routing ───
+  const navLinks = document.querySelectorAll('.nav a[data-page]');
+  function route(){
+    const hash = location.hash.replace('#','') || 'overview';
+    navLinks.forEach(a=>a.classList.toggle('active', a.dataset.page === hash));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const target = document.getElementById('page-'+hash);
+    if(target){ target.classList.add('active'); document.getElementById('crumb').textContent = hash; }
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange', route);
+  route();
+
+  // ─── KB modal ───
+  const kbModal = document.getElementById('kbModal');
+  document.getElementById('kbAddBtn')?.addEventListener('click',()=>kbModal.classList.add('show'));
+  function closeKB(){ kbModal.classList.remove('show'); }
+  kbModal.addEventListener('click',(e)=>{ if(e.target===kbModal) closeKB(); });
+
+  // ─── Brand color sync ───
+  const bc = document.getElementById('brandColor');
+  const bh = document.getElementById('brandHex');
+  if(bc && bh){
+    bc.addEventListener('input',()=>bh.value=bc.value.toUpperCase());
+    bh.addEventListener('input',()=>{ if(/^#[0-9A-Fa-f]{6}$/.test(bh.value)) bc.value = bh.value });
+  }
+
+  // ─── Copy buttons ───
+  document.querySelectorAll('[data-copy]').forEach(b=>{
+    b.addEventListener('click',(e)=>{
+      e.preventDefault();
+      const key = b.dataset.copy;
+      const txt = key === 'embed'
+        ? `<!-- AICS chat widget -->\n<script src="https://aics-web.vercel.app/embed.js" data-tenant="toko-skincare-bdg" defer></` + `script>`
+        : 'https://aics-web.vercel.app/c/toko-skincare-bdg';
+      navigator.clipboard.writeText(txt).then(()=>{
+        const t = b.textContent; b.textContent='Copied ✓';
+        setTimeout(()=>b.textContent=t,1500);
+      });
+    });
+  });
+
+  // ─── Chip filters ───
+  document.querySelectorAll('.filter-row').forEach(row=>{
+    const chips = row.querySelectorAll('.chip-filter');
+    chips.forEach(c=>c.addEventListener('click',()=>{
+      chips.forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+    }));
+  });
+</script>
+
+</body>
+</html>

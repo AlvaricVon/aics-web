@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Admin · AICS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FAFAF7;--surface:#FFFFFF;--surface-alt:#F5F4F1;
+    --text:#1C1917;--text-soft:#44403C;--muted:#78716C;
+    --border:#E7E5E4;--border-strong:#D6D3D1;
+    --accent:#C2410C;--accent-hover:#9A3412;--accent-bg:#FFF7ED;
+    --success:#15803D;--warning:#D97706;--danger:#DC2626;--info:#2563EB;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100vh}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+  /* ─── LOGIN ─── */
+  .login-wrap{min-height:100vh;display:grid;place-items:center;padding:32px}
+  .login{width:100%;max-width:400px}
+  .login-brand{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:32px;font-weight:700;letter-spacing:-.02em}
+  .login-brand .mark{width:34px;height:34px;border-radius:8px;background:var(--text);color:var(--bg);display:grid;place-items:center;font-size:14px;font-weight:800}
+  .login-brand .name{font-size:16px}
+  .login-brand .name small{display:block;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+  .login-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;box-shadow:0 12px 32px -16px rgba(28,25,23,.10)}
+  .login-card h1{font-size:22px;font-weight:700;letter-spacing:-.015em;margin:0 0 4px}
+  .login-card .sub{font-size:13.5px;color:var(--text-soft);margin:0 0 24px}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  label{font-size:13px;font-weight:600;color:var(--text)}
+  input{font-family:inherit;font-size:14.5px;padding:11px 13px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface);color:var(--text);outline:none;width:100%;transition:all .12s}
+  input:focus{border-color:var(--text);box-shadow:0 0 0 3px rgba(28,25,23,.06)}
+  .forgot{font-size:12.5px;color:var(--accent);text-align:right;margin-top:-6px;font-weight:600}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:7px;font-weight:600;font-size:14px;border:1px solid transparent;transition:all .15s;cursor:pointer;line-height:1;white-space:nowrap}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 6px 16px -6px rgba(194,65,12,.32)}
+  .btn-ghost{background:var(--surface);color:var(--text);border-color:var(--border-strong)}
+  .btn-ghost:hover{border-color:var(--text)}
+  .btn-dark{background:var(--text);color:var(--bg)}
+  .btn-dark:hover{background:#000}
+  .btn-sm{padding:6px 10px;font-size:12.5px}
+  .btn-success{background:var(--success);color:#fff}
+  .btn-success:hover{background:#166534}
+  .btn-wa{background:#25D366;color:#fff}
+  .btn-wa:hover{background:#1FB155}
+  .login-card .btn-primary{width:100%;margin-top:8px}
+  .login-foot{text-align:center;font-size:12.5px;color:var(--muted);margin-top:24px;font-family:'JetBrains Mono',monospace}
+  .login-foot a{color:var(--text-soft);font-weight:600}
+  .alert{padding:10px 12px;border-radius:7px;font-size:13px;margin-bottom:14px;display:none}
+  .alert.show{display:block}
+  .alert.error{background:#FEF2F2;color:var(--danger);border:1px solid #FECACA}
+
+  /* ─── ADMIN APP ─── */
+  .admin{display:none;min-height:100vh;flex-direction:column}
+  .admin.show{display:flex}
+
+  .topbar{
+    height:60px;border-bottom:1px solid var(--border);background:var(--surface);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 32px;position:sticky;top:0;z-index:20;
+  }
+  @media(max-width:640px){.topbar{padding:0 20px}}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.02em}
+  .brand-mark{width:28px;height:28px;border-radius:6px;background:var(--text);color:var(--bg);display:grid;place-items:center;font-size:12px;font-weight:800}
+  .brand-name{font-size:14.5px}
+  .brand-name small{color:var(--muted);font-weight:500;margin-left:6px;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+  .top-right{display:flex;align-items:center;gap:10px}
+  .user-pill{display:flex;align-items:center;gap:8px;padding:5px 11px 5px 5px;border:1px solid var(--border);border-radius:999px;font-size:13px}
+  .user-avatar{width:24px;height:24px;border-radius:50%;background:var(--text);color:var(--bg);display:grid;place-items:center;font-size:11px;font-weight:700}
+
+  /* ─── REALTIME BANNER ─── */
+  .realtime{
+    background:#1C1917;color:#FAFAF7;padding:10px 32px;
+    display:flex;align-items:center;gap:12px;font-size:13px;
+    border-bottom:1px solid #44403C;
+    animation:slideDown .4s ease;
+  }
+  @keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+  .realtime .pulse{width:8px;height:8px;border-radius:50%;background:#F59E5C;box-shadow:0 0 0 4px rgba(245,158,92,.20);animation:pulse 2s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(245,158,92,0)}}
+  .realtime .tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#F59E5C;font-weight:600}
+  .realtime .msg{flex:1}
+  .realtime .msg strong{font-weight:700}
+  .realtime .close{color:#A8A29E;cursor:pointer;padding:4px 8px;border-radius:4px;font-size:18px;line-height:1}
+  .realtime .close:hover{background:rgba(255,255,255,.08);color:#fff}
+
+  .content{padding:32px;flex:1}
+  @media(max-width:640px){.content{padding:24px 20px}}
+  h1.page-title{font-size:24px;font-weight:700;letter-spacing:-.018em;margin:0 0 4px;line-height:1.2}
+  .page-desc{font-size:14px;color:var(--text-soft);margin:0 0 24px}
+
+  /* ─── STATS ─── */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px}
+  @media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{border:1px solid var(--border);border-radius:10px;padding:16px 18px;background:var(--surface);transition:border-color .15s}
+  .stat:hover{border-color:var(--border-strong)}
+  .stat-label{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .stat-value{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:6px 0 2px;font-family:'JetBrains Mono',monospace}
+  .stat-trend{font-size:11.5px;color:var(--success);font-family:'JetBrains Mono',monospace}
+  .stat-trend.warn{color:var(--warning)}
+
+  /* ─── TABS ─── */
+  .tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0;overflow-x:auto}
+  .tab{
+    padding:12px 18px;font-size:14px;color:var(--text-soft);cursor:pointer;
+    border-bottom:2px solid transparent;font-weight:500;display:flex;align-items:center;gap:8px;
+    white-space:nowrap;transition:all .12s;
+  }
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+  .tab .count{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--surface-alt);padding:2px 7px;border-radius:3px;color:var(--muted);font-weight:600}
+  .tab.active .count{background:var(--accent-bg);color:var(--accent)}
+
+  /* ─── PANEL ─── */
+  .panel{border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;background:var(--surface);overflow:hidden}
+  .filter-row{display:flex;gap:6px;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+  .filter-row .search{flex:1;min-width:200px;border:1px solid var(--border-strong);border-radius:7px;padding:6px 12px 6px 32px;font-size:13px;background:var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2378716C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") no-repeat 10px center}
+  .chip-filter{font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;color:var(--text-soft);background:var(--surface);cursor:pointer;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .chip-filter:hover{border-color:var(--text)}
+  .chip-filter.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+  /* ─── TABLE ─── */
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  thead th{background:var(--surface-alt);font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;text-align:left;padding:10px 16px;border-bottom:1px dashed var(--border-strong)}
+  tbody td{padding:14px 16px;border-bottom:1px dashed var(--border);color:var(--text-soft);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-alt)}
+  td.col-key{color:var(--text);font-weight:500}
+  td.col-mono{font-family:'JetBrains Mono',monospace;font-size:12.5px}
+  td.col-actions{text-align:right;white-space:nowrap}
+  td.col-actions .btn{margin-left:4px}
+
+  .badge{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:4px;font-weight:600;border:1px solid transparent;line-height:1;display:inline-block}
+  .b-paid{background:rgba(21,128,61,.10);color:var(--success);border-color:rgba(21,128,61,.20)}
+  .b-pending{background:rgba(217,119,6,.10);color:var(--warning);border-color:rgba(217,119,6,.22)}
+  .b-delivered{background:rgba(28,25,23,.06);color:var(--text);border-color:var(--border-strong)}
+  .b-cancelled{background:rgba(220,38,38,.08);color:var(--danger);border-color:rgba(220,38,38,.20)}
+  .b-new{background:rgba(37,99,235,.08);color:var(--info);border-color:rgba(37,99,235,.18)}
+
+  .tab-content{display:none}
+  .tab-content.active{display:block}
+
+  .plan-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:var(--surface-alt);color:var(--text-soft);padding:2px 7px;border-radius:3px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+  .plan-tag.pro{background:var(--accent-bg);color:var(--accent)}
+  .plan-tag.business{background:var(--text);color:var(--bg)}
+</style>
+</head>
+<body>
+
+<!-- ─── LOGIN ─── -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login">
+    <div class="login-brand">
+      <span class="mark">AI</span>
+      <span class="name">AICS<small>Internal admin</small></span>
+    </div>
+    <div class="login-card">
+      <h1>Masuk admin</h1>
+      <p class="sub">Akses internal · hanya untuk founder.</p>
+      <div class="alert error" id="loginError"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="adminEmail" placeholder="kamil@aics.id" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="adminPass" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <a href="/reset-password.html" class="forgot" style="display:block">Lupa password?</a>
+        <button type="submit" class="btn btn-primary">Masuk →</button>
+      </form>
+    </div>
+    <div class="login-foot">aics admin v1.0 · <a href="/">↩ landing</a></div>
+  </div>
+</div>
+
+<!-- ─── ADMIN APP ─── -->
+<div class="admin" id="adminApp">
+  <div class="topbar">
+    <a class="brand" href="/admin.html">
+      <span class="brand-mark">AI</span>
+      <span class="brand-name">AICS<small>admin</small></span>
+    </a>
+    <div class="top-right">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)" id="clock">14:32 WIB</span>
+      <div class="user-pill">
+        <span class="user-avatar">KA</span>
+        <span id="adminWho">kamil@aics.id</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <div class="realtime" id="realtimeBar">
+    <span class="pulse"></span>
+    <span class="tag">NEW ORDER</span>
+    <span class="msg"><strong>Toko Bunga Surabaya</strong> baru daftar paket <strong>Pro</strong> · belum bayar · 2 menit lalu</span>
+    <button class="btn btn-sm" style="background:#F59E5C;color:#1C1917;font-weight:600">Reply WA →</button>
+    <span class="close" onclick="document.getElementById('realtimeBar').style.display='none'">×</span>
+  </div>
+
+  <div class="content">
+    <h1 class="page-title">Dashboard internal</h1>
+    <p class="page-desc">Snapshot 30 hari terakhir · refresh tiap 60 detik</p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Orders</div>
+        <div class="stat-value">47</div>
+        <div class="stat-trend">↑ 9 minggu ini</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pending payment</div>
+        <div class="stat-value">6</div>
+        <div class="stat-trend warn">⚠ 2 lewat 24 jam</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Revenue MTD</div>
+        <div class="stat-value">Rp 12.4jt</div>
+        <div class="stat-trend">↑ 23% vs Apr</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Audit requests</div>
+        <div class="stat-value">3</div>
+        <div class="stat-trend">2 due minggu ini</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Demo chats</div>
+        <div class="stat-value">214</div>
+        <div class="stat-trend">↑ 41 hari ini</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="orders">Orders <span class="count">47</span></div>
+      <div class="tab" data-tab="audits">Audit Requests <span class="count">3</span></div>
+      <div class="tab" data-tab="leads">Leads <span class="count">28</span></div>
+      <div class="tab" data-tab="demos">Demo Chats <span class="count">214</span></div>
+    </div>
+
+    <div class="panel">
+      <!-- ─── ORDERS ─── -->
+      <div class="tab-content active" id="tab-orders">
+        <div class="filter-row">
+          <input class="search" placeholder="Cari nama toko, email, atau invoice…" />
+          <button class="chip-filter active">Semua</button>
+          <button class="chip-filter">Pending</button>
+          <button class="chip-filter">Paid</button>
+          <button class="chip-filter">Delivered</button>
+          <button class="chip-filter">Cancelled</button>
+        </div>
+        <table>
+          <thead><tr><th>Order</th><th>Customer</th><th>Plan</th><th>Total</th><th>Status</th><th>Tanggal</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="col-mono">INV-2026-0047</td>
+              <td><strong style="color:var(--text)">Toko Bunga Surabaya</strong><br><span style="color:var(--muted);font-size:12px">eko@tokobunga.com · +62 813 5678 1234</span></td>
+              <td><span class="plan-tag pro">Pro</span></td>
+              <td class="col-mono">Rp 299.000</td>
+              <td><span class="badge b-pending">PENDING</span></td>
+              <td class="col-mono">15 Mei · 14:18</td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-success btn-sm">Mark Paid</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-mono">INV-2026-0046</td>
+              <td><strong style="color:var(--text)">Kursus Online Yogya</strong><br><span style="color:var(--muted);font-size:12px">budi@kursusyogya.id · +62 856 7890 1234</span></td>
+              <td><span class="plan-tag pro">Pro</span></td>
+              <td class="col-mono">Rp 299.000</td>
+              <td><span class="badge b-paid">PAID</span></td>
+              <td class="col-mono">15 Mei · 11:42</td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-primary btn-sm">Deliver</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-mono">INV-2026-0045</td>
+              <td><strong style="color:var(--text)">Jasa Cuci Sepatu BKS</strong><br><span style="color:var(--muted);font-size:12px">rian@cucisepatubks.com · +62 821 4567 8910</span></td>
+              <td><span class="plan-tag">Lite</span></td>
+              <td class="col-mono">Rp 99.000</td>
+              <td><span class="badge b-delivered">DELIVERED</span></td>
+              <td class="col-mono">14 Mei · 16:30</td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-ghost btn-sm">Lihat</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-mono">INV-2026-0044</td>
+              <td><strong style="color:var(--text)">Skincare Indo Premium</strong><br><span style="color:var(--muted);font-size:12px">putri@skincareindo.com · +62 819 2345 6789</span></td>
+              <td><span class="plan-tag business">Business</span></td>
+              <td class="col-mono">Rp 999.000</td>
+              <td><span class="badge b-paid">PAID</span></td>
+              <td class="col-mono">14 Mei · 09:15</td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-primary btn-sm">Deliver</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-mono">INV-2026-0043</td>
+              <td><strong style="color:var(--text)">Roti Bakery Bandung</strong><br><span style="color:var(--muted);font-size:12px">dewi@rotibakery.id · +62 877 8901 2345</span></td>
+              <td><span class="plan-tag">Lite</span></td>
+              <td class="col-mono">Rp 99.000</td>
+              <td><span class="badge b-cancelled">CANCELLED</span></td>
+              <td class="col-mono">13 Mei · 19:08</td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-ghost btn-sm">Lihat</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-mono">INV-2026-0042</td>
+              <td><strong style="color:var(--text)">Aksesoris Kucing Jkt</strong><br><span style="color:var(--muted);font-size:12px">tomi@aksesoriskucing.com · +62 812 6789 0123</span></td>
+              <td><span class="plan-tag pro">Pro</span></td>
+              <td class="col-mono">Rp 299.000</td>
+              <td><span class="badge b-delivered">DELIVERED</span></td>
+              <td class="col-mono">13 Mei · 10:24</td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-ghost btn-sm">Lihat</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ─── AUDITS ─── -->
+      <div class="tab-content" id="tab-audits">
+        <div class="filter-row">
+          <input class="search" placeholder="Cari audit request…" />
+          <button class="chip-filter active">Semua</button>
+          <button class="chip-filter">New</button>
+          <button class="chip-filter">In progress</button>
+          <button class="chip-filter">Delivered</button>
+        </div>
+        <table>
+          <thead><tr><th>ID</th><th>Customer</th><th>Tipe</th><th>Due</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="col-mono">AUD-014</td>
+              <td><strong style="color:var(--text)">Skincare Indo Premium</strong><br><span style="color:var(--muted);font-size:12px">audit penuh + PDP compliance</span></td>
+              <td>Compliance audit</td>
+              <td class="col-mono">22 Mei 2026</td>
+              <td><span class="badge b-new">NEW</span></td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-primary btn-sm">Kickoff</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-mono">AUD-013</td>
+              <td><strong style="color:var(--text)">Kursus Online Yogya</strong><br><span style="color:var(--muted);font-size:12px">review knowledge base structure</span></td>
+              <td>KB audit</td>
+              <td class="col-mono">19 Mei 2026</td>
+              <td><span class="badge b-pending">IN PROGRESS</span></td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-success btn-sm">Mark Done</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-mono">AUD-012</td>
+              <td><strong style="color:var(--text)">Aksesoris Kucing Jkt</strong><br><span style="color:var(--muted);font-size:12px">setup voice & tone</span></td>
+              <td>Voice audit</td>
+              <td class="col-mono">12 Mei 2026</td>
+              <td><span class="badge b-delivered">DELIVERED</span></td>
+              <td class="col-actions">
+                <button class="btn btn-wa btn-sm">WA</button>
+                <button class="btn btn-ghost btn-sm">Report</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ─── LEADS ─── -->
+      <div class="tab-content" id="tab-leads">
+        <div class="filter-row">
+          <input class="search" placeholder="Cari lead…" />
+          <button class="chip-filter active">Semua</button>
+          <button class="chip-filter">New</button>
+          <button class="chip-filter">Contacted</button>
+          <button class="chip-filter">Closed</button>
+        </div>
+        <table>
+          <thead><tr><th>Source</th><th>Contact</th><th>Interest</th><th>Status</th><th>Tanggal</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="col-key">Demo chat</td><td><strong style="color:var(--text)">Indah K.</strong><br><span style="color:var(--muted);font-size:12px">indah@tokobaju.id</span></td><td>Pro plan</td><td><span class="badge b-new">NEW</span></td><td class="col-mono">15 Mei · 13:42</td><td class="col-actions"><button class="btn btn-wa btn-sm">WA</button></td></tr>
+            <tr><td class="col-key">FAQ inquiry</td><td><strong style="color:var(--text)">Hendra W.</strong><br><span style="color:var(--muted);font-size:12px">+62 812 3456 7890</span></td><td>Custom integration</td><td><span class="badge b-pending">CONTACTED</span></td><td class="col-mono">15 Mei · 10:15</td><td class="col-actions"><button class="btn btn-wa btn-sm">WA</button></td></tr>
+            <tr><td class="col-key">LinkedIn DM</td><td><strong style="color:var(--text)">Putu D.</strong><br><span style="color:var(--muted);font-size:12px">putu@warungkopi.bali</span></td><td>Business plan</td><td><span class="badge b-new">NEW</span></td><td class="col-mono">14 Mei · 20:08</td><td class="col-actions"><button class="btn btn-wa btn-sm">WA</button></td></tr>
+            <tr><td class="col-key">Demo chat</td><td><strong style="color:var(--text)">Anonymous</strong><br><span style="color:var(--muted);font-size:12px">session_8e2a</span></td><td>Pricing question</td><td><span class="badge b-delivered">CLOSED</span></td><td class="col-mono">14 Mei · 16:30</td><td class="col-actions"><button class="btn btn-ghost btn-sm">Lihat</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ─── DEMO CHATS ─── -->
+      <div class="tab-content" id="tab-demos">
+        <div class="filter-row">
+          <input class="search" placeholder="Cari demo chat…" />
+          <button class="chip-filter active">Semua</button>
+          <button class="chip-filter">Resolved</button>
+          <button class="chip-filter">Escalated</button>
+          <button class="chip-filter">Lead potential</button>
+        </div>
+        <table>
+          <thead><tr><th>Session</th><th>Pesan pertama</th><th>Intent</th><th>State</th><th>Lead?</th><th>Waktu</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="col-mono">demo_8e2a</td><td class="col-key">Ini bisa connect ke WA Business gak?</td><td>integration</td><td><span class="badge b-paid">RESOLVED</span></td><td>🟢 Strong</td><td class="col-mono">15 Mei · 14:12</td><td class="col-actions"><button class="btn btn-ghost btn-sm">Lihat</button></td></tr>
+            <tr><td class="col-mono">demo_4f29</td><td class="col-key">Berapa harga untuk volume 50rb chat?</td><td>pricing</td><td><span class="badge b-paid">RESOLVED</span></td><td>🟢 Strong</td><td class="col-mono">15 Mei · 13:55</td><td class="col-actions"><button class="btn btn-ghost btn-sm">Lihat</button></td></tr>
+            <tr><td class="col-mono">demo_b56f</td><td class="col-key">Saya akan menuntut secara hukum</td><td>legal_threat</td><td><span class="badge b-pending">ESCALATED</span></td><td>—</td><td class="col-mono">15 Mei · 13:30</td><td class="col-actions"><button class="btn btn-ghost btn-sm">Lihat</button></td></tr>
+            <tr><td class="col-mono">demo_2c91</td><td class="col-key">Bisa custom voice/tone?</td><td>customization</td><td><span class="badge b-paid">RESOLVED</span></td><td>🟡 Medium</td><td class="col-mono">15 Mei · 12:18</td><td class="col-actions"><button class="btn btn-ghost btn-sm">Lihat</button></td></tr>
+            <tr><td class="col-mono">demo_7e02</td><td class="col-key">refund</td><td>refund_test</td><td><span class="badge b-paid">RESOLVED</span></td><td>—</td><td class="col-mono">15 Mei · 11:42</td><td class="col-actions"><button class="btn btn-ghost btn-sm">Lihat</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+  const SUPABASE_URL = 'https://stcywvcnbbapshrzqblk.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_WUxbFG3866P7BANLSqv-Sw_4NcXMLSr';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const loginWrap = document.getElementById('loginWrap');
+  const adminApp = document.getElementById('adminApp');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+
+  // Check session on load
+  const { data: { session } } = await supabase.auth.getSession();
+  if(session){ showAdmin(session.user?.email || 'kamil@aics.id'); }
+
+  loginForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    loginError.classList.remove('show');
+    const email = document.getElementById('adminEmail').value;
+    const password = document.getElementById('adminPass').value;
+    try{
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if(error) throw error;
+      showAdmin(data.user?.email || email);
+    }catch(err){
+      loginError.textContent = err.message || 'Login gagal. Cek email dan password Anda.';
+      loginError.classList.add('show');
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', async ()=>{
+    await supabase.auth.signOut();
+    location.reload();
+  });
+
+  function showAdmin(email){
+    loginWrap.style.display='none';
+    adminApp.classList.add('show');
+    document.getElementById('adminWho').textContent = email;
+  }
+
+  // ─── Tabs ───
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ─── Filter chips ───
+  document.querySelectorAll('.filter-row').forEach(row=>{
+    const chips = row.querySelectorAll('.chip-filter');
+    chips.forEach(c=>c.addEventListener('click',()=>{
+      chips.forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+    }));
+  });
+
+  // ─── Clock ───
+  function tick(){
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    document.getElementById('clock').textContent = `${h}:${m} WIB`;
+  }
+  tick(); setInterval(tick, 30000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<title>AICS · LinkedIn banner (1584×396)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#1C1917;color:#FAFAF7}
+  .frame{
+    width:1584px;height:396px;
+    background:#FAFAF7;color:#1C1917;
+    padding:48px 88px;
+    display:flex;align-items:center;gap:64px;
+    position:relative;overflow:hidden;
+  }
+  .frame::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(800px 300px at 120% 50%, rgba(194,65,12,.10),transparent 60%);
+  }
+  .left{flex:1;position:relative;display:flex;flex-direction:column;gap:18px;max-width:920px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{width:40px;height:40px;border-radius:9px;background:#1C1917;color:#FAFAF7;display:grid;place-items:center;font-size:15px;font-weight:800;letter-spacing:-.02em}
+  .brand-name{font-size:18px;font-weight:700;letter-spacing:-.02em}
+  .brand-name small{display:block;font-size:11.5px;color:#78716C;font-weight:500;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
+  h1{font-size:42px;font-weight:800;letter-spacing:-.025em;line-height:1.05;text-wrap:balance;max-width:760px}
+  h1 em{font-style:normal;color:#C2410C}
+  .meta-row{display:flex;gap:32px;align-items:center;margin-top:4px}
+  .meta-row .item{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#44403C}
+  .meta-row .item::before{content:"";width:6px;height:6px;border-radius:50%;background:#C2410C}
+
+  .right{
+    flex:0 0 360px;align-self:stretch;
+    background:#1C1917;color:#FAFAF7;border-radius:14px;padding:28px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    position:relative;overflow:hidden;
+  }
+  .right::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(400px 200px at 100% 0%,rgba(194,65,12,.20),transparent 60%);
+  }
+  .quote-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#F59E5C;font-weight:600;position:relative}
+  .quote{font-size:18px;line-height:1.4;letter-spacing:-.015em;font-weight:600;position:relative}
+  .who{display:flex;align-items:center;gap:10px;font-size:13px;color:#A8A29E;position:relative}
+  .who-avatar{width:34px;height:34px;border-radius:8px;background:#FAFAF7;color:#1C1917;display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:-.02em}
+  .who strong{color:#FAFAF7;font-weight:700;display:block;font-size:14px}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="left">
+    <div class="brand">
+      <span class="brand-mark">AI</span>
+      <span class="brand-name">AICS<small>by Kamil Alfaris · Jakarta</small></span>
+    </div>
+    <h1>AI customer service untuk <em>UMKM Indonesia.</em> Self-serve. Mulai Rp 99rb/bulan.</h1>
+    <div class="meta-row">
+      <span class="item">Multi-agent architecture</span>
+      <span class="item">UU PDP compliant</span>
+      <span class="item">Trial 14 hari, tanpa kartu kredit</span>
+    </div>
+  </div>
+
+  <div class="right">
+    <span class="quote-tag">tentang founder</span>
+    <p class="quote">Self-serve, harga jelas, dokumentasi lengkap. Saya jawab WA Anda sendiri.</p>
+    <div class="who">
+      <span class="who-avatar">KA</span>
+      <span><strong>Kamil Alfaris</strong>Solo founder & engineer</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
