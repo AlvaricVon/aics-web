@@ -531,8 +531,8 @@
       <a href="#pricing">Pricing</a>
       <a href="#cara-kerja">Cara Kerja</a>
       <a href="#faq">FAQ</a>
-      <div class="nav-cta">
-        <a href="/admin.html" class="btn btn-sm btn-ghost">Login</a>
+      <div class="nav-cta" id="navCta">
+        <a href="/dashboard.html" class="btn btn-sm btn-ghost">Login</a>
         <a href="/signup.html" class="btn btn-sm btn-primary">Mulai trial gratis</a>
       </div>
     </nav>
@@ -1094,6 +1094,24 @@
   // ─── DEMO WIDGET ───
   const SUPABASE_URL = 'https://stcywvcnbbapshrzqblk.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_WUxbFG3866P7BANLSqv-Sw_4NcXMLSr';
+  const ADMIN_EMAILS = ['kamilalfaris@gmail.com'];
+
+  // ─── HEADER AUTH STATE: show Dashboard button if logged in ───
+  (async () => {
+    try {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.45.0');
+      const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) return;
+      const email = session.user.email;
+      const navCta = document.getElementById('navCta');
+      if (!navCta) return;
+      const isAdmin = ADMIN_EMAILS.includes(email);
+      navCta.innerHTML = isAdmin
+        ? `<a href="/dashboard.html" class="btn btn-sm btn-ghost">Dashboard</a><a href="/admin.html" class="btn btn-sm btn-primary">Admin</a>`
+        : `<a href="/dashboard.html" class="btn btn-sm btn-primary">Buka Dashboard</a>`;
+    } catch (_) { /* silent */ }
+  })();
   const SESSION_ID = 'demo_'+Math.random().toString(36).slice(2,10);
 
   const body = document.getElementById('demoBody');
@@ -1185,7 +1203,7 @@
       result = localFallback(text);
     }
     removeTyping();
-    addBot(result.reply || result.message || 'Maaf, terjadi kendala.', result);
+    addBot(result.response || result.reply || result.message || 'Maaf, terjadi kendala.', result);
     sendBtn.disabled = false;
   }
 

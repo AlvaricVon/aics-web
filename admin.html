@@ -559,19 +559,38 @@
     history.replaceState(null, "", location.pathname);
   }
 
-  // ===== AUTH CHECK =====
+  // ===== AUTH CHECK + ADMIN ALLOWLIST =====
+  const ADMIN_EMAILS = ["kamilalfaris@gmail.com"];
+
   async function checkAuth() {
     const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      showApp(session.user);
-    } else {
+    if (!session) {
       loginWrap.style.display = "flex";
       app.classList.remove("active");
+      return;
     }
+    if (!ADMIN_EMAILS.includes(session.user.email)) {
+      // Logged in but NOT admin — log them out and show denial
+      await sb.auth.signOut();
+      loginWrap.style.display = "flex";
+      app.classList.remove("active");
+      const msg = document.getElementById("loginMsg");
+      msg.className = "login-msg error";
+      msg.innerHTML = `Akses ditolak. Email <strong>${session.user.email}</strong> bukan admin. <br><br>Kalau Anda customer AICS, login di <a href="/dashboard.html" style="color: var(--accent);">Dashboard Customer</a>.`;
+      msg.style.display = "block";
+      return;
+    }
+    showApp(session.user);
   }
   await checkAuth();
-  sb.auth.onAuthStateChange((event, session) => {
-    if (event === "SIGNED_IN" && session) showApp(session.user);
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === "SIGNED_IN" && session) {
+      if (!ADMIN_EMAILS.includes(session.user.email)) {
+        await sb.auth.signOut();
+        return;
+      }
+      showApp(session.user);
+    }
     if (event === "SIGNED_OUT") {
       loginWrap.style.display = "flex";
       app.classList.remove("active");
