@@ -14,21 +14,21 @@ Lu udah punya foundation bagus (CCNA, MTCRE, juara NETCOMP). Tinggal **add layer
 
 **Tambahin AICS partnership**:
 ```
-NOC Engineer at Indocyber | Growth Partner @ AICS · AI Customer Support untuk UMKM Indonesia | CCNA · MTCRE | TKJ → Network Engineer → AI/SaaS
+NOC Engineer at Indocyber | Growth Partner @ AICS · AI Customer Support untuk D2C Brand & Startup Indonesia | CCNA · MTCRE | TKJ → Network Engineer → AI/SaaS
 ```
 
 #### 2. About section — tambahin paragraf baru di akhir:
 
 ```
-Saat ini juga aktif sebagai Growth Partner di AICS (https://aics-web.vercel.app) — platform AI customer support self-serve untuk UMKM dan startup Indonesia. Fokus saya: membantu owner UMKM otomasi FAQ customer support dengan biaya 5-10x lebih murah dari agency tradisional.
+Saat ini juga aktif sebagai Growth Partner di AICS (https://aics-web.vercel.app) — platform AI customer support self-serve untuk D2C brand, startup, dan online business Indonesia yang punya website. Fokus saya: membantu founder otomasi FAQ customer support dengan biaya 5-10x lebih murah dari agency tradisional.
 
-Phase 2: contribute ke development WhatsApp Business API integration (Q2-Q3 2026).
+Phase 2 (Q2-Q3 2026): lead development WhatsApp Business API integration — supaya AICS bisa serve marketplace seller (Shopee/Tokopedia) lewat WhatsApp Business channel.
 ```
 
 #### 3. Featured section — tambahin link AICS:
 - URL: `https://aics-web.vercel.app`
-- Title: "AICS — AI Customer Support untuk UMKM Indonesia"
-- Description: "Platform self-serve · Trial 14 hari gratis · Mulai Rp 99rb/bulan"
+- Title: "AICS — AI Customer Support untuk D2C Brand & Startup Indonesia"
+- Description: "Platform self-serve untuk bisnis dengan website · Trial 14 hari gratis · Mulai Rp 99rb/bulan"
 
 #### 4. Banner image:
 - Lu bisa pakai banner AICS yang udah Kamil bikin: `https://aics-web.vercel.app/linkedin-banner.png`
@@ -108,18 +108,24 @@ Lakuin pas waktu rehat di kerja Indocyber atau sebelum tidur.
 
 ### 1. **LinkedIn** (PRIMARY — 60% effort)
 
-**Kenapa primary:** profesional, decision maker UMKM/startup ada di sini, niche cyber/AI bisa lu leverage.
+**Kenapa primary:** profesional, decision maker D2C brand/startup ada di sini, niche cyber/AI bisa lu leverage.
 
-**Target audience:**
-- Founder e-commerce Indonesia (search "founder e-commerce indonesia")
-- Head of CX / Customer Experience
-- Operations Manager startup
-- Owner UMKM digital
+**Target audience (PRIORITAS — yang ada website):**
+- Founder D2C brand Indonesia (fashion, beauty, F&B, lifestyle) — Erigo, Compass, Sociolla tier
+- Head of CX / Customer Experience di startup B2C
+- Founder edtech/healthtech yang punya web app (Ruangguru, Halodoc tier, scale down)
+- Owner SaaS lokal kecil-medium (Mekari, Jurnal, Krealogi tier)
+- Operations Manager perusahaan online dengan website
+
+**BUKAN target audience:**
+- Marketplace-only seller (Shopee/Tokopedia tanpa website) → tunggu sampai WhatsApp integration live (Q3 2026)
+- UMKM offline-only (warung, toko fisik) → bukan ICP kita
 
 **Komunitas lu join:**
 - AI Indonesia groups
-- Indonesia Startup community
-- HIPMI Online
+- Indonesia Startup community (founders dengan web product)
+- Indie Hackers Indonesia
+- D2C / DTC Brand Indonesia (FB Group ada)
 - Cisco Community Indonesia (advantage lu — bisa cross-promote dari niche network)
 
 **Strategy:**
@@ -141,12 +147,13 @@ Lakuin pas waktu rehat di kerja Indocyber atau sebelum tidur.
 Halo [Nama],
 
 Lagi sibuk gak? Quick context: gw lagi jadi growth partner di AICS — 
-platform AI customer support untuk UMKM Indonesia.
+platform AI customer support untuk D2C brand & startup Indonesia 
+yang punya website.
 
 Bukan minta apa-apa. Cuma curious, ada gak temen/keluarga lu yang punya:
-- Online shop dengan tim CS (yang sering kena FAQ berulang)
-- Startup dengan website yang butuh chatbot
-- Brand UMKM yang struggle handle WhatsApp bisnis
+- D2C brand (fashion/beauty/F&B) dengan website + tim CS
+- Startup dengan web product yang butuh chatbot
+- SaaS lokal yang FAQ customer support-nya overflow
 
 Kalau ada, gw bantu setup gratis 14 hari + audit operasional.
 
@@ -155,28 +162,32 @@ Cek: https://aics-web.vercel.app
 Thanks bro/sis!
 ```
 
+> **Catatan:** Kalau yang ditanya jawab "ada, tapi mereka jualan di Shopee/Tokped doang gak ada website" → bilang "noted, kita lagi siapin WhatsApp integration untuk marketplace seller, target Q3. Boleh save kontaknya buat early access?" Jangan close door — convert ke waiting list.
+
 ### 3. **Instagram** (MEDIUM — 10% effort)
 
-**Kenapa:** owner UMKM/D2C banyak yang aktif di IG.
+**Kenapa:** founder D2C brand banyak yang aktif di IG.
 
 **Activity:**
-- DM 5 owner brand kecil per minggu (lihat IG bio "founder", "owner", "CEO")
+- DM 5 founder D2C brand per minggu (lihat IG bio "founder", "owner", "CEO" + link website di bio)
 - Comment di post mereka dulu (build rapport), baru DM
+- **Filter penting:** cek dulu mereka punya website (bukan cuma link Shopee/Tokped)
 
 **Target tipe akun:**
-- Brand skincare/fashion D2C dengan 1k-50k followers
-- Founder yang share BTS bisnis di IG Stories
-- Coffee shop / F&B yang post menu + tag #UMKMIndonesia
+- Brand skincare/fashion D2C dengan 5k-100k followers + website sendiri (Shopify/Tokoko/custom)
+- Founder yang share BTS bisnis di IG Stories dan punya web order
+- Coffee chain / F&B dengan brand kuat + website order online (bukan UMKM warung tradisional)
 
 ### 4. **Facebook Groups** (LOW-MEDIUM — 5% effort)
 
-**Kenapa:** banyak komunitas UMKM tradisional di FB Groups.
+**Kenapa:** banyak komunitas founder D2C dan online business di FB Groups.
 
-**Komunitas join:**
-- Komunitas UMKM Naik Kelas
-- Pengusaha Muda Indonesia (HIPMI Online)
-- Bisnis Online Indonesia
-- Komunitas Pebisnis Online
+**Komunitas join (priorities):**
+- D2C / DTC Brand Indonesia
+- Shopify Sellers Indonesia
+- Indonesia Indie Hackers / Bootstrappers
+- Founder Startup Indonesia
+- Bisnis Online Indonesia (filter: yang punya website)
 
 **Activity:**
 - Engage 2 post per minggu (jawab pertanyaan, bantu member)
@@ -186,8 +197,8 @@ Thanks bro/sis!
 ### 5. **TikTok** (BONUS — 5% effort, optional)
 
 **Kalau lu nyaman bikin video pendek:**
-- 30-60 detik edukasi: "5 tanda tim CS lu butuh otomasi", "Cara setup chatbot 5 menit", dll
-- Tag #UMKMIndonesia #AIChatbot #StartupIndo
+- 30-60 detik edukasi: "5 tanda CS brand lu butuh otomasi", "Cara setup chatbot di website 5 menit", dll
+- Tag #StartupIndonesia #D2CBrand #AIChatbot
 - Even 1 video viral = 1000+ visits ke landing
 
 **Skip kalau lu gak nyaman on camera.** Optional only.
@@ -200,21 +211,22 @@ Thanks bro/sis!
 ```
 Halo, saya Alvin — NOC Engineer di Indocyber + Growth Partner di AICS.
 
-Sebagai network engineer, saya sering lihat UMKM Indonesia kehabisan
-nafas handle customer service di WhatsApp. Pertanyaan FAQ yang sama
-diulang ratusan kali per minggu.
+Sebagai network engineer, saya sering lihat D2C brand Indonesia
+kehabisan nafas handle customer service di website. Pertanyaan FAQ
+yang sama (ukuran, ongkir, kebijakan return) diulang ratusan kali
+per minggu — capek timnya, customer juga nunggu balasan.
 
-AICS = platform AI customer support self-serve untuk UMKM Indonesia.
-Pasang chatbot di website Anda 5 menit. Trial 14 hari gratis.
+AICS = platform AI customer support self-serve untuk brand & startup
+Indonesia yang punya website. Pasang chatbot 5 menit. Trial 14 hari gratis.
 
-Mulai Rp 99rb/bulan setelah trial — affordable untuk UMKM, gak kayak
-agency Rp 200jt+.
+Mulai Rp 99rb/bulan setelah trial — affordable untuk brand kecil-medium,
+gak kayak agency enterprise Rp 200jt+.
 
-Saya offer audit gratis untuk 3 UMKM pertama yang DM minggu ini.
+Saya offer audit gratis untuk 3 brand pertama yang DM minggu ini.
 
 Coba demo (no signup): https://aics-web.vercel.app
 
-#StartupIndonesia #UMKM #AI #CustomerSupport
+#StartupIndonesia #D2CBrand #AI #CustomerSupport
 ```
 
 ### Week 2: **Technical insight (leverage lu network background)**
@@ -228,7 +240,7 @@ ARSITEKTUR AICS:
 → Knowledge Base per-tenant dengan RLS Postgres
 → Auto-escalation untuk kasus abuse/legal (safety net)
 
-Stack ini = enterprise-grade, harga UMKM-friendly.
+Stack ini = enterprise-grade, harga startup-friendly.
 
 Bukan rule-based chatbot. Bukan ChatGPT wrapper. Multi-agent dengan
 guardrails proper.
@@ -252,7 +264,7 @@ ROI: 50x dalam 1 bulan
 
 Trial 14 hari gratis: https://aics-web.vercel.app
 
-#UMKM #SaaS #ROI #BusinessAutomation
+#D2CBrand #SaaS #ROI #BusinessAutomation
 ```
 
 ### Week 4: **Personal vulnerability / journey**
@@ -266,7 +278,7 @@ Update 30 hari setelah AICS launch:
 
 Yang saya pelajari sebagai growth partner first-time:
 1. Cold DM template = 0 reply. Personalized = 15% reply.
-2. Komunitas WhatsApp warm > LinkedIn cold (untuk UMKM target).
+2. Komunitas WhatsApp warm > LinkedIn cold (untuk founder D2C target).
 3. Demo live > slide deck (visitor 3x lebih likely sign up trial).
 4. Konsistensi 30 hari > burst sekali2 dengan janji ROI.
 

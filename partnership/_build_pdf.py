@@ -159,7 +159,7 @@ def parse_md(md_text: str, styles: dict, title: str, subtitle: str, meta_lines: 
     )
     flowables.append(Spacer(1, 6 * cm))
     flowables.append(Paragraph("AICS", ParagraphStyle("BrandLarge", fontName="Helvetica-Bold", fontSize=48, textColor=ACCENT, spaceAfter=4)))
-    flowables.append(Paragraph("AI Customer Support untuk UMKM Indonesia", styles["title_meta"]))
+    flowables.append(Paragraph("AI Customer Support untuk Brand & Startup Indonesia", styles["title_meta"]))
     flowables.append(Spacer(1, 2 * cm))
     flowables.append(Paragraph(title, styles["title"]))
     flowables.append(Paragraph(subtitle, styles["subtitle"]))
@@ -367,4 +367,19 @@ if __name__ == "__main__":
         header="AICS · Lead Tracking Guide"
     )
 
-    print("\nAll 3 PDFs generated successfully.")
+    # 4. WhatsApp Integration Roadmap
+    build_pdf(
+        md_path=str(base / "04_whatsapp_integration_roadmap.md"),
+        pdf_path=str(base / "04_whatsapp_integration_roadmap.pdf"),
+        title="WhatsApp Integration Roadmap",
+        subtitle="Phase 2 — Q3 2026 launch plan",
+        meta_lines=[
+            "<b>Lead developer:</b> Alvin Zaidan Faizal Putra",
+            "<b>Architecture review:</b> Kamil Alfaris",
+            "<b>Target launch:</b> Q3 2026",
+            "<b>Versi:</b> 1.0 · Mei 2026",
+        ],
+        header="AICS · WhatsApp Integration Roadmap"
+    )
+
+    print("\nAll 4 PDFs generated successfully.")

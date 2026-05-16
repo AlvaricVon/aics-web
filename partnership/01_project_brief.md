@@ -8,10 +8,14 @@
 
 ## 1. Apa Itu AICS?
 
-**AICS adalah platform AI customer support self-serve untuk UMKM dan startup Indonesia.**
+**AICS adalah platform AI customer support self-serve untuk D2C brands, SaaS, dan online business Indonesia yang punya website.**
+
+> ⚠️ **PENTING**: Target market kami **bukan** UMKM warung kecil yang jualan di Tokopedia/Shopee/Lazada (kami belum bisa integrate marketplace chat). Target kami = brand/business yang sudah punya website sendiri.
+>
+> **WhatsApp Business integration**: dalam roadmap 2-4 minggu (Alvin lead).
 
 ### Problem yang kami selesaikan:
-- Owner UMKM/startup di Indonesia kewalahan handle FAQ berulang via WhatsApp
+- Owner D2C brand/startup yang punya website kewalahan handle FAQ berulang via web chat + WhatsApp
 - Agency AI lokal charge Rp 200jt+ untuk implementasi (terlalu mahal)
 - SaaS chatbot existing (Cekat, Wati, Qontak) terlalu kaku + mahal (Rp 600rb–2,5jt/bulan)
 - Banyak yang butuh middle ground: affordable + flexible + self-serve
@@ -23,16 +27,22 @@
 - Mulai **Rp 99rb/bulan** (jauh lebih murah dari kompetitor)
 - Trial 14 hari gratis (no kartu kredit)
 
-### Target audience:
-- ✅ UMKM yang punya **website sendiri** (Shopify, Webflow, WordPress, HTML custom)
-- ✅ Brand D2C dengan online presence (skincare, fashion, F&B, dll)
-- ✅ Startup mid-stage dengan tim CS 3-10 orang
-- ✅ Solopreneur / freelancer dengan landing page
+### Target audience (TIER A — fokus prioritas):
+- ✅ **D2C brands** dengan website sendiri (Erigo, Compass, Buttonscarves, AVO, BLP Beauty, Sociolla style)
+- ✅ **F&B chains** dengan own app/web (Kopi Kenangan, Janji Jiwa, Fore)
+- ✅ **SaaS startups** Indonesia mid-stage (Mekari, Qoala, Sirka, Hangry)
+- ✅ **Edu platform** dengan website (Skill Academy, Cakap, Ruangguru sub-products)
+- ✅ **Klinik/dokter** dengan website appointment booking
+- ✅ **Solopreneur** dengan landing page (konsultan, coach, course creator)
 
-### BUKAN target audience:
-- ❌ Toko offline tanpa website
-- ❌ Yang hanya jualan di Tokopedia/Shopee (mereka pakai chat marketplace, kami belum integrate)
+### BUKAN target audience (untuk sekarang):
+- ❌ Warung online di Instagram tanpa website
+- ❌ Seller Tokopedia/Shopee/Lazada tanpa website sendiri (chat marketplace API tertutup, kami gak bisa integrate)
+- ❌ UMKM offline tanpa digital presence
 - ❌ Enterprise besar dengan tim 50+ CS (mereka butuh agency Rp 200jt+ + dedicated team)
+
+### Setelah WhatsApp integration live (Q2):
+- ✅ **UMKM yang pakai WhatsApp Business** sebagai channel utama (90% UMKM Indonesia) — market akan terbuka 10x lebih besar
 
 ---
 
@@ -117,7 +127,7 @@
 |---|---|---|---|
 | **Cekat.ai** | Rp 850rb-2,5jt/bln | Established, multi-channel | Mahal, lock-in |
 | **Wati** | Rp 600rb+ | WhatsApp specialist | Cuma WA, gak ada AI custom |
-| **Qontak** | Rp 1jt+ | Enterprise grade | Overkill untuk UMKM |
+| **Qontak** | Rp 1jt+ | Enterprise grade | Overkill untuk brand kecil-medium |
 | **Manychat** | Rp 250rb+ (USD) | Easy setup | Rule-based, gak ada AI grounded |
 | **AICS** | **Rp 99rb-999rb** | Affordable, self-serve, AI grounded with KB | Belum ada WA integration (yet), founder-led brand belum established |
 
@@ -162,7 +172,7 @@
 
 ```
 PHASE 1: Discover (Week 1)
-├─ Identify prospect (LinkedIn, komunitas UMKM, referral)
+├─ Identify prospect (LinkedIn, komunitas D2C founder, referral)
 ├─ Research profile (15 menit per prospect)
 └─ Compose personalized DM (value-first, no hard pitch)
 
